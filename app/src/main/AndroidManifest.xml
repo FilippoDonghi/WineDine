@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WineDine"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.home.viewmodel.HomeActivity"
+            android:exported="true" >
+        </activity>
+
         <activity
             android:name=".ui.welcome.viewmodel.WelcomeActivity"
             android:exported="true">
