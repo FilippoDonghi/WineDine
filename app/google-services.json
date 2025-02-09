@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "606861685673",
+    "project_id": "winedine-6b29b",
+    "storage_bucket": "winedine-6b29b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606861685673:android:b83853d70ffef91340cab8",
+        "android_client_info": {
+          "package_name": "it.unimib.winedine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606861685673-re9iveuhaeatacmqcpenm29lthmm666e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.unimib.winedine",
+            "certificate_hash": "fbd73741e5207e50607642cc230e0b612ddc66fb"
+          }
+        },
+        {
+          "client_id": "606861685673-s1g03kc7ibphackj7ld3c9af36f879na.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAlYD5yrOvgSxBrxc1lXDwAUhn4JkzyV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606861685673-s1g03kc7ibphackj7ld3c9af36f879na.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

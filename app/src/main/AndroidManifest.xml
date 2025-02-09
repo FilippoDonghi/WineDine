@@ -13,7 +13,7 @@
         android:theme="@style/Theme.WineDine"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.welcome.viewmodel.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
