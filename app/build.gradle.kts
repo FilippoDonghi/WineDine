@@ -42,6 +42,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
 
 
 

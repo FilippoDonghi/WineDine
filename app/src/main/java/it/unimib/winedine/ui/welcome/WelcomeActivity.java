@@ -1,4 +1,4 @@
-package it.unimib.winedine.ui.welcome.viewmodel;
+package it.unimib.winedine.ui.welcome;
 
 import android.os.Bundle;
 import it.unimib.winedine.R;

@@ -21,7 +21,7 @@
         </activity>
 
         <activity
-            android:name=".ui.welcome.viewmodel.WelcomeActivity"
+            android:name=".ui.welcome.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
