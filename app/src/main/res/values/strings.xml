@@ -14,4 +14,10 @@
     <string name="create_a_new_account">Create new account</string>
     <string name="or">or</string>
     <string name="signup">signup\n</string>
+
+    <!-- Errors -->
+    <string name="error_email_login">Check the email address</string>
+    <string name="error_password_login">The password must have at least 8 characters</string>
+    <string name="error_retrieving_news">There was an error retrieving the news</string>
+    <string name="error_no_internet">No internet connection</string>
 </resources>

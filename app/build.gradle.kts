@@ -43,9 +43,11 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
     implementation(libs.firebase.database)
-
-
+    implementation (libs.gson)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
 
 
     testImplementation(libs.junit)
