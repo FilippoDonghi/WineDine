@@ -11,4 +11,7 @@ public class Constants {
     public static final String USER_COLLISION_ERROR = "userCollisionError";
     public static final String WEAK_PASSWORD_ERROR = "passwordIsWeak";
 
+    public static final String FIREBASE_REALTIME_DATABASE = "https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/";
+    public static final String FIREBASE_USERS_COLLECTION = "users";
+    public static final String FIREBASE_FAVORITE_NEWS_COLLECTION = "favorite_news";
 }

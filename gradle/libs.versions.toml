@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+commonsValidator = "1.7"
 firebaseBom = "33.9.0"
 gson = "2.12.1"
 junit = "4.13.2"
@@ -18,6 +19,7 @@ roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
 
 [libraries]
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commonsValidator" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }

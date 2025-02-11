@@ -20,4 +20,6 @@
     <string name="error_password_login">The password must have at least 8 characters</string>
     <string name="error_retrieving_news">There was an error retrieving the news</string>
     <string name="error_no_internet">No internet connection</string>
+    <string name="error_unexpected">error unexpected</string>
+    <string name="error_collision_user">collision user</string>
 </resources>

@@ -4,6 +4,9 @@ public abstract class Result {
 
     private Result() {
     }
+    public boolean isSuccess() {
+        return !(this instanceof Error);
+    }
 
     public static final class UserSuccess extends Result {
         private final User user;

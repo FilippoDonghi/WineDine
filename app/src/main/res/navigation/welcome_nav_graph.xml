@@ -17,9 +17,7 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
         app:popExitAnim="@anim/slide_out_right"/>
-        <action
-            android:id="@+id/action_loginFragment_to_homeActivity"
-            app:destination="@id/homeActivity" />
+
     </fragment>
 
     <fragment
@@ -29,12 +27,6 @@
         android:label="SignUpFragment">
     </fragment>
 
-    <activity
-        android:id="@+id/homeActivity"
-        android:name="it.unimib.winedine.ui.home.viewmodel.HomeActivity"
-        tools:layout="@layout/activity_home"
-        android:label="ActivityHome">
-    </activity>
 
 
 </navigation>

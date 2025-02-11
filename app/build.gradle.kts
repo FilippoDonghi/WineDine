@@ -46,6 +46,9 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.database)
     implementation (libs.gson)
+    implementation(libs.commons.validator)
+
+
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
 
