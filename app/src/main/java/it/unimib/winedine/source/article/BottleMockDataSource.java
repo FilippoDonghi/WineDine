@@ -20,6 +20,7 @@ public class BottleMockDataSource extends BaseBottleRemoteDataSource {
     public BottleMockDataSource(JSONParserUtils jsonParserUtil) {
         this.jsonParserUtil = jsonParserUtil;
     }
+
 /**
     @Override
     public void getArticles() {

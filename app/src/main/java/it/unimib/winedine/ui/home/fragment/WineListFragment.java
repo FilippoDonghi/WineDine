@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,16 @@ import java.io.IOException;
 import java.util.List;
 
 import it.unimib.winedine.R;
+import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.BottleAPIResponse;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
 public class WineListFragment extends Fragment {
+
+    public static final String TAG = WineListFragment.class.getName();
+
     private LinearLayout shimmerLinearLayout;
     private RecyclerView recyclerView;
     private FrameLayout noInternetView;
@@ -41,8 +46,8 @@ public class WineListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wine_list, container, false);
 
-        shimmerLinearLayout = view.findViewById(R.id.shimmerLinearLayout);
-        noInternetView = view.findViewById(R.id.noInternetMessage);
+       /* shimmerLinearLayout = view.findViewById(R.id.shimmerLinearLayout);
+        noInternetView = view.findViewById(R.id.noInternetMessage);*/
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
@@ -50,8 +55,12 @@ public class WineListFragment extends Fragment {
 
         try {
             BottleAPIResponse bottleAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-            List<Bottle> bottleList = bottleAPIResponse.getBottles();
-            int a=0;
+
+            Log.i(TAG, bottleAPIResponse.getTotalFound() + "aa");
+            List<Bottle> bottleList = bottleAPIResponse.getRecommendedWines();
+
+            BottleRecyclerAdapter adapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList);
+            recyclerView.setAdapter(adapter);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

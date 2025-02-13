@@ -3,16 +3,10 @@ package it.unimib.winedine.model;
 import java.util.List;
 
 public class BottleAPIResponse {
-    private List<Bottle> bottles;
+    private List<Bottle> recommendedWines;
     private int totalFound;
 
-    public void setBottles(List<Bottle> bottles) {
-        this.bottles = bottles;
-    }
 
-    public List<Bottle> getBottles() {
-        return bottles;
-    }
 
     public void setTotalFound(int totalFound) {
         this.totalFound = totalFound;
@@ -22,6 +16,13 @@ public class BottleAPIResponse {
         return totalFound;
     }
 
+    public List<Bottle> getRecommendedWines() {
+        return recommendedWines;
+    }
+
+    public void setRecommendedWines(List<Bottle> recommendedWines) {
+        this.recommendedWines = recommendedWines;
+    }
 }
 
 
