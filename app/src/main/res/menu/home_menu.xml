@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/wineListFragment"
+        android:title="@string/wineSection"
+        android:icon="@drawable/baseline_wine_bar_24"
+        />
+
+    <item
+        android:id="@+id/dishListFragment"
+        android:title="@string/dineSection"
+        android:icon="@drawable/baseline_wine_bar_24"
+        />
+<!--
+    <item
+        android:id="@+id/favoriteNewsFragment"
+        android:title="@string/favorite"
+        android:icon="@drawable/baseline_favorite_24"
+        /> -->
+</menu>

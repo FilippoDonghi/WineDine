@@ -1,0 +1,74 @@
+{
+    "recommendedWines": [{
+        "id": 428396,
+        "title": "Rolling Stones 50th Anniversary Forty Licks Merlot Wine",
+        "description": "The 2012 Merlot captures the attitude of Mendocino County's style. Aromas of black cherry, leather, and tobacco are followed by rich flavors of cinnamon over vanilla. This dry red wine is a fine match for herb-roasted chicken, grilled beef or smoky chili.",
+        "price": "$16.99",
+        "imageUrl": "https://img.spoonacular.com/products/428396-312x231.jpg",
+        "averageRating": 0.9599999785423279,
+        "ratingCount": 7.0,
+        "score": 0.9145,
+        "link": "https://www.amazon.com/Rolling-Stones-Anniversary-Merlot-Mendocino/dp/B01NCT6E9V?tag=spoonacular-20"
+    }, {
+        "id": 431508,
+        "title": "Madsen Family Cellars State Merlot Wine",
+        "description": "This well-structured blend of Red Mountain and Wahluke Slope grapes has been aged 20 months in French and American oak barrels. Rich with cherries, cranberries and toffee with a smooth mouthfeel and a long, lingering finish. This big-bodied wine goes well with grilled lamb or beef. Seth Ryan vineyards, Red Mountain AVA and Stone Tree Vineyards, Wahluke Slope AVA. Wine Advocate 2010, issue 190 - 91 points",
+        "price": "$22.0",
+        "imageUrl": "https://img.spoonacular.com/products/431508-312x231.jpg",
+        "averageRating": 1.0,
+        "ratingCount": 3.0,
+        "score": 0.9,
+        "link": "https://www.amazon.com/Madsen-Family-Cellars-Washington-Merlot/dp/B00A3IU89M?tag=spoonacular-20"
+    }, {
+        "id": 428495,
+        "title": "Columbia Winery Merlot",
+        "description": "The deep purple color of our Columbia Merlot alludes to enticing plum aromas with hints of spice. On the palate, dark berry fruit flavors are met with pronounced notes of toasty oak and vanilla for a textured mouthfeel. Rich with a mouth-watering acidity, this Merlot has a finish that lingers.",
+        "price": "$22.65",
+        "imageUrl": "https://img.spoonacular.com/products/428495-312x231.jpg",
+        "averageRating": 1.0,
+        "ratingCount": 3.0,
+        "score": 0.9,
+        "link": "https://www.amazon.com/Columbia-Winery-Valley-Merlot-750mL/dp/B01ATV4HL2?tag=spoonacular-20"
+    }, {
+        "id": 435229,
+        "title": "Chateau Ste. Michelle Indian Wells Vineyard Merlot",
+        "description": "Ripe and luscious black cherry and berry aromas are distinguished by an appealing leather, mocha, and tobacco complexity. Very bright, full and sweet ripe fruit flavors are balanced by solid tannins, concluding in a long and full finish.",
+        "price": "$16.99",
+        "imageUrl": "https://img.spoonacular.com/products/435229-312x231.jpg",
+        "averageRating": 0.9399999976158142,
+        "ratingCount": 6.0,
+        "score": 0.8874,
+        "link": "https://click.linksynergy.com/deeplink?id=*QCiIS6t4gA&mid=2025&murl=https%3A%2F%2Fwww.wine.com%2Fproduct%2Fchateau-ste-michelle-indian-wells-vineyard-merlot-1997%2F24196"
+    }, {
+        "id": 436263,
+        "title": "Edna Valley Vineyard Merlot",
+        "description": "Edna Valley Vineyard 2010 Merlot opens with aromas of cocoa powder, anise and black cherry, complemented by hints of leather and humidor. Fine tannins and a bright acidity create a rich, balanced mouthfeel.",
+        "price": "$12.99",
+        "imageUrl": "https://img.spoonacular.com/products/436263-312x231.jpg",
+        "averageRating": 0.9399999976158142,
+        "ratingCount": 5.0,
+        "score": 0.8775,
+        "link": "https://click.linksynergy.com/deeplink?id=*QCiIS6t4gA&mid=2025&murl=https%3A%2F%2Fwww.wine.com%2Fproduct%2Fedna-valley-vineyard-merlot-2010%2F122423"
+    }, {
+        "id": 436913,
+        "title": "Parcel 41 Merlot",
+        "description": "The goal with Parcel 41 was to make a Merlot that is supple and elegant, yet still has the structure, depth and richness found in more expensive offerings. This limited production Merlot hits the nail on the ahead. It is enormously rich, ripe and concentrated\nshowing layers of blackberry, currant and mocha.",
+        "price": "$20.99",
+        "imageUrl": "https://img.spoonacular.com/products/436913-312x231.jpg",
+        "averageRating": 0.9399999976158142,
+        "ratingCount": 5.0,
+        "score": 0.8775,
+        "link": "https://click.linksynergy.com/deeplink?id=*QCiIS6t4gA&mid=2025&murl=https%3A%2F%2Fwww.wine.com%2Fproduct%2Fparcel-41-merlot-2013%2F140831"
+    }, {
+        "id": 434240,
+        "title": "Frog's Leap Merlot",
+        "description": "A decade after its first production, our Merlot has firmly established itself as one of Frog's Leap's most consistently superb varietals. The excellence begins in our vineyards, with the inspired combination of strong-backed, deeply ßavored Carneros fruit and seductively flavored, intensively aromatic fruit from Rutherford. The essence of our dry-farmed, organically-grown fruit is best left simply prepared. From the moment the fruit arrives from the vineyards, our winemaking team instinctively knows that heavy-handed winemaking techniques have no place in their cellar and gently allow the wine to come into its own. Our partnership with the fruit nurtures a wine that possesses a deeply reßective sense of place. Frog's Leap 2000 Merlot is pungent with ripe red fruit aromatics, satisfying with mouth-filling plumy flavors and bracing with a strong tannic spine and bright acidity. It is balanced, supple, harmonious, and elegant. Truly a wine as nature intended.",
+        "price": "$39.99",
+        "imageUrl": "https://img.spoonacular.com/products/434240-312x231.jpg",
+        "averageRating": 0.8999999761581421,
+        "ratingCount": 14.0,
+        "score": 0.8767,
+        "link": "https://click.linksynergy.com/deeplink?id=*QCiIS6t4gA&mid=2025&murl=https%3A%2F%2Fwww.wine.com%2Fproduct%2Ffrogs-leap-merlot-2001%2F62008"
+    }],
+    "totalFound": 76
+}

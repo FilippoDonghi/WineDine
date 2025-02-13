@@ -73,7 +73,7 @@ public class UserViewModel extends ViewModel {
     }
 
     private void getUserFavoriteNews(String idToken) {
-        userFavoriteNewsMutableLiveData = userRepository.getUserFavoriteNews(idToken);
+        userFavoriteNewsMutableLiveData = userRepository.getUserFavoriteWines(idToken);
     }
 
     public void getUser(String email, String password, boolean isUserRegistered) {

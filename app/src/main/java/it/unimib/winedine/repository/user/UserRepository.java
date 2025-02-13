@@ -7,7 +7,6 @@ import java.util.Set;
 
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
-import it.unimib.winedine.source.article.BaseArticleLocalDataSource;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
 
@@ -51,9 +50,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback {
         return userMutableLiveData;
     }
 
+    //da cambiare
     @Override
-    public MutableLiveData<Result> getUserFavoriteNews(String idToken) {
-        userDataRemoteDataSource.getUserFavoriteNews(idToken);
+    public MutableLiveData<Result> getUserFavoriteWines(String idToken) {
+        userDataRemoteDataSource.getUserFavoriteWines(idToken);
         return userFavoriteNewsMutableLiveData;
     }
 

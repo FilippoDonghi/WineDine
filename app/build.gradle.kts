@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.firebase.database)
     implementation (libs.gson)
     implementation(libs.commons.validator)
+    implementation(libs.github.glide)
+    implementation(libs.shimmer)
 
 
     implementation(libs.room.runtime)

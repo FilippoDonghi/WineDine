@@ -29,7 +29,7 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
     }
 
     @Override
-    public void getUserFavoriteNews(String idToken) {
+    public void getUserFavoriteWines(String idToken) {
 
     }
 

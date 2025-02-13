@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Wine&amp;Dine</string>
 
-        <string name="pick_a_country">Pick a country</string>
-        <string name="pick_categories">Pick some categories</string>
+    <string name="pick_a_country">Pick a country</string>
+    <string name="pick_categories">Pick some categories</string>
 
-        <string name="welcome">Welcome!</string>
-        <string name="already_registered">Are you already registered?</string>
-        <string name="email">E-mail</string>
-        <string name="password">Password</string>
-        <string name="password_forgotten">Did you forget your password?</string>
-        <string name="login">Login</string>
-        <string name="login_with_google">Login with Google</string>
+    <string name="welcome">Welcome!</string>
+    <string name="already_registered">Are you already registered?</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="password_forgotten">Did you forget your password?</string>
+    <string name="login">Login</string>
+    <string name="login_with_google">Login with Google</string>
     <string name="create_a_new_account">Create new account</string>
     <string name="or">or</string>
     <string name="signup">signup\n</string>
@@ -22,4 +22,7 @@
     <string name="error_no_internet">No internet connection</string>
     <string name="error_unexpected">error unexpected</string>
     <string name="error_collision_user">collision user</string>
+    <string name="wineSection">Wine</string>
+    <string name="dineSection">Dine</string>
+
 </resources>

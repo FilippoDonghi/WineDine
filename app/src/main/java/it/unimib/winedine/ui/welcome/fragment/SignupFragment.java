@@ -111,6 +111,7 @@ public class SignupFragment extends Fragment {
     private boolean isEmailOk(String email) {
         // Check if the email is valid through the use of this library:
         // https://commons.apache.org/proper/commons-validator/
+
         if (!EmailValidator.getInstance().isValid((email))) {
             textInputEmail.setError(getString(R.string.error_email_login));
             return false;

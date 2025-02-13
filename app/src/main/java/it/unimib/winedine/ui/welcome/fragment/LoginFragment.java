@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.Result;
@@ -168,6 +169,10 @@ public class LoginFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
@@ -226,13 +231,13 @@ public class LoginFragment extends Fragment {
 
 
     private boolean isEmailOk (String email){
-            return true;
-            //return EmailValidator.getInstance().isValid(email);
+return true;
+           // return EmailValidator.getInstance().isValid(email);
         }
 
         private boolean isPasswordOk (String password){
-            return true;
-            //return password.length() > 7;
+return true;
+          //  return password.length() > 7;
         }
     }
 
