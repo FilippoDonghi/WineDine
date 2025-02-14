@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -52,10 +53,11 @@ public class SignupFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.signup_fragment, container, false);
 
-        textInputEmail = view.findViewById(R.id.textInputEmail);
+        Button signupButton = view.findViewById(R.id.signupButton);
+                textInputEmail = view.findViewById(R.id.textInputEmail);
         textInputPassword = view.findViewById(R.id.textInputPassword);
 
-        view.findViewById(R.id.signupButton).setOnClickListener(v -> {
+        signupButton.setOnClickListener(v -> {
             String email = textInputEmail.getText().toString().trim();
             String password = textInputPassword.getText().toString().trim();
 
@@ -68,8 +70,7 @@ public class SignupFragment extends Fragment {
                                     User user = ((Result.UserSuccess) result).getData();
                                     //saveLoginData(email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
-                                    //Navigation.findNavController(view).navigate(
-                                          //  R.id.action_signupFragment_to_homeActivity);
+                                    Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_homeActivity);
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),

@@ -28,6 +28,7 @@ import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.ui.welcome.WelcomeActivity;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
+import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.ServiceLocator;
 import it.unimib.winedine.util.SharedPreferencesUtils;
 
@@ -193,7 +194,7 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
                 if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
-                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_signupFragment);
+                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
 
                 } else {
                     editTextPassword.setError(getString(R.string.error_password_login));
@@ -229,16 +230,34 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    private boolean isEmailOk(String email) {
+        // Check if the email is valid through the use of this library:
+        // https://commons.apache.org/proper/commons-validator/
 
-    private boolean isEmailOk (String email){
-return true;
-           // return EmailValidator.getInstance().isValid(email);
+        if (!EmailValidator.getInstance().isValid((email))) {
+            editTextEmail.setError(getString(R.string.error_email_login));
+            return false;
+        } else {
+            editTextEmail.setError(null);
+            return true;
         }
+    }
 
-        private boolean isPasswordOk (String password){
-return true;
-          //  return password.length() > 7;
+    /**
+     * Checks if the password is not empty.
+     * @param password The password to be checked
+     * @return True if the password has at least 6 characters, false otherwise
+     */
+    private boolean isPasswordOk(String password) {
+        // Check if the password length is correct
+        if (password.isEmpty() || password.length() < Constants.MINIMUM_LENGTH_PASSWORD) {
+            editTextPassword.setError(getString(R.string.error_password_login));
+            return false;
+        } else {
+            editTextPassword.setError(null);
+            return true;
         }
+    }
     }
 
 

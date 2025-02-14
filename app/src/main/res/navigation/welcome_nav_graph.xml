@@ -17,6 +17,9 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
         app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_loginFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
 
     </fragment>
 
@@ -25,8 +28,15 @@
         android:name="it.unimib.winedine.ui.welcome.fragment.SignupFragment"
         tools:layout="@layout/signup_fragment"
         android:label="SignUpFragment">
+        <action
+            android:id="@+id/action_signupFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
-
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="it.unimib.winedine.ui.home.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 
 
 </navigation>
