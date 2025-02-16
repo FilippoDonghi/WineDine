@@ -2,10 +2,9 @@ package it.unimib.winedine.model;
 
 import java.util.List;
 
-public class BottleAPIResponse {
+public class WineAPIResponse {
     private List<Bottle> recommendedWines;
     private int totalFound;
-
 
 
     public void setTotalFound(int totalFound) {

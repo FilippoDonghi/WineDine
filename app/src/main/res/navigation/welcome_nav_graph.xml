@@ -26,7 +26,7 @@
     <fragment
         android:id="@id/signupFragment"
         android:name="it.unimib.winedine.ui.welcome.fragment.SignupFragment"
-        tools:layout="@layout/signup_fragment"
+        tools:layout="@layout/fragment_signup"
         android:label="SignUpFragment">
         <action
             android:id="@+id/action_signupFragment_to_homeActivity"

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import it.unimib.winedine.R;
-import it.unimib.winedine.database.BottleRoomDatabase;
 import it.unimib.winedine.model.Bottle;
 
 
@@ -79,7 +78,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         viewHolder.getTextViewScore().setText(bottleList.get(position).getScore());
         viewHolder.getTextViewPrice().setText(bottleList.get(position).getPrice());
 
-     //   BottleRoomDatabase.getDatabase(viewHolder.getTextViewTitle().getContext()).bottleDao().insertAll((List<Bottle>) bottleList.get(position));
+
 
         context = viewHolder.getImageView().getContext();
         Glide.with(context)

@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.firestore)
     implementation (libs.gson)
     implementation(libs.commons.validator)
     implementation(libs.github.glide)

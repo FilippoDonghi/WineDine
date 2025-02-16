@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import it.unimib.winedine.model.BottleAPIResponse;
+import it.unimib.winedine.model.WineAPIResponse;
 
 public class JSONParserUtils {
     public Context context;
@@ -18,10 +18,10 @@ public class JSONParserUtils {
         this.context = context;
     }
 
-    public BottleAPIResponse parseJSONFileWithGSon(String filename) throws IOException {
+    public WineAPIResponse parseJSONFileWithGSon(String filename) throws IOException {
         InputStream inputStream = context.getAssets().open(filename);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        return new Gson().fromJson(bufferedReader, BottleAPIResponse.class);
+        return new Gson().fromJson(bufferedReader, WineAPIResponse.class);
     }
 }

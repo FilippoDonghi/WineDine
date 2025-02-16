@@ -19,19 +19,19 @@ import java.util.List;
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
-import it.unimib.winedine.model.BottleAPIResponse;
+import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
-public class WineListFragment extends Fragment {
+public class BottleListFragment extends Fragment {
 
-    public static final String TAG = WineListFragment.class.getName();
+    public static final String TAG = BottleListFragment.class.getName();
 
     private LinearLayout shimmerLinearLayout;
     private RecyclerView recyclerView;
     private FrameLayout noInternetView;
 
-    public WineListFragment() {
+    public BottleListFragment() {
 
     }
 
@@ -54,10 +54,10 @@ public class WineListFragment extends Fragment {
         JSONParserUtils jsonParserUtil = new JSONParserUtils(getContext());
 
         try {
-            BottleAPIResponse bottleAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
+            WineAPIResponse wineAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
 
-            Log.i(TAG, bottleAPIResponse.getTotalFound() + "aa");
-            List<Bottle> bottleList = bottleAPIResponse.getRecommendedWines();
+            Log.i(TAG, wineAPIResponse.getTotalFound() + "aa");
+            List<Bottle> bottleList = wineAPIResponse.getRecommendedWines();
 
             BottleRecyclerAdapter adapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList);
             recyclerView.setAdapter(adapter);
