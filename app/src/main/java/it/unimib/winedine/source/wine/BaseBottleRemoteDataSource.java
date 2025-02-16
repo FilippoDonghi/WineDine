@@ -1,4 +1,4 @@
-package it.unimib.winedine.source.article;
+package it.unimib.winedine.source.wine;
 
 import it.unimib.winedine.repository.wine.BottleResponseCallback;
 

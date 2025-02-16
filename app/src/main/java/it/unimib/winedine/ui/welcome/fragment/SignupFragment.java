@@ -50,11 +50,11 @@ public class SignupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.signup_fragment, container, false);
 
         Button signupButton = view.findViewById(R.id.signupButton);
-                textInputEmail = view.findViewById(R.id.textInputEmail);
+        textInputEmail = view.findViewById(R.id.textInputEmail);
         textInputPassword = view.findViewById(R.id.textInputPassword);
 
         signupButton.setOnClickListener(v -> {

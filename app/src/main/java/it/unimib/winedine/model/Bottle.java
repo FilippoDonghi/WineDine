@@ -1,6 +1,19 @@
 package it.unimib.winedine.model;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Bottle {
+
+    @PrimaryKey(autoGenerate = true)
+    private long uid;
+
     private String id;
     private String title;
     private String description;
@@ -11,6 +24,16 @@ public class Bottle {
     private String score;
     private String link;
 
+    private boolean liked;
+
+
+    public boolean getLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
     public String getId() {
         return id;
     }
@@ -82,4 +105,13 @@ public class Bottle {
     public void setLink(String link) {
         this.link = link;
     }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
 }

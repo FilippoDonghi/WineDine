@@ -16,4 +16,7 @@ public class Constants {
     public static final String FIREBASE_FAVORITE_NEWS_COLLECTION = "favorite_news";
 
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
+
+    public static final int DATABASE_VERSION = 1;
+    public static final String SAVED_BOTTLES_DATABASE = "saved_db";
 }

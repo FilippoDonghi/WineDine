@@ -1,16 +1,5 @@
-package it.unimib.winedine.source.article;
+package it.unimib.winedine.source.wine;
 
-import static java.security.AccessController.getContext;
-import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
-
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.List;
-
-import it.unimib.winedine.model.Bottle;
-import it.unimib.winedine.model.BottleAPIResponse;
-import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
 public class BottleMockDataSource extends BaseBottleRemoteDataSource {
