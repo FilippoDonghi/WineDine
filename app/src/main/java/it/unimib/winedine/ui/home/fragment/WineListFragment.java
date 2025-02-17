@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +19,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Source;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
@@ -32,55 +39,62 @@ import it.unimib.winedine.util.JSONParserUtils;
 
 public class WineListFragment extends Fragment {
     public static final String TAG = WineListFragment.class.getName();
+
+    private Set<String> categories = new HashSet<>();
+    private ArrayAdapter<String> adapter;
+    private Spinner spinnerCategory;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_wine_list, container, false);
 
+            spinnerCategory = view.findViewById(R.id.spinnerCategory);
 
-            try {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference docRef = db.collection("wines").document("HreseKkLSRhPPgn1FGxw");
+            adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerCategory.setAdapter(adapter);
 
-// Source can be CACHE, SERVER, or DEFAULT.
-                Source source = Source.CACHE;
-
-// Get the document, forcing the SDK to use the offline cache
-                docRef.get(source).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // Document found in the offline cache
-                            DocumentSnapshot document = task.getResult();
-                            Log.d(TAG, "Cached document data: " + document.getData());
-                            TextView textView = view.findViewById(R.id.textViewWine);
-                            Map<String, Object> data = document.getData();
-
-                            // Estrai i valori
-                            String name = data.get("name").toString();
-                            String type = data.get("type").toString();
-                            String category = data.get("category").toString();
-
-                            // Formatta il testo da mostrare
-                            String displayText = "Name: " + name + "\nType: " + type + "\nCategory: " + category;
-                            Log.d(TAG, "VINO: " + displayText);
-                            Log.d(TAG, "TEXTVIEW: " + textView);
-                            textView.setText(displayText);
-
-                        } else {
-                            Log.d(TAG, "Cached get failed: ", task.getException());
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            getCategoriesFromFirestore();
             return view;
         }
+
+    private void getCategoriesFromFirestore(){
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("wines")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                categories.clear();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    categories.add(document.getString("category"));
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    Log.d(TAG, "Categorie: " + categories);
+                                }
+                                adapter.clear();
+                                adapter.addAll(categories);
+                                adapter.notifyDataSetChanged();
+                                Log.d(TAG, "Dati nell'adapter: " + adapter.getCount());
+                                for (int i = 0; i < adapter.getCount(); i++) {
+                                    Log.d(TAG, "Item " + i + ": " + adapter.getItem(i));
+                                }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     }
