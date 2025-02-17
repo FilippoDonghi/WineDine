@@ -15,6 +15,7 @@ import it.unimib.winedine.model.Wine;
         @Query("SELECT * FROM wine WHERE category = :category")
         List<Wine> getWinesByCategory(String category);
 
+
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         void insertAll(List<Wine> wines);
 
