@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.Source;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ import java.util.Set;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
+import it.unimib.winedine.adapter.WineAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.util.Constants;
@@ -40,10 +43,10 @@ import it.unimib.winedine.util.JSONParserUtils;
 public class WineListFragment extends Fragment {
     public static final String TAG = WineListFragment.class.getName();
 
-    private Set<String> categories = new HashSet<>();
-    private ArrayAdapter<String> adapter;
-    private Spinner spinnerCategory;
-
+    private List<String> categories = new ArrayList<>();
+    private HashMap<String, List<String>> winesMap = new HashMap<>();
+    private WineAdapter adapter;
+    private ExpandableListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,11 +58,10 @@ public class WineListFragment extends Fragment {
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_wine_list, container, false);
 
-            spinnerCategory = view.findViewById(R.id.spinnerCategory);
+            listView = view.findViewById(R.id.expandableListView);
 
-            adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>());
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerCategory.setAdapter(adapter);
+            adapter = new WineAdapter(requireContext(), categories, winesMap);
+            listView.setAdapter(adapter);
 
             getCategoriesFromFirestore();
             return view;
@@ -75,20 +77,27 @@ public class WineListFragment extends Fragment {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 categories.clear();
+                                winesMap.clear();
+
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    categories.add(document.getString("category"));
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    String categoryName = document.getId(); // Prendi l'ID come nome della categoria
+                                    categories.add(categoryName);
+
                                     Log.d(TAG, "Categorie: " + categories);
+
+                                    List<String> wines = (List<String>) document.get("winesList");
+                                    if (wines != null) {
+                                        winesMap.put(categoryName, wines);
+                                    } else {
+                                        winesMap.put(categoryName, new ArrayList<>()); // Se non ci sono vini, lista vuota
+                                    }
+
+                                    Log.d(TAG, "Categoria: " + categoryName + " -> Vini: " + wines);
                                 }
-                                adapter.clear();
-                                adapter.addAll(categories);
                                 adapter.notifyDataSetChanged();
-                                Log.d(TAG, "Dati nell'adapter: " + adapter.getCount());
-                                for (int i = 0; i < adapter.getCount(); i++) {
-                                    Log.d(TAG, "Item " + i + ": " + adapter.getItem(i));
-                                }
                             } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                Log.e(TAG, "Errore nel recupero dei documenti", task.getException());
                             }
                         }
                     });

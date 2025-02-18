@@ -1,43 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.home.fragment.WineListFragment">
+    android:background="#543F3F">
 
-
-    <TextView
-        android:id="@+id/textViewCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CATEGORIE"
-        android:textSize="18sp"
-        android:textColor="#FF0000"
-        android:layout_marginBottom="8dp" />
-
-
-        <!-- Spinner per la Categoria del Vino -->
-        <Spinner
-            android:id="@+id/spinnerCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:hint="CATEGORIE"
-            android:padding="8dp"/>
-
-        <!-- Spinner per il Tipo di Vino, visibile solo se esistono tipi -->
-        <Spinner
-            android:id="@+id/spinnerType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <!-- RecyclerView per i Vini -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_height="match_parent"
+    <EditText
+        android:id="@+id/search_bar"
         android:layout_width="match_parent"
-        android:id="@+id/recyclerViewWines"
-        android:padding="@dimen/margin_medium" />
+        android:layout_height="wrap_content"
+        android:hint="Cerca"
 
+        android:padding="10dp"
+        android:textColor="#000"
+        android:textColorHint="#000"/>
+
+    <ExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:background="@android:color/transparent"/>
 </LinearLayout>
