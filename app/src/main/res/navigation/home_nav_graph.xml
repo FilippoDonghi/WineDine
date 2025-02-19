@@ -3,13 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/bottleListFragment">
+    app:startDestination="@id/wineListFragment">
 
     <fragment
         android:id="@+id/bottleListFragment"
         android:name="it.unimib.winedine.ui.home.fragment.BottleListFragment"
         android:label="fragment_bottle_list"
-        tools:layout="@layout/fragment_bottle_list" />
+        tools:layout="@layout/fragment_bottle_list">
+    <argument
+        android:name="selectedWine"
+        app:argType="string"/>
+    </fragment>
+
     <fragment
         android:id="@+id/dishListFragment"
         android:name="it.unimib.winedine.ui.home.fragment.DishListFragment"
@@ -19,5 +24,6 @@
     <fragment
         android:id="@+id/wineListFragment"
         android:name="it.unimib.winedine.ui.home.fragment.WineListFragment"
-        android:label="WineListFragment" />
+        android:label="WineListFragment"
+        tools:layout="@layout/fragment_wine_list"/>
 </navigation>

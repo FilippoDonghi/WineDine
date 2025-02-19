@@ -10,7 +10,7 @@ public interface BottleResponseCallback {
     void onFailureFromRemote(Exception exception);
     void onSuccessFromLocal(List<Bottle> bottlesList);
     void onFailureFromLocal(Exception exception);
-    void onNewsFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles);
-    void onNewsFavoriteStatusChanged(List<Bottle> bottles);
-    void onDeleteFavoriteNewsSuccess(List<Bottle> favoriteBottles);
+    void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles);
+    void onWinesFavoriteStatusChanged(List<Bottle> bottles);
+    void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles);
 }

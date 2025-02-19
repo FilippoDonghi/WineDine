@@ -3,9 +3,10 @@ package it.unimib.winedine.util;
 import android.app.Application;
 
 
-
+import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.user.UserRepository;
+import it.unimib.winedine.service.WineAPIService;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.winedine.source.user.UserAuthenticationFirebaseDataSource;
@@ -13,6 +14,7 @@ import it.unimib.winedine.source.user.UserFirebaseDataSource;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceLocator {
     private static volatile ServiceLocator INSTANCE = null;
@@ -60,5 +62,16 @@ public class ServiceLocator {
                 userDataRemoteDataSource);
     }
 
+    public WineAPIService getWinesAPIService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.API_BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        return retrofit.create(WineAPIService.class);
+    }
+
+public WineRoomDatabase getWinesDAO(Application application){
+        return WineRoomDatabase.getDatabase(application);
+}
 }
 

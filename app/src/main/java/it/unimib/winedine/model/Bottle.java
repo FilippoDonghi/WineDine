@@ -1,10 +1,17 @@
 package it.unimib.winedine.model;
 
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity
 public class Bottle {
 
+    @PrimaryKey
+    @NonNull
     private String id;
+
     private String title;
     private String description;
     private String price;

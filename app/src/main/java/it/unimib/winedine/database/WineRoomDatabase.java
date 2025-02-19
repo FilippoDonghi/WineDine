@@ -11,10 +11,10 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import it.unimib.winedine.model.Wine;
+import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.util.Constants;
 
-@Database(entities = {Wine.class}, version = DATABASE_VERSION)
+@Database(entities = {Bottle.class}, version = DATABASE_VERSION)
     public abstract class WineRoomDatabase extends RoomDatabase {
 
         public abstract WineDao wineDao();

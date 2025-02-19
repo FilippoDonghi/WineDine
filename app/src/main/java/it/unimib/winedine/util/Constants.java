@@ -13,10 +13,18 @@ public class Constants {
 
     public static final String FIREBASE_REALTIME_DATABASE = "https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String FIREBASE_USERS_COLLECTION = "users";
-    public static final String FIREBASE_FAVORITE_NEWS_COLLECTION = "favorite_news";
+
 
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
 
     public static final int DATABASE_VERSION = 1;
     public static final String SAVED_BOTTLES_DATABASE = "saved_db";
+
+    public static final String API_BASE_URL = "https://api.spoonacular.com/food/wine/";
+    public static final String RECOMMENDATION_ENDPOINT = "recommendation";
+    public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
+    public static final String RECOMMENDATION_NUMBER_PARAMETER = "number";
+    public static final int RECOMMENDATION_NUMBER_VALUE = 3;
+    public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
+    public static final String WINE_API_KEY = "38d691c02be24ca092d408e95fda6005";
 }

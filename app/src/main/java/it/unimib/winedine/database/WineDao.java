@@ -7,19 +7,18 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import it.unimib.winedine.model.Wine;
+import it.unimib.winedine.model.Bottle;
 
-    @Dao
+@Dao
     public interface WineDao {
 
-        @Query("SELECT * FROM wine WHERE category = :category")
-        List<Wine> getWinesByCategory(String category);
-
+        @Query("SELECT * FROM Bottle")
+        List<Bottle> getAll();
 
         @Insert(onConflict = OnConflictStrategy.REPLACE)
-        void insertAll(List<Wine> wines);
+        void insertAll(List<Bottle> bottles);
 
-        @Query("DELETE FROM wine")
+        @Query("DELETE FROM Bottle")
         void clearAll();
     }
 

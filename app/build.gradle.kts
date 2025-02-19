@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
@@ -15,6 +17,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        
+        resValue("bool", "debug_mode", gradleLocalProperties(rootDir, providers).getProperty("debug_mode"))
     }
 
     buildTypes {
@@ -33,12 +38,13 @@ android {
 }
 
 dependencies {
-
+    implementation (libs.play.services.auth.v2070)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation (libs.retrofit)
+    implementation (libs.converter.gson)
     implementation(platform(libs.firebase.bom))
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)

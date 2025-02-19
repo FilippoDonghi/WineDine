@@ -1,7 +1,9 @@
 package it.unimib.winedine.ui.home.fragment;
 
 
+import android.app.Application;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,22 +41,33 @@ import java.util.Set;
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.adapter.WineAdapter;
+import it.unimib.winedine.database.WineFireStoreDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.WineAPIResponse;
+import it.unimib.winedine.repository.wine.BottleResponseCallback;
+import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
-public class WineListFragment extends Fragment {
+public class WineListFragment extends Fragment implements BottleResponseCallback{
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
     private HashMap<String, List<String>> winesMap = new HashMap<>();
     private WineAdapter adapter;
     private ExpandableListView listView;
+    private WineFireStoreDatabase database;
+    private WinesRepository winesRepository;
+    private BottleRecyclerAdapter bottleAdapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        database = new WineFireStoreDatabase();
+        winesRepository = new WinesRepository(getActivity().getApplication());
+
     }
 
         @Override
@@ -63,47 +80,84 @@ public class WineListFragment extends Fragment {
             adapter = new WineAdapter(requireContext(), categories, winesMap);
             listView.setAdapter(adapter);
 
-            getCategoriesFromFirestore();
+            fetchCategories();
+
+
+            listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+                String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
+                long lastUpdate = 0; // Sostituisci con un valore persistente se vuoi ottimizzare le chiamate
+                winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate, this);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("selectedWine", selectedWine);
+
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.bottleListFragment, bundle);
+                return true;
+            });
             return view;
         }
 
-    private void getCategoriesFromFirestore(){
-        try {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("wines")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                categories.clear();
-                                winesMap.clear();
+    private void fetchCategories() {
+        database.getCategoriesFromFirestore(new WineFireStoreDatabase.FirestoreCallback() {
+            @Override
+            public void onSuccess(List<String> fetchedCategories, HashMap<String, List<String>> fetchedWinesMap) {
+                categories.clear();
+                categories.addAll(fetchedCategories);
 
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+                winesMap.clear();
+                winesMap.putAll(fetchedWinesMap);
 
-                                    String categoryName = document.getId(); // Prendi l'ID come nome della categoria
-                                    categories.add(categoryName);
+                adapter.notifyDataSetChanged();
+            }
 
-                                    Log.d(TAG, "Categorie: " + categories);
-
-                                    List<String> wines = (List<String>) document.get("winesList");
-                                    if (wines != null) {
-                                        winesMap.put(categoryName, wines);
-                                    } else {
-                                        winesMap.put(categoryName, new ArrayList<>()); // Se non ci sono vini, lista vuota
-                                    }
-
-                                    Log.d(TAG, "Categoria: " + categoryName + " -> Vini: " + wines);
-                                }
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Log.e(TAG, "Errore nel recupero dei documenti", task.getException());
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            @Override
+            public void onFailure(Exception e) {
+                Log.e(TAG, "Errore nel recupero dei dati da Firestore", e);
+            }
+        });
     }
+
+
+    @Override
+    public void onSuccessFromLocal(List<Bottle> bottleList) {
+        Log.i(TAG, "onSuccessFromLocal: " + bottleList.size());
+    }
+
+
+        @Override
+        public void onFailureFromRemote(Exception e) {
+
+                Log.e("API_ERROR", "Errore nel recupero delle raccomandazioni: " + e.getMessage());
+
+            Toast.makeText(getContext(), "Errore nel recupero delle raccomandazioni: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
+
+        }
+
+
+        @Override
+        public void onFailureFromLocal(Exception exception) {
+
+        }
+
+
+        @Override
+        public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
+
+        }
+
+        @Override
+        public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
+
+        }
+
+        @Override
+        public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
+
+        }
 
     }
