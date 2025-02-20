@@ -15,6 +15,7 @@ import it.unimib.winedine.source.user.UserFirebaseDataSource;
 import it.unimib.winedine.source.wine.BaseBottleLocalDataSource;
 import it.unimib.winedine.source.wine.BaseBottleRemoteDataSource;
 import it.unimib.winedine.source.wine.BottleLocalDataSource;
+import it.unimib.winedine.source.wine.BottleMockDataSource;
 import it.unimib.winedine.source.wine.BottleRemoteDataSource;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,8 +71,18 @@ public class ServiceLocator {
 
 
     public WinesRepository getWinesRepository(Application application, boolean debugMode) {
-        BaseBottleRemoteDataSource bottleRemoteDataSource = new BottleRemoteDataSource();
-        BaseBottleLocalDataSource bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application));
+
+
+        BaseBottleRemoteDataSource bottleRemoteDataSource;
+        BaseBottleLocalDataSource bottleLocalDataSource;
+
+        if (debugMode) {
+            JSONParserUtils jsonParserUtil = new JSONParserUtils(application);
+            bottleRemoteDataSource = new BottleMockDataSource(jsonParserUtil);
+        } else {
+            bottleRemoteDataSource = new BottleRemoteDataSource();
+        }
+        bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application));
 
         return new WinesRepository(bottleRemoteDataSource, bottleLocalDataSource);
     }

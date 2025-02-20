@@ -25,7 +25,6 @@
     <string name="wineSection">Wine</string>
     <string name="dineSection">Dine</string>
 
-    <string name="wine_api_key">38d691c02be24ca092d408e95fda6005</string>
     <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
 
 </resources>

@@ -8,9 +8,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,24 +98,19 @@ public class BottleListFragment extends Fragment{
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        /*
-        JSONParserUtils jsonParserUtil = new JSONParserUtils(getContext());
-
-        try {
-            WineAPIResponse wineAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-
-            Log.i(TAG, wineAPIResponse.getTotalFound() + "aa");
-            List<Bottle> bottleList = wineAPIResponse.getRecommendedWines();
-
-            BottleRecyclerAdapter adapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList);
-            recyclerView.setAdapter(adapter);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-*/
         // Inizializza l'adapter con una lista vuota
-        bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList);
+        bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList,
+                new BottleRecyclerAdapter.OnItemClickListener() {
+
+                    @Override
+                    public void onBottleItemClick(Bottle bottle) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
+
+                        Navigation.findNavController(view).navigate(R.id.action_bottleListFragment_to_visualizeBottleFragment, bundle);
+                    }
+
+                });
         recyclerView.setAdapter(bottleAdapter);
 
         // Se un vino è stato selezionato, esegui la chiamata API

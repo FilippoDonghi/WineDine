@@ -18,11 +18,16 @@ import it.unimib.winedine.model.Bottle;
 
 public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onBottleItemClick(Bottle bottle);
+        }
+
     private int layout;
     private List<Bottle> bottleList;
     private Context context;
+    private final OnItemClickListener onItemClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView textViewTitle;
         private final TextView textViewScore;
@@ -36,6 +41,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             textViewScore = view.findViewById(R.id.textViewScore);
             textViewPrice = view.findViewById(R.id.textViewPrice);
             imageView = view.findViewById(R.id.imageView);
+            view.setOnClickListener(this);
         }
 
 
@@ -54,11 +60,19 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         public ImageView getImageView() {
             return imageView;
         }
+
+
+    @Override
+    public void onClick(View v) {
+        onItemClickListener.onBottleItemClick(bottleList.get(getAdapterPosition()));
+        }
     }
 
-    public BottleRecyclerAdapter(int layout, List<Bottle> bottleList) {
+
+    public BottleRecyclerAdapter(int layout, List<Bottle> bottleList, OnItemClickListener onItemClickListener) {
         this.layout = layout;
         this.bottleList = bottleList;
+        this.onItemClickListener = onItemClickListener;
     }
 
 
@@ -68,6 +82,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(layout, viewGroup, false);
 
+        if (this.context == null) this.context = viewGroup.getContext();
         return new ViewHolder(view);
     }
 

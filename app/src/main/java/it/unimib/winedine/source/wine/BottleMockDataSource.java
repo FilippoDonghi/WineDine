@@ -1,8 +1,14 @@
 package it.unimib.winedine.source.wine;
 
+import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
+
+import java.io.IOException;
+
+import it.unimib.winedine.model.WineAPIResponse;
+import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
-public class BottleMockDataSource{
+public class BottleMockDataSource extends BaseBottleRemoteDataSource {
 
     private final JSONParserUtils jsonParserUtil;
 
@@ -10,25 +16,21 @@ public class BottleMockDataSource{
         this.jsonParserUtil = jsonParserUtil;
     }
 
-/**
     @Override
-    public void getArticles() {
-        BottleAPIResponse bottleAPIResponse = null;
-
-        try {
-            bottleAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
-            List<Bottle> bottleList = bottleAPIResponse.getBottles();
-            int a=0;
+    public void getWines(String wine) {
+        WineAPIResponse wineAPIResponse= null;
+        try{
+            wineAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (bottleAPIResponse != null) {
-            bottleCallback.onSuccessFromRemote(bottleAPIResponse, System.currentTimeMillis());
+
+        if (wineAPIResponse != null) {
+            responseCallback.onSuccessFromRemote(wineAPIResponse, System.currentTimeMillis());
         } else {
-            bottleCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+            responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
         }
     }
-    */
 }
 
 

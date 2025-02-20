@@ -13,6 +13,9 @@
     <argument
         android:name="selectedWine"
         app:argType="string"/>
+        <action
+            android:id="@+id/action_bottleListFragment_to_visualizeBottleFragment"
+            app:destination="@id/visualizeBottleFragment" />
     </fragment>
 
     <fragment
@@ -26,4 +29,10 @@
         android:name="it.unimib.winedine.ui.home.fragment.WineListFragment"
         android:label="WineListFragment"
         tools:layout="@layout/fragment_wine_list"/>
+
+    <fragment
+        android:id="@+id/visualizeBottleFragment"
+        android:name="it.unimib.winedine.ui.home.fragment.BottleVisualizeFragment"
+        android:label="fragment_bottle_visualize"
+        tools:layout="@layout/fragment_bottle_visualize" />
 </navigation>
