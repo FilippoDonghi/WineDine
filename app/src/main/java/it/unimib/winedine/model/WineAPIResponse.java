@@ -6,6 +6,9 @@ public class WineAPIResponse {
     private List<Bottle> recommendedWines;
     private int totalFound;
 
+    public WineAPIResponse(List<Bottle> recommendedWines) {
+        this.recommendedWines = recommendedWines;
+    }
 
     public void setTotalFound(int totalFound) {
         this.totalFound = totalFound;

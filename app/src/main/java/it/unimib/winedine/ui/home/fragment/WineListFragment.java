@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,19 +47,23 @@ import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
+import it.unimib.winedine.util.ServiceLocator;
 
 public class WineListFragment extends Fragment implements BottleResponseCallback{
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
     private HashMap<String, List<String>> winesMap = new HashMap<>();
-    private WineAdapter adapter;
     private ExpandableListView listView;
+
+    private WineAdapter adapter;
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
-    private BottleRecyclerAdapter bottleAdapter;
+
 
 
     @Override
@@ -66,9 +71,13 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
 
         super.onCreate(savedInstanceState);
         database = new WineFireStoreDatabase();
-        winesRepository = new WinesRepository(getActivity().getApplication());
 
-    }
+        winesRepository = ServiceLocator.getInstance().getWinesRepository(
+                requireActivity().getApplication(),
+                requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
+        );
+
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,8 +94,8 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
 
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
-                long lastUpdate = 0; // Sostituisci con un valore persistente se vuoi ottimizzare le chiamate
-                winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate, this);
+                long lastUpdate = 0;
+                winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
 
                 Bundle bundle = new Bundle();
                 bundle.putString("selectedWine", selectedWine);

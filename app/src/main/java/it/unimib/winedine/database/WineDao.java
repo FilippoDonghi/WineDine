@@ -18,6 +18,9 @@ import it.unimib.winedine.model.Bottle;
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         void insertAll(List<Bottle> bottles);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    List<Long> insertBottlesList(List<Bottle> bottlesList);
+
         @Query("DELETE FROM Bottle")
         void clearAll();
     }

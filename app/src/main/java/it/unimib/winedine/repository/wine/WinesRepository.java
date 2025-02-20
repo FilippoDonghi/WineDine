@@ -10,73 +10,87 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
 import it.unimib.winedine.R;
+import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.database.WineDao;
 import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.service.WineAPIService;
+import it.unimib.winedine.source.wine.BaseBottleLocalDataSource;
+import it.unimib.winedine.source.wine.BaseBottleRemoteDataSource;
 import it.unimib.winedine.ui.home.fragment.BottleListFragment;
 import it.unimib.winedine.util.ServiceLocator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WinesRepository{
+public class WinesRepository implements BottleResponseCallback {
 
-    private final Application application;
-    private final WineAPIService winesAPIService;
-    private final WineDao winesDAO;
     public static final String TAG = WinesRepository.class.getName();
 
+    private final MutableLiveData<Result> allWinesMutableLiveData;
+    private final BaseBottleRemoteDataSource bottleRemoteDataSource;
+    private final BaseBottleLocalDataSource bottleLocalDataSource;
 
-    public WinesRepository(Application application) {
-        this.application = application;
-        this.winesAPIService = ServiceLocator.getInstance().getWinesAPIService();
-        WineRoomDatabase winesRoomDatabase = ServiceLocator.getInstance().getWinesDAO(application);
-        this.winesDAO = winesRoomDatabase.wineDao();
+    public WinesRepository(BaseBottleRemoteDataSource bottleRemoteDataSource, BaseBottleLocalDataSource bottleLocalDataSource) {
+        this.allWinesMutableLiveData = new MutableLiveData<>();
+        this.bottleRemoteDataSource = bottleRemoteDataSource;
+        this.bottleRemoteDataSource.setBottleCallback(this);
+        this.bottleLocalDataSource = bottleLocalDataSource;
+        this.bottleLocalDataSource.setBottleCallback(this);
     }
 
-
-    public void fetchWines(String wine, int number, long lastUpdate, BottleResponseCallback responseCallback) {
+    public MutableLiveData<Result> fetchWines(String wine, int number, long lastUpdate) {
         long currentTime = System.currentTimeMillis();
-
         if (currentTime - lastUpdate > FRESH_TIMEOUT) {    //fa la chiamata API
-            Call<WineAPIResponse> winesResponseCall = winesAPIService.getWines(wine, RECOMMENDATION_NUMBER_VALUE,WINE_API_KEY);
-            Log.d("API Request", "URL: https://api.spoonacular.com/food/wine/recommendation?wine="
-                    + wine + "&number=" + RECOMMENDATION_NUMBER_VALUE + "&apiKey=" + R.string.wine_api_key);
-
-            winesResponseCall.enqueue(new Callback<WineAPIResponse>() {
-
-                @Override
-                public void onResponse(@NonNull Call<WineAPIResponse> call,
-                                       @NonNull Response<WineAPIResponse> response) {
-
-
-                    if (response.body() != null && response.isSuccessful()) {
-                        List<Bottle> bottleList = response.body().getRecommendedWines();
-                        responseCallback.onSuccessFromLocal(bottleList);
-                    } else {
-                        responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<WineAPIResponse> call, @NonNull Throwable t) {
-                    responseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
-                }
-            });
+            bottleRemoteDataSource.getWines(wine);
+        } else {
+            bottleLocalDataSource.getWines();
         }
+        return allWinesMutableLiveData;
     }
 
+    @Override
+    public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
+       bottleLocalDataSource.insertWines(wineAPIResponse.getRecommendedWines());
+    }
 
-    public void readDataFromDatabase(BottleResponseCallback responseCallback){
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            // Reads the news from the database
-            responseCallback.onSuccessFromLocal(winesDAO.getAll());
-    });
-}
+    @Override
+    public void onFailureFromRemote(Exception exception) {
+        Result.Error result = new Result.Error(exception.getMessage());
+       allWinesMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onSuccessFromLocal(List<Bottle> bottlesList) {
+        Result.WineSuccess result = new Result.WineSuccess(new WineAPIResponse(bottlesList));
+        allWinesMutableLiveData.postValue(result);
+    }
+
+    @Override
+    public void onFailureFromLocal(Exception exception) {
+        Result.Error resultError = new Result.Error(exception.getMessage());
+        allWinesMutableLiveData.postValue(resultError);
+    }
+
+    @Override
+    public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
+
+    }
+
+    @Override
+    public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
+
+    }
+
+    @Override
+    public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
+
+    }
 }

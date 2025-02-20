@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Bottle {
 
-    @PrimaryKey
-    @NonNull
-    private String id;
+    @PrimaryKey(autoGenerate = true)
+    private long uid;
 
+    private String id;
     private String title;
     private String description;
     private String price;
@@ -103,6 +103,11 @@ public class Bottle {
         this.link = link;
     }
 
+    public long getUid() {
+            return uid;
+    }
 
-
-}
+        public void setUid(long uid) {
+            this.uid = uid;
+        }
+    }

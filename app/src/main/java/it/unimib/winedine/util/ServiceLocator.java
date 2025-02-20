@@ -6,11 +6,16 @@ import android.app.Application;
 import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.user.UserRepository;
+import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.service.WineAPIService;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.winedine.source.user.UserAuthenticationFirebaseDataSource;
 import it.unimib.winedine.source.user.UserFirebaseDataSource;
+import it.unimib.winedine.source.wine.BaseBottleLocalDataSource;
+import it.unimib.winedine.source.wine.BaseBottleRemoteDataSource;
+import it.unimib.winedine.source.wine.BottleLocalDataSource;
+import it.unimib.winedine.source.wine.BottleRemoteDataSource;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
@@ -62,6 +67,15 @@ public class ServiceLocator {
                 userDataRemoteDataSource);
     }
 
+
+
+    public WinesRepository getWinesRepository(Application application, boolean debugMode) {
+        BaseBottleRemoteDataSource bottleRemoteDataSource = new BottleRemoteDataSource();
+        BaseBottleLocalDataSource bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application));
+
+        return new WinesRepository(bottleRemoteDataSource, bottleLocalDataSource);
+    }
+
     public WineAPIService getWinesAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.API_BASE_URL)
@@ -70,8 +84,9 @@ public class ServiceLocator {
         return retrofit.create(WineAPIService.class);
     }
 
-public WineRoomDatabase getWinesDAO(Application application){
+public WineRoomDatabase getWineDAO(Application application){
         return WineRoomDatabase.getDatabase(application);
 }
+
 }
 

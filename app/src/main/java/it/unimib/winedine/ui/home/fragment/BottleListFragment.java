@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,21 +40,27 @@ import java.util.Map;
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
+import it.unimib.winedine.util.ServiceLocator;
 
-public class BottleListFragment extends Fragment implements BottleResponseCallback {
+public class BottleListFragment extends Fragment{
 
     public static final String TAG = BottleListFragment.class.getName();
 
     private RecyclerView recyclerView;
     private String selectedWine;
     private WinesRepository winesRepository;
-    private List<Bottle> bottleList = new ArrayList<>();
+    private List<Bottle> bottleList;
     private BottleRecyclerAdapter bottleAdapter;
+    private WineViewModel wineViewModel;
+
 
     public BottleListFragment() {
 
@@ -65,12 +73,19 @@ public class BottleListFragment extends Fragment implements BottleResponseCallba
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             selectedWine = getArguments().getString("selectedWine");
-
         }
-        winesRepository = new WinesRepository(requireActivity().getApplication());
+
+        winesRepository = ServiceLocator.getInstance().getWinesRepository(
+                        requireActivity().getApplication(),
+                        requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
+                );
+
+        wineViewModel = new ViewModelProvider(
+                requireActivity(),
+                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+
+        bottleList = new ArrayList<>();
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,52 +119,22 @@ public class BottleListFragment extends Fragment implements BottleResponseCallba
         // Se un vino è stato selezionato, esegui la chiamata API
         if (selectedWine != null) {
             long lastUpdate = 0; // Se hai un sistema di cache, sostituisci con un valore persistente
-            winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate, this);
+
+            wineViewModel.getBottles(selectedWine, lastUpdate).observe(getViewLifecycleOwner(),
+                    result -> {
+                        if (result.isSuccess()) {
+                            int initialSize = this.bottleList.size();
+                            this.bottleList.clear();
+                            this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
+                            bottleAdapter.notifyDataSetChanged();
+                        } else {
+                            Snackbar.make(view,
+                                    getString(R.string.error_retireving_bottles),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    });
         }
-
-
         return view;
-    }
-
-    @Override
-    public void onSuccessFromLocal(List<Bottle> bottlesList) {
-        if (!bottlesList.isEmpty()) {
-            bottleList.clear();
-            bottleList.addAll(bottlesList);
-            bottleAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
-
-    }
-
-    @Override
-    public void onFailureFromRemote(Exception exception) {
-        Log.e(TAG, "Errore nel recupero dei dati dall'API", exception);
-    }
-
-
-
-    @Override
-    public void onFailureFromLocal(Exception exception) {
-
-    }
-
-    @Override
-    public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
-
-    }
-
-    @Override
-    public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
-
-    }
-
-    @Override
-    public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
-
     }
 
     }

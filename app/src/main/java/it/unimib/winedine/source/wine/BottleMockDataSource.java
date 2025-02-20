@@ -2,7 +2,7 @@ package it.unimib.winedine.source.wine;
 
 import it.unimib.winedine.util.JSONParserUtils;
 
-public class BottleMockDataSource extends BaseBottleRemoteDataSource {
+public class BottleMockDataSource{
 
     private final JSONParserUtils jsonParserUtil;
 
