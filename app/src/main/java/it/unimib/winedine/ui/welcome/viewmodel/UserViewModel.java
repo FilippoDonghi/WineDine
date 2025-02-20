@@ -9,6 +9,7 @@ import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
 
+
 public class UserViewModel extends ViewModel {
     private static final String TAG = UserViewModel.class.getSimpleName();
 
@@ -17,6 +18,10 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userFavoriteNewsMutableLiveData;
     private MutableLiveData<Result> userPreferencesMutableLiveData;
     private boolean authenticationError;
+
+
+
+
 
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;

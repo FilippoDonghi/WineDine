@@ -25,6 +25,7 @@ import it.unimib.winedine.R;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
+import it.unimib.winedine.ui.home.HomeActivity;
 import it.unimib.winedine.ui.welcome.WelcomeActivity;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
@@ -162,6 +163,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
+
     }
 
 
@@ -182,7 +184,11 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
          if (userViewModel.getLoggedUser() != null) {
-           goToNextPage(view);}
+             Log.i(TAG, "Logged as: " + userViewModel.getLoggedUser().getEmail());
+             startActivity(new Intent(getContext(), HomeActivity.class));
+             }
+
+
 
         editTextEmail = view.findViewById(R.id.textInputEmail);
         editTextPassword = view.findViewById(R.id.textInputPassword);
@@ -194,6 +200,7 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
                 if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
+                    Log.i(TAG, "Current user is: " + userViewModel.getLoggedUser());
                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
 
                 } else {
@@ -211,6 +218,7 @@ public class LoginFragment extends Fragment {
                         IntentSenderRequest intentSenderRequest =
                                 new IntentSenderRequest.Builder(result.getPendingIntent()).build();
                         activityResultLauncher.launch(intentSenderRequest);
+                        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
                     }
                 })
                 .addOnFailureListener(requireActivity(), new OnFailureListener() {

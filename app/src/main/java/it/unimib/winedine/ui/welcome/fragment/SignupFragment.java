@@ -62,6 +62,7 @@ public class SignupFragment extends Fragment {
             String password = textInputPassword.getText().toString().trim();
 
             if (isEmailOk(email) & isPasswordOk(password)) {
+                Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_homeActivity);
                 //binding.progressBar.setVisibility(View.VISIBLE);
                 if (!userViewModel.isAuthenticationError()) {
                     userViewModel.getUserMutableLiveData(email, password, false).observe(
@@ -70,7 +71,7 @@ public class SignupFragment extends Fragment {
                                     User user = ((Result.UserSuccess) result).getData();
                                     //saveLoginData(email, password, user.getIdToken());
                                     userViewModel.setAuthenticationError(false);
-                                    Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_homeActivity);
+
                                 } else {
                                     userViewModel.setAuthenticationError(true);
                                     Snackbar.make(requireActivity().findViewById(android.R.id.content),

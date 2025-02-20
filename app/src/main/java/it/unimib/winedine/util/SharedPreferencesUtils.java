@@ -4,16 +4,53 @@ import android.content.SharedPreferences;
 
 import java.util.Set;
 
+import it.unimib.winedine.model.User;
+
 
 public class SharedPreferencesUtils {
+    private static final String PREF_NAME = "login_prefs";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_ID_TOKEN = "id_token";
 
-    private final Context context;
+    private SharedPreferences sharedPreferences;
 
     public SharedPreferencesUtils(Context context) {
-
-        this.context = context;
+        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+
+    public void saveLoginData(String email, String idToken) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_ID_TOKEN, idToken);
+        editor.apply(); // Salvataggio asincrono
+    }
+
+    /**
+     * Recupera l'utente salvato. Se non esiste, restituisce null.
+     */
+    public User getSavedUser() {
+        String email = sharedPreferences.getString(KEY_EMAIL, null);
+        String idToken = sharedPreferences.getString(KEY_ID_TOKEN, null);
+
+        if (email != null && idToken != null) {
+            return new User(null, email, idToken);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Cancella i dati di login (logout).
+     */
+    public void clearLoginData() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+    }
+}
+
+/*
     public void writeStringData(String sharedPreferencesFileName, String key, String value) {
         SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
                 Context.MODE_PRIVATE);
@@ -42,3 +79,4 @@ public class SharedPreferencesUtils {
         return sharedPref.getStringSet(key, null);
     }
 }
+*/

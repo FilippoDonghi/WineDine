@@ -76,13 +76,16 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
+                    Log.d("AUTH", "Login riuscito: " + firebaseUser.getEmail());
                     userResponseCallback.onSuccessFromAuthentication(
                             new User(firebaseUser.getDisplayName(), email, firebaseUser.getUid())
                     );
                 } else {
+                    Log.e("AUTH", "Login riuscito, ma FirebaseUser è null! (Verifica persistenza)");
                     userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }
             } else {
+                Log.e("AUTH", "Autenticazione fallita: " + task.getException().getMessage());
                 userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
             }
         });
