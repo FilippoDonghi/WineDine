@@ -34,6 +34,7 @@ import it.unimib.winedine.util.SharedPreferencesUtils;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
@@ -46,6 +47,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -192,17 +195,47 @@ public class LoginFragment extends Fragment {
         Button loginGoogleButton = view.findViewById(R.id.loginGoogleButton);
 
         loginButton.setOnClickListener(v -> {
-            if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
-                if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
-                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
+            String email = editTextEmail.getText() != null ? editTextEmail.getText().toString().trim() : "";
+            String password = editTextPassword.getText() != null ? editTextPassword.getText().toString().trim() : "";
 
-                } else {
-                    editTextPassword.setError(getString(R.string.error_password_login));
-                }
-            } else {
+            boolean isValid = true;
+
+            if (!isEmailOk(email)) {
                 editTextEmail.setError(getString(R.string.error_email_login));
+                isValid = false;
+            }
+
+            if (!isPasswordOk(password)) {
+                editTextPassword.setError(getString(R.string.error_password_login));
+                isValid = false;
+            }
+
+            if (isValid) {
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Login avvenuto con successo, naviga alla Home
+                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
+                            } else {
+                                // Controlla il tipo di errore
+                                Exception e = task.getException();
+                                if (e instanceof FirebaseAuthInvalidUserException) {
+                                    // L'account non esiste
+                                    editTextEmail.setError("Account non trovato. Registrati prima di accedere.");
+                                } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                    // Password errata
+                                    editTextPassword.setError("Password errata. Riprova.");
+                                } else {
+                                    // Altro errore (es. connessione assente)
+                                    Toast.makeText(v.getContext(), "Errore: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
+
+
         loginGoogleButton.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(requireActivity(), new OnSuccessListener<BeginSignInResult>() {
                     @Override

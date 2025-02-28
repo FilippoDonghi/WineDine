@@ -79,28 +79,31 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <Button
-        android:id="@+id/buttonNewAccount"
-        style="@style/Widget.Material3.Button.TextButton"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:gravity="top|start"
-        android:text="@string/create_a_new_account"
-        />
-
-
-    <Button
-        android:id="@+id/loginButton"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
+        android:layout_height="102dp"
+        android:orientation="horizontal"
         android:layout_gravity="center"
-        />
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/loginButton"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="157dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/buttonNewAccount"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="157dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:text="@string/create_a_new_account" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_marginTop="@dimen/margin_medium"
