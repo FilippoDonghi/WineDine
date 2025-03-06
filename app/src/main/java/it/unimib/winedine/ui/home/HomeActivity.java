@@ -14,13 +14,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.winedine.R;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.util.ServiceLocator;
 
 public class HomeActivity extends AppCompatActivity {
 
     private NavController navController;
+    private UserViewModel userViewModel;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
             else if (id == R.id.action_logout) {
-               // performLogout();
+               userViewModel.logout();
                 return true;
             }
             return false;
