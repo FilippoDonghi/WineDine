@@ -95,11 +95,8 @@ public class LoginFragment extends Fragment {
                 SHARED_PREFERENCES_COUNTRY_OF_INTEREST) != null &&
                 sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILENAME,
                         SHARED_PREFERENCES_CATEGORIES_OF_INTEREST) != null) {
-
+**/
             startActivity(new Intent(getContext(), HomeActivity.class));
-        } else {
-            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_pickCountryFragment);
-        }**/
     }
 
     @Override
@@ -163,7 +160,6 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-
     }
 
 
@@ -184,11 +180,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
          if (userViewModel.getLoggedUser() != null) {
-             Log.i(TAG, "Logged as: " + userViewModel.getLoggedUser().getEmail());
-             startActivity(new Intent(getContext(), HomeActivity.class));
-             }
-
-
+           goToNextPage(view);}
 
         editTextEmail = view.findViewById(R.id.textInputEmail);
         editTextPassword = view.findViewById(R.id.textInputPassword);
@@ -200,7 +192,6 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
                 if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
-                    Log.i(TAG, "Current user is: " + userViewModel.getLoggedUser());
                     Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
 
                 } else {
@@ -218,7 +209,6 @@ public class LoginFragment extends Fragment {
                         IntentSenderRequest intentSenderRequest =
                                 new IntentSenderRequest.Builder(result.getPendingIntent()).build();
                         activityResultLauncher.launch(intentSenderRequest);
-                        Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
                     }
                 })
                 .addOnFailureListener(requireActivity(), new OnFailureListener() {

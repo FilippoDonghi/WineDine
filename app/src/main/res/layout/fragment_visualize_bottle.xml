@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:strokeWidth="0dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Immagine del Vino -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:elevation="2dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="15dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_launcher_background" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Informazioni Testuali -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome del Vino"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:paddingBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/textViewDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Breve descrizione del vino"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:paddingBottom="6dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewAverageRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.5 ★"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_dark"/>
+
+                <TextView
+                    android:id="@+id/textViewRatingCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(1234 recensioni)"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wine Score: 92"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:paddingTop="4dp"/>
+
+            <TextView
+                android:id="@+id/textViewPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="€ 19.99"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/holo_green_dark"
+                android:paddingTop="4dp"/>
+
+            <!-- Bottone per Vedere i Dettagli -->
+            <Button
+                android:id="@+id/buttonDishPairing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Abbinamento"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

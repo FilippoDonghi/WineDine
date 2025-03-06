@@ -36,10 +36,14 @@ public class BottleVisualizeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bottle_visualize, container, false);
+        View view = inflater.inflate(R.layout.fragment_visualize_bottle, container, false);
 
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(currentBottle.getTitle());
-        ((TextView) view.findViewById(R.id.textViewBody)).setText(currentBottle.getScore());
+        ((TextView) view.findViewById(R.id.textViewDescription)).setText(currentBottle.getDescription());
+        ((TextView) view.findViewById(R.id.textViewAverageRating)).setText(currentBottle.getAverageRating());
+        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(currentBottle.getRatingCount());
+        ((TextView) view.findViewById(R.id.textViewScore)).setText(currentBottle.getScore());
+        ((TextView) view.findViewById(R.id.textViewPrice)).setText(currentBottle.getPrice());
         ImageView imageView = view.findViewById(R.id.imageView);
 
         Glide.with(getContext())
