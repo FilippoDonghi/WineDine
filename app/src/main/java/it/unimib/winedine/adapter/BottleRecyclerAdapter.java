@@ -98,7 +98,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         context = viewHolder.getImageView().getContext();
         Glide.with(context)
                 .load(bottleList.get(position).getImageUrl())
-                .placeholder(new ColorDrawable(context.getColor(R.color.placeholder_gray)))
+                .placeholder(new ColorDrawable(context.getColor(R.color.md_theme_errorContainer_highContrast)))
                 .into(viewHolder.getImageView());
     }
 

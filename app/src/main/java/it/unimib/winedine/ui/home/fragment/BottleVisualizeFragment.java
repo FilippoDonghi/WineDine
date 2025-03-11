@@ -71,7 +71,7 @@ public class BottleVisualizeFragment extends Fragment {
 
         Glide.with(getContext())
                 .load(currentBottle.getImageUrl())
-                .placeholder(new ColorDrawable(getContext().getColor(R.color.placeholder_gray)))
+                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
                 .into(imageView);
 
 
