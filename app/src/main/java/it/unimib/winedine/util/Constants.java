@@ -29,4 +29,9 @@ public class Constants {
     public static final String WINE_API_KEY = "38d691c02be24ca092d408e95fda6005";
 
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
+
+
+    public static final String DISHES_ENDPOINT = "dishes";
+
+
 }

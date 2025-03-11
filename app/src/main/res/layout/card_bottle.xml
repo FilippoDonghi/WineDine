@@ -1,89 +1,76 @@
-<com.google.android.material.card.MaterialCardView android:id="@+id/card"
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/card"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
     android:background="#00000000"
     app:strokeWidth="0dp"
     android:clickable="true"
-    android:focusable="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#00ffffff"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <com.google.android.material.card.MaterialCardView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
-            android:layout_margin="@dimen/margin_small"
-            app:cardCornerRadius="25dp"
-            app:strokeWidth="0dp">
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                app:srcCompat="@drawable/ic_launcher_background"
-                android:scaleType="centerCrop"
-                />
+                android:layout_width="80dp"
+                android:layout_height="200dp"
+                android:layout_alignParentStart="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_launcher_background" />
 
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="30dp"
+                android:layout_toEndOf="@id/imageView"
                 android:text="Titolo"
-                android:textStyle="bold"
-                android:textSize="25sp"
-                android:textAppearance="?attr/textAppearanceTitleLarge"
-                />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textViewScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_tiny"
-                android:text="score"
-                android:textStyle="normal"
-                />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_alignTop="@+id/textViewTitle"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="125dp"
+                android:layout_toEndOf="@id/imageView"
+                android:text="Score"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/textViewPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="prezzo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textViewPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/textViewTitle"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="77dp"
+                android:layout_toEndOf="@id/imageView"
+                android:text="prezzo"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-
-
-
+        </RelativeLayout>
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
