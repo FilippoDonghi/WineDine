@@ -8,14 +8,14 @@
     android:gravity="center" >
     <!--tools:context=".ui.welcome.WelcomeActivity"> -->
 
-    <!--
+
        <ImageView
            android:id="@+id/imageView"
            android:layout_width="match_parent"
            android:layout_height="250dp"
-           app:srcCompat="@drawable/login_main"
-           app:tint="?android:attr/textColorPrimary"/>
-           -->
+           app:srcCompat="@drawable/img_login"
+           />
+
 
     <TextView
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/md_theme_background"
         android:text="@string/welcome"/>
 
     <TextView
@@ -31,6 +32,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/md_theme_background"
         android:text="@string/already_registered"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -40,8 +42,8 @@
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
+        android:background="#80FFFFFF"
         style="?attr/textInputOutlinedStyle"
-        android:background="#05000000"
         app:startIconDrawable="@drawable/baseline_alternate_email_24"
         >
 
@@ -64,7 +66,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
         style="?attr/textInputOutlinedStyle"
-        android:background="#05000000"
+        android:background="#80FFFFFF"
         app:startIconDrawable="@drawable/baseline_password_24"
         >
 
@@ -95,13 +97,18 @@
             android:text="@string/login" />
 
         <Button
-            android:id="@+id/buttonNewAccount"
+            android:id="@+id/loginGoogleButton"
             style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="157dp"
-            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:text="@string/create_a_new_account" />
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginEnd="50dp"
+            android:text="@string/login_with_google"
+            app:icon="@drawable/google_icon"
+            app:iconGravity="textStart"
+            app:iconTint="@null" />
 
     </LinearLayout>
 
@@ -141,21 +148,13 @@
     </RelativeLayout>
 
     <Button
+        android:id="@+id/buttonNewAccount"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login_with_google"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:id="@+id/loginGoogleButton"
+        android:layout_width="255dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
-        app:icon="@drawable/google_icon"
-        app:iconGravity="textStart"
-        app:iconTint="@null"
-        />
-
-
+        android:layout_marginStart="20dp"
+        android:text="@string/create_a_new_account" />
 
 
 </LinearLayout>
