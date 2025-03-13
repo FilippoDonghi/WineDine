@@ -23,7 +23,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@color/md_theme_background"
+        android:textColor="#d1c9bc"
         android:text="@string/welcome"/>
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/md_theme_background"
+        android:textColor="#b4a998"
         android:text="@string/already_registered"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -94,20 +94,24 @@
             android:layout_width="157dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
+            android:backgroundTint="#d1c9bc"
+
             android:text="@string/login" />
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="60dp"/>
 
         <Button
             android:id="@+id/loginGoogleButton"
             style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="157dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginEnd="50dp"
             android:text="@string/login_with_google"
             app:icon="@drawable/google_icon"
             app:iconGravity="textStart"
+            android:backgroundTint="#d1c9bc"
             app:iconTint="@null" />
 
     </LinearLayout>
@@ -153,7 +157,7 @@
         android:layout_width="255dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_marginStart="20dp"
+        android:backgroundTint="#d1c9bc"
         android:text="@string/create_a_new_account" />
 
 
