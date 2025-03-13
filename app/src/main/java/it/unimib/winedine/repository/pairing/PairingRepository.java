@@ -4,40 +4,85 @@ import static it.unimib.winedine.util.Constants.FRESH_TIMEOUT;
 
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unimib.winedine.model.PairingAPIResponse;
+import it.unimib.winedine.model.Recipe;
+import it.unimib.winedine.model.RecipeAPIResponse;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.service.WineAPIService;
 import it.unimib.winedine.source.pairing.BasePairingLocalDataSource;
 import it.unimib.winedine.source.pairing.BasePairingRemoteDataSource;
+import it.unimib.winedine.util.Constants;
+import it.unimib.winedine.util.ServiceLocator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class PairingRepository implements PairingResponseCallback{
+public class PairingRepository {
+    private final WineAPIService wineAPIService;
+    private PairingResponseCallback callback;
+    private List<Recipe> aggregatedRecipes = new ArrayList<>();
+    private int pendingRequests = 0;
 
-    private BasePairingRemoteDataSource bottleRemoteDataSource;
-    private BasePairingLocalDataSource bottleLocalDataSource;
-    private final MutableLiveData<Result> allPairingsMutableLiveData;
-
-    public PairingRepository(BasePairingRemoteDataSource bottleRemoteDataSource) {
-        this.bottleLocalDataSource = bottleLocalDataSource;
-        this.bottleLocalDataSource.setPairingCallback(this);
-        this.bottleRemoteDataSource = bottleRemoteDataSource;
-        this.bottleRemoteDataSource.setPairingCallback(this);
+    public PairingRepository() {
+        this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();
     }
 
-    public MutableLiveData<Result> fetchPairings(String wine, long lastUpdate) {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdate > FRESH_TIMEOUT) {    //fa la chiamata API
-            bottleRemoteDataSource.getPairings(wine);
-        } else {
-           // bottleLocalDataSource.getWines();
+    public void setCallback(PairingResponseCallback callback) {
+        this.callback = callback;
+    }
+
+    public void fetchPairingAndRecipes(String wine) {
+        wineAPIService.getPairings(wine, Constants.WINE_API_KEY)
+                .enqueue(new Callback<PairingAPIResponse>() {
+                    @Override
+                    public void onResponse(Call<PairingAPIResponse> call, Response<PairingAPIResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            callback.onPairingSuccess(response.body(), System.currentTimeMillis());
+                            fetchRecipesForPairings(response.body().getPairings());
+                        } else {
+                            callback.onFailure(new Exception("Pairing API error"));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PairingAPIResponse> call, Throwable t) {
+                        callback.onFailure(new Exception(t));
+                    }
+                });
+    }
+
+    private void fetchRecipesForPairings(String[] ingredients) {
+        pendingRequests = ingredients.length;
+        for (String ingredient : ingredients) {
+            wineAPIService.getRecipes(
+                    ingredient,
+                    25, // maxFat
+                    3,  // number
+                    Constants.WINE_API_KEY
+            ).enqueue(new Callback<RecipeAPIResponse>() {
+                @Override
+                public void onResponse(Call<RecipeAPIResponse> call, Response<RecipeAPIResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        aggregatedRecipes.addAll(response.body().getResults());
+                        callback.onRecipeSuccess(response.body().getResults());
+                    }
+                    checkCompletion();
+                }
+
+                @Override
+                public void onFailure(Call<RecipeAPIResponse> call, Throwable t) {
+                    checkCompletion();
+                }
+            });
         }
-        return allPairingsMutableLiveData;
-    }
-    @Override
-    public void onSuccessFromRemote(PairingAPIResponse pairingAPIResponse, long lastUpdate) {
-
     }
 
-    @Override
-    public void onFailureFromRemote(Exception exception) {
-
+    private void checkCompletion() {
+        if (--pendingRequests == 0) {
+            callback.onAllRequestsCompleted(aggregatedRecipes);
+        }
     }
 }

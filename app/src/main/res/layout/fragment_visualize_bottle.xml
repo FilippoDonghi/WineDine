@@ -108,7 +108,7 @@
 
             <!-- Bottone per Vedere i Dettagli -->
             <Button
-                android:id="@+id/buttonDishPairing"
+                android:id="@+id/button_pairing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Abbinamento"

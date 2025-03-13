@@ -20,16 +20,22 @@ public class Constants {
     public static final int DATABASE_VERSION = 1;
     public static final String SAVED_BOTTLES_DATABASE = "saved_db";
 
-    public static final String API_BASE_URL = "https://api.spoonacular.com/food/wine/";
-    public static final String RECOMMENDATION_ENDPOINT = "recommendation";
+    public static final String API_BASE_URL = "https://api.spoonacular.com/";
+    public static final String RECOMMENDATION_ENDPOINT = "food/wine/recommendation";
     public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
-    public static final String RECOMMENDATION_NUMBER_PARAMETER = "number";
-    public static final int RECOMMENDATION_NUMBER_VALUE = 3;
+    public static final String NUMBER_PARAMETER = "number";
+    public static final int RECOMMENDATION_NUMBER_VALUE = 6;
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
     public static final String WINE_API_KEY = "38d691c02be24ca092d408e95fda6005";
 
 
-    public static final String PAIRING_ENDPOINT = "dishes";
+
+    public static final String RECIPE_ENDPOINT = "recipes/complexSearch";
+    public static final String QUERY_PARAMETER = "query";
+    public static final String MAX_FAT_PARAMETER = "maxFat";
+    public static final String PAIRING_ENDPOINT = "food/wine/dishes";
+
+
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
 
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";

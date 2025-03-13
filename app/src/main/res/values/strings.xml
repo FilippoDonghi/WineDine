@@ -26,5 +26,6 @@
     <string name="favoriteSection">Favorite</string>
 
     <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
+    <string name="recipe_image">recipe_image</string>
 
 </resources>

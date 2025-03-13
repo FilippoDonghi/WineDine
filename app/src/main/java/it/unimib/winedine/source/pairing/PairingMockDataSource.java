@@ -37,9 +37,9 @@ public void getPairings(String wine) {
     }
 
     if (pairingAPIResponse != null) {
-        responseCallback.onSuccessFromRemote(pairingAPIResponse, System.currentTimeMillis());
+        responseCallback.onPairingSuccess(pairingAPIResponse, System.currentTimeMillis());
     } else {
-        responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+        responseCallback.onFailure(new Exception(API_KEY_ERROR));
     }
 }
 }
