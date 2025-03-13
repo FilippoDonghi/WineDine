@@ -29,7 +29,9 @@ public class BottleVisualizeFragment extends Fragment {
 
     private Bottle currentBottle;
 
-    public BottleVisualizeFragment(){}
+    public BottleVisualizeFragment(){
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
