@@ -2,6 +2,8 @@ package it.unimib.winedine.repository.pairing;
 
 import static it.unimib.winedine.util.Constants.FRESH_TIMEOUT;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ public class PairingRepository {
     }
 
     public void fetchPairingAndRecipes(String wine) {
+        Log.d("API_DEBUG", "Pairing URL: " +
+                "https://api.spoonacular.com/food/wine/dishes?wine=" + wine +
+                "&apiKey=" + Constants.WINE_API_KEY);
         wineAPIService.getPairings(wine, Constants.WINE_API_KEY)
                 .enqueue(new Callback<PairingAPIResponse>() {
                     @Override

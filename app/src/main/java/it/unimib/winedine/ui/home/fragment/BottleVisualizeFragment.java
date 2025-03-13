@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.PairingAPIResponse;
+import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.source.pairing.PairingMockDataSource;
 import it.unimib.winedine.ui.home.viewmodel.PairingViewModel;
+import it.unimib.winedine.ui.home.viewmodel.PairingViewModelFactory;
 import it.unimib.winedine.util.JSONParserUtils;
 
 public class BottleVisualizeFragment extends Fragment {
@@ -92,14 +94,19 @@ public class BottleVisualizeFragment extends Fragment {
                 .load(currentBottle.getImageUrl())
                 .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
                 .into(imageView);
-
+        setupPairingViewModel();
         return view;
     }
     private void setupPairingViewModel() {
-        pairingViewModel = new ViewModelProvider(this).get(PairingViewModel.class);
+
+        PairingRepository pairingRepository = new PairingRepository();
+
+        PairingViewModelFactory factory = new PairingViewModelFactory(pairingRepository);
+
+        pairingViewModel = new ViewModelProvider(this, factory).get(PairingViewModel.class);
 
         pairingViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
-            // Creazione corretta del Bundle
+
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("recipes", new ArrayList<>(recipes)); // 1. Modifica il Bundle
 
