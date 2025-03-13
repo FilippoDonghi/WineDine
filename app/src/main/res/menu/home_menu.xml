@@ -7,14 +7,9 @@
         />
 
     <item
-        android:id="@+id/dishListFragment"
-        android:title="@string/dineSection"
-        android:icon="@drawable/baseline_wine_bar_24"
-        />
-<!--
-    <item
-        android:id="@+id/favoriteNewsFragment"
-        android:title="@string/favorite"
+        android:id="@+id/favoriteWinesFragment"
+        android:title="@string/favoriteSection"
         android:icon="@drawable/baseline_favorite_24"
-        /> -->
+        />
+
 </menu>

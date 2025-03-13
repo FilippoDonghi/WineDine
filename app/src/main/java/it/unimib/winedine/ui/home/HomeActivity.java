@@ -42,7 +42,7 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.wineListFragment, R.id.dishListFragment
+                R.id.wineListFragment, R.id.favoriteWinesFragment
         ).build();
 
         NavigationUI.setupWithNavController(bottomNav, navController);

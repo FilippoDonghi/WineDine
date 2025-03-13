@@ -30,8 +30,8 @@ public class Constants {
 
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
 
-
-    public static final String DISHES_ENDPOINT = "dishes";
+    public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
+    public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
 
 
 }

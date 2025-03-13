@@ -19,10 +19,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/dishListFragment"
-        android:name="it.unimib.winedine.ui.home.fragment.DishListFragment"
-        android:label="fragment_dish_list"
-        tools:layout="@layout/fragment_dish_list" />
+        android:id="@+id/favoriteWinesFragment"
+        android:name="it.unimib.winedine.ui.home.fragment.FavoriteWinesFragment"
+        android:label="fragment_favorite_wines"
+        tools:layout="@layout/fragment_favorite_wines" />
 
     <fragment
         android:id="@+id/wineListFragment"
@@ -34,5 +34,5 @@
         android:id="@+id/visualizeBottleFragment"
         android:name="it.unimib.winedine.ui.home.fragment.BottleVisualizeFragment"
         android:label="fragment_bottle_visualize"
-        tools:layout="@layout/fragment_bottle_visualize" />
+        tools:layout="@layout/fragment_visualize_bottle" />
 </navigation>

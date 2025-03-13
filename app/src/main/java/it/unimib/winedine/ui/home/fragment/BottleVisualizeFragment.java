@@ -8,9 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -18,6 +21,9 @@ import com.bumptech.glide.Glide;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.PairingAPIResponse;
+import it.unimib.winedine.source.pairing.PairingMockDataSource;
+import it.unimib.winedine.util.JSONParserUtils;
 
 public class BottleVisualizeFragment extends Fragment {
 
@@ -74,8 +80,7 @@ public class BottleVisualizeFragment extends Fragment {
                 .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
                 .into(imageView);
 
-
         return view;
     }
-
 }
+

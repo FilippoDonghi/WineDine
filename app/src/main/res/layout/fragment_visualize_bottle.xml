@@ -115,6 +115,13 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/textViewPairings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Abbinamenti:">
+            </TextView>
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
