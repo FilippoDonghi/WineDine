@@ -11,6 +11,7 @@
         android:paddingEnd="@dimen/margin_small"
         android:id="@+id/recyclerView"
         android:padding="@dimen/margin_medium"
+
         />
 
 </FrameLayout>
