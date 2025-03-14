@@ -9,15 +9,6 @@
      android:background="#d1c9bc"
         android:padding="16dp">
 
-       <!-- <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cerca"
-            android:backgroundTint="#d1c9bc"
-            android:padding="12dp"
-            android:textColor="#b4a998"
-            android:textColorHint="#b4a998"/> -->
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

@@ -101,7 +101,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("selectedWine", selectedWine);
+                bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
 
                 NavController navController = Navigation.findNavController(requireView());
                 navController.navigate(R.id.bottleListFragment, bundle);

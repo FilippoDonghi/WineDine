@@ -17,9 +17,9 @@ import it.unimib.winedine.model.Bottle;
 
 
 public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAdapter.ViewHolder> {
-
+    private String selectedWine;
     public interface OnItemClickListener {
-        void onBottleItemClick(Bottle bottle);
+        void onBottleItemClick(Bottle bottle, String selectedWine);
         }
 
     private int layout;
@@ -64,15 +64,16 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
     @Override
     public void onClick(View v) {
-        onItemClickListener.onBottleItemClick(bottleList.get(getAdapterPosition()));
+        onItemClickListener.onBottleItemClick(bottleList.get(getAdapterPosition()), selectedWine);
         }
     }
 
 
-    public BottleRecyclerAdapter(int layout, List<Bottle> bottleList, OnItemClickListener onItemClickListener) {
+    public BottleRecyclerAdapter(int layout, List<Bottle> bottleList, OnItemClickListener onItemClickListener, String selectedWine) {
         this.layout = layout;
         this.bottleList = bottleList;
         this.onItemClickListener = onItemClickListener;
+        this.selectedWine = selectedWine; // Inizializza selectedWine
     }
 
 

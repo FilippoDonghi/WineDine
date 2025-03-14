@@ -101,16 +101,16 @@ public class BottleListFragment extends Fragment{
         // Inizializza l'adapter con una lista vuota
         bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList,
                 new BottleRecyclerAdapter.OnItemClickListener() {
-
                     @Override
-                    public void onBottleItemClick(Bottle bottle) {
+                    public void onBottleItemClick(Bottle bottle, String selectedWine) {
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
+                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle); // Passa la bottiglia
+                        bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
 
                         Navigation.findNavController(view).navigate(R.id.action_bottleListFragment_to_visualizeBottleFragment, bundle);
                     }
+                }, selectedWine); // Passa selectedWine qui
 
-                });
         recyclerView.setAdapter(bottleAdapter);
 
         // Se un vino è stato selezionato, esegui la chiamata API

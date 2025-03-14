@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +32,7 @@ import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.source.pairing.PairingMockDataSource;
 import it.unimib.winedine.ui.home.viewmodel.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.PairingViewModelFactory;
+import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 
 public class BottleVisualizeFragment extends Fragment {
@@ -38,6 +40,7 @@ public class BottleVisualizeFragment extends Fragment {
     private Button pairingButton;
 
     private Bottle currentBottle;
+    private String selectedWine;
 
     public BottleVisualizeFragment(){
 
@@ -47,10 +50,15 @@ public class BottleVisualizeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        currentBottle = getArguments().getParcelable(BUNDLE_KEY_CURRENT_BOTTLE);
+        // Ricevi la bottiglia e il tipo di vino dal Bundle
+        if (getArguments() != null) {
+            currentBottle = getArguments().getParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE);
+            selectedWine = getArguments().getString("selectedWine"); // Ricevi il tipo di vino
+        }
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(currentBottle.getTitle());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(currentBottle.getTitle());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,27 +102,31 @@ public class BottleVisualizeFragment extends Fragment {
                 .load(currentBottle.getImageUrl())
                 .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
                 .into(imageView);
+
+        pairingButton = view.findViewById(R.id.button_pairing);
         setupPairingViewModel();
+        setupButton();
         return view;
     }
     private void setupPairingViewModel() {
 
         PairingRepository pairingRepository = new PairingRepository();
-
         PairingViewModelFactory factory = new PairingViewModelFactory(pairingRepository);
-
         pairingViewModel = new ViewModelProvider(this, factory).get(PairingViewModel.class);
 
         pairingViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
+            NavController navController = Navigation.findNavController(requireView());
 
+            // Verifica che la destinazione corrente non sia già RecipeListFragment
+            if (navController.getCurrentDestination() != null &&
+                    navController.getCurrentDestination().getId() != R.id.recipeListFragment) {
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("recipes", new ArrayList<>(recipes)); // 1. Modifica il Bundle
-
-            // 2. Passa il Bundle creato
-            Navigation.findNavController(requireView()).navigate(
-                    R.id.action_bottleVisualizeFragment_to_recipeListFragment,
-                    bundle // <-- Qui viene passato il Bundle completo
-            );
+            bundle.putParcelableArrayList("recipes", new ArrayList<>(recipes));
+                navController.navigate(
+                        R.id.action_bottleVisualizeFragment_to_recipeListFragment,
+                        bundle
+                );
+            }
         });
 
         pairingViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), error -> {
@@ -122,9 +134,10 @@ public class BottleVisualizeFragment extends Fragment {
         });
     }
 
+
     private void setupButton() {
         pairingButton.setOnClickListener(v -> {
-            pairingViewModel.fetchPairingInfo(currentBottle.getTitle());
+            pairingViewModel.fetchPairingInfo(selectedWine);
         });
     }
 }
