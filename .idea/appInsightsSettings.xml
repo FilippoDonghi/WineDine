@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="it.unimib.winedine" />
+                  <option name="mobileSdkAppId" value="1:606861685673:android:b83853d70ffef91340cab8" />
+                  <option name="projectId" value="winedine-6b29b" />
+                  <option name="projectNumber" value="606861685673" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

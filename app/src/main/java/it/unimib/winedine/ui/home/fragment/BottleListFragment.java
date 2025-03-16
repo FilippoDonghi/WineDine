@@ -109,7 +109,7 @@ public class BottleListFragment extends Fragment{
 
                         Navigation.findNavController(view).navigate(R.id.action_bottleListFragment_to_visualizeBottleFragment, bundle);
                     }
-                }, selectedWine); // Passa selectedWine qui
+                }, selectedWine, true); // Passa selectedWine qui
 
         recyclerView.setAdapter(bottleAdapter);
 
