@@ -78,25 +78,9 @@ public class LoginFragment extends Fragment {
     private void retrieveUserInformationAndStartActivity(User user, View view) {
         userViewModel.getUserPreferences(user.getIdToken()).observe(
                 getViewLifecycleOwner(), userPreferences -> {
-                    //The viewmodel updated sharedprefs
-                    goToNextPage(view);
+
                 }
         );
-    }
-
-    private void goToNextPage(View view) {
-        //questa riga l'ho aggiunta io
-        //startActivity(new Intent(getContext(), WelcomeActivity.class ));
-        /**
-        SharedPreferencesUtils sharedPreferencesUtil =
-                new SharedPreferencesUtils(requireActivity().getApplication());
-
-        if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILENAME,
-                SHARED_PREFERENCES_COUNTRY_OF_INTEREST) != null &&
-                sharedPreferencesUtil.readStringSetData(SHARED_PREFERENCES_FILENAME,
-                        SHARED_PREFERENCES_CATEGORIES_OF_INTEREST) != null) {
-**/
-            startActivity(new Intent(getContext(), HomeActivity.class));
     }
 
     @Override
@@ -179,8 +163,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-         if (userViewModel.getLoggedUser() != null) {
-           goToNextPage(view);}
 
         editTextEmail = view.findViewById(R.id.textInputEmail);
         editTextPassword = view.findViewById(R.id.textInputPassword);
@@ -241,11 +223,6 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    /**
-     * Checks if the password is not empty.
-     * @param password The password to be checked
-     * @return True if the password has at least 6 characters, false otherwise
-     */
     private boolean isPasswordOk(String password) {
         // Check if the password length is correct
         if (password.isEmpty() || password.length() < Constants.MINIMUM_LENGTH_PASSWORD) {

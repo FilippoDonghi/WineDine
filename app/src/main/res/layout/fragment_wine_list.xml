@@ -1,26 +1,57 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#543F3F">
 
-    <EditText
-        android:id="@+id/search_bar"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+     android:background="#d1c9bc"
+        android:padding="16dp">
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Cerca"
+        app:boxBackgroundMode="filled"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxStrokeColor="#d1c9bc"
+        app:boxBackgroundColor="#d1c9bc">
 
-        android:padding="10dp"
-        android:textColor="#000"
-        android:textColorHint="#000"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="#d1c9bc"
+            android:drawablePadding="8dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <ExpandableListView
-        android:id="@+id/expandableListView"
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:background="@android:color/transparent"/>
-</LinearLayout>
+        app:cardCornerRadius="12dp"
+        app:cardElevation="20dp"
+        android:layout_margin="12dp"
+        android:background="#d1c9bc"
+        android:backgroundTint="#d1c9bc">
+
+        <ExpandableListView
+            android:id="@+id/expandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/cardview_dark_background"
+            android:dividerHeight="1dp"
+            android:background="#d1c9bc"
+            android:padding="12dp"
+            android:layout_marginTop="12dp"
+            android:scrollbarStyle="outsideOverlay"/>
+    </androidx.cardview.widget.CardView>
+
+    </LinearLayout>

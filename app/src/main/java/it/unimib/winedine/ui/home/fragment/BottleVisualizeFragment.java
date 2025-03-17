@@ -8,31 +8,57 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.PairingAPIResponse;
+import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.source.pairing.PairingMockDataSource;
+import it.unimib.winedine.ui.home.viewmodel.PairingViewModel;
+import it.unimib.winedine.ui.home.viewmodel.PairingViewModelFactory;
+import it.unimib.winedine.util.Constants;
+import it.unimib.winedine.util.JSONParserUtils;
 
 public class BottleVisualizeFragment extends Fragment {
+    private PairingViewModel pairingViewModel;
+    private Button pairingButton;
 
     private Bottle currentBottle;
+    private String selectedWine;
 
-    public BottleVisualizeFragment(){}
+    public BottleVisualizeFragment(){
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        currentBottle = getArguments().getParcelable(BUNDLE_KEY_CURRENT_BOTTLE);
+        // Ricevi la bottiglia e il tipo di vino dal Bundle
+        if (getArguments() != null) {
+            currentBottle = getArguments().getParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE);
+            selectedWine = getArguments().getString("selectedWine"); // Ricevi il tipo di vino
+        }
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(currentBottle.getTitle());
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(currentBottle.getTitle());
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,8 +68,11 @@ public class BottleVisualizeFragment extends Fragment {
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(currentBottle.getTitle());
         ((TextView) view.findViewById(R.id.textViewDescription)).setText(currentBottle.getDescription());
         TextView ratingView = view.findViewById(R.id.textViewAverageRating);
-        String originalRating = currentBottle.getAverageRating();
 
+        String originalRating = currentBottle.getAverageRating();
+        pairingButton = view.findViewById(R.id.button_pairing);
+        setupPairingViewModel();
+        setupButton();
         try {
 
             // 2. Troncamento a 4 caratteri
@@ -71,11 +100,47 @@ public class BottleVisualizeFragment extends Fragment {
 
         Glide.with(getContext())
                 .load(currentBottle.getImageUrl())
-                .placeholder(new ColorDrawable(getContext().getColor(R.color.placeholder_gray)))
+                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
                 .into(imageView);
 
-
+        pairingButton = view.findViewById(R.id.button_pairing);
+        setupPairingViewModel();
+        setupButton();
         return view;
     }
+    private void setupPairingViewModel() {
 
+        PairingRepository pairingRepository = new PairingRepository();
+        PairingViewModelFactory factory = new PairingViewModelFactory(pairingRepository);
+        pairingViewModel = new ViewModelProvider(this, factory).get(PairingViewModel.class);
+
+        pairingViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
+            NavController navController = Navigation.findNavController(requireView());
+
+            // Verifica che la destinazione corrente non sia già RecipeListFragment
+            if (navController.getCurrentDestination() != null &&
+                    navController.getCurrentDestination().getId() != R.id.recipeListFragment) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("recipes", new ArrayList<>(recipes));
+                navController.navigate(
+                        R.id.action_bottleVisualizeFragment_to_recipeListFragment,
+                        bundle
+                );
+            }
+        });
+
+        pairingViewModel.getErrorLiveData().observe(getViewLifecycleOwner(), error -> {
+            Toast.makeText(getContext(), "Errore: " + error, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+
+    private void setupButton() {
+        pairingButton.setOnClickListener(v -> {
+            pairingViewModel.fetchPairingInfo(selectedWine);
+        });
+    }
 }
+
+
+

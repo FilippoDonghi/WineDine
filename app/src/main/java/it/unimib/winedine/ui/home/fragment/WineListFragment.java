@@ -33,11 +33,13 @@ import com.google.firebase.firestore.Source;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
@@ -57,6 +59,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
+    private HashMap<String, String> categoryMapping = new HashMap<>(); // Mappa per il legame tra nomi originali e formattati
     private HashMap<String, List<String>> winesMap = new HashMap<>();
     private ExpandableListView listView;
 
@@ -98,7 +101,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("selectedWine", selectedWine);
+                bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
 
                 NavController navController = Navigation.findNavController(requireView());
                 navController.navigate(R.id.bottleListFragment, bundle);
@@ -117,6 +120,9 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 winesMap.clear();
                 winesMap.putAll(fetchedWinesMap);
 
+                // Formattare i nomi delle categorie e dei vini per la visualizzazione
+               formatCategoryAndWineNames();
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -127,6 +133,39 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
         });
     }
 
+    private void formatCategoryAndWineNames() {
+        // Mappa temporanea per la versione formattata
+        HashMap<String, List<String>> formattedWinesMap = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : winesMap.entrySet()) {
+            String originalCategory = entry.getKey();
+            String formattedCategory = formatWineName(originalCategory); // Formatta il nome
+
+            categoryMapping.put(formattedCategory, originalCategory); // Salva il legame tra formattato e originale
+
+            List<String> formattedWines = new ArrayList<>();
+            for (String wine : entry.getValue()) {
+                formattedWines.add(formatWineName(wine)); // Formatta il nome del vino
+            }
+
+            formattedWinesMap.put(formattedCategory, formattedWines);
+        }
+
+        // Aggiorna la lista delle categorie per l'UI
+        categories.clear();
+        categories.addAll(formattedWinesMap.keySet());
+
+        // Usa formattedWinesMap solo per l'UI
+        winesMap.clear();
+        winesMap.putAll(formattedWinesMap);
+    }
+
+    // Funzione di formattazione
+    private String formatWineName(String wine) {
+        return Arrays.stream(wine.split("_"))
+                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
+    }
 
     @Override
     public void onSuccessFromLocal(List<Bottle> bottleList) {

@@ -23,8 +23,9 @@
     <string name="error_unexpected">error unexpected</string>
     <string name="error_collision_user">collision user</string>
     <string name="wineSection">Wine</string>
-    <string name="dineSection">Dine</string>
+    <string name="favoriteSection">Favorite</string>
 
     <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
+    <string name="recipe_image">recipe_image</string>
 
 </resources>

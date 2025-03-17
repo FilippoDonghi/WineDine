@@ -8,12 +8,50 @@ import it.unimib.winedine.model.User;
 
 
 public class SharedPreferencesUtils {
+
+    private final Context context;
     private static final String PREF_NAME = "login_prefs";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_ID_TOKEN = "id_token";
 
-    private SharedPreferences sharedPreferences;
+    public SharedPreferencesUtils(Context context) {
+        this.context = context;
+    }
 
+    public void writeStringData(String sharedPreferencesFileName, String key, String value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public void writeStringSetData(String sharedPreferencesFileName, String key, Set<String> value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(key, value);
+        editor.apply();
+    }
+
+    public String readStringData(String sharedPreferencesFileName, String key) {
+        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        return sharedPref.getString(key, null);
+    }
+
+    public Set<String> readStringSetData(String sharedPreferencesFileName, String key) {
+        SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
+                Context.MODE_PRIVATE);
+        return sharedPref.getStringSet(key, null);
+    }
+}
+
+
+
+
+
+/**
     public SharedPreferencesUtils(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
@@ -26,9 +64,7 @@ public class SharedPreferencesUtils {
         editor.apply(); // Salvataggio asincrono
     }
 
-    /**
-     * Recupera l'utente salvato. Se non esiste, restituisce null.
-     */
+
     public User getSavedUser() {
         String email = sharedPreferences.getString(KEY_EMAIL, null);
         String idToken = sharedPreferences.getString(KEY_ID_TOKEN, null);
@@ -40,17 +76,16 @@ public class SharedPreferencesUtils {
         }
     }
 
-    /**
-     * Cancella i dati di login (logout).
-     */
+
+ //Cancella i dati di login (logout).
+
     public void clearLoginData() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
     }
-}
 
-/*
+
     public void writeStringData(String sharedPreferencesFileName, String key, String value) {
         SharedPreferences sharedPref = context.getSharedPreferences(sharedPreferencesFileName,
                 Context.MODE_PRIVATE);
@@ -80,3 +115,4 @@ public class SharedPreferencesUtils {
     }
 }
 */
+
