@@ -1,5 +1,7 @@
 package it.unimib.winedine.source.wine;
 
+import static it.unimib.winedine.util.Constants.UNEXPECTED_ERROR;
+
 import java.util.List;
 
 import it.unimib.winedine.database.WineDao;
@@ -18,6 +20,14 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     public void getWines() {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             responseCallback.onSuccessFromLocal(wineDao.getAll());
+        });
+    }
+
+    @Override
+    public void getFavoriteWines() {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Bottle> favoriteBottle = wineDao.getLiked();
+            responseCallback.onWinesFavoriteStatusChanged(favoriteBottle);
         });
     }
 
@@ -45,5 +55,20 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
             }
         });
     }
+
+    @Override
+    public void updateWine(Bottle bottle) {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            int rowUpdatedCounter = wineDao.updateBottle(bottle);
+
+            // It means that the update succeeded because only one row had to be updated
+            if (rowUpdatedCounter == 1) {
+                Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
+                responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
+            } else {
+                responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            }
+        });
     }
+}
 

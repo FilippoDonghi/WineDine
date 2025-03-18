@@ -99,7 +99,7 @@ public class BottleListFragment extends Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // Inizializza l'adapter con una lista vuota
-        bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList,
+        bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
                 new BottleRecyclerAdapter.OnItemClickListener() {
                     @Override
                     public void onBottleItemClick(Bottle bottle, String selectedWine) {
@@ -109,7 +109,13 @@ public class BottleListFragment extends Fragment{
 
                         Navigation.findNavController(view).navigate(R.id.action_bottleListFragment_to_visualizeBottleFragment, bundle);
                     }
-                }, selectedWine, true); // Passa selectedWine qui
+                    @Override
+                    public void onFavoriteButtonClick(int position) {
+                        bottleList.get(position).setLiked(!bottleList.get(position).getLiked());
+                        wineViewModel.updateWine(bottleList.get(position));
+                    }
+
+                });
 
         recyclerView.setAdapter(bottleAdapter);
 

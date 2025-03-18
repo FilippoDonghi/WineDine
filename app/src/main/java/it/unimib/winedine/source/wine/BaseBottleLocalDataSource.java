@@ -16,4 +16,8 @@ public abstract class  BaseBottleLocalDataSource {
     public abstract void getWines();
 
     public abstract void insertWines(List<Bottle> bottleList);
+
+    public abstract void updateWine(Bottle bottle);
+
+    public abstract void getFavoriteWines();
 }

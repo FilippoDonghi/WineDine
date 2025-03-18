@@ -5,6 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -30,5 +31,17 @@ import it.unimib.winedine.model.Bottle;
 
     @Query("DELETE FROM Bottle")
     void clearAll();
+
+    @Query("SELECT * FROM Bottle WHERE uid = :id")
+    Bottle getBottle(long id);
+
+    @Query("SELECT * FROM Bottle WHERE liked = 1")
+    List<Bottle> getLiked();
+
+    @Update
+    int updateBottle(Bottle bottle);
+
+    @Update
+    int updateListFavoriteBottle(List<Bottle> bottles);
     }
 
