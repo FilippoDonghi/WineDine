@@ -140,7 +140,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         context = viewHolder.getImageView().getContext();
         Glide.with(context)
                 .load(bottleList.get(position).getImageUrl())
-                .placeholder(new ColorDrawable(context.getColor(R.color.md_theme_errorContainer_highContrast)))
+                .placeholder(new ColorDrawable(context.getColor(R.color.md_theme_onSecondaryContainer)))
                 .into(viewHolder.getImageView());
 
     }
@@ -148,5 +148,11 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
     @Override
     public int getItemCount() {
         return bottleList.size();
+    }
+
+    public void setBottles(List<Bottle> bottles) {
+        this.bottleList.clear();
+        this.bottleList.addAll(bottles);
+        notifyDataSetChanged();
     }
 }

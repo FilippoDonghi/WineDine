@@ -64,7 +64,9 @@ public class BottleListFragment extends Fragment{
     private WineViewModel wineViewModel;
 
 
-    public BottleListFragment() {}
+    public BottleListFragment() {
+
+    }
 
 
     @Override
@@ -96,7 +98,7 @@ public class BottleListFragment extends Fragment{
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // Inizializza l'adapter con una lista vuota
+
         bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
                 new BottleRecyclerAdapter.OnItemClickListener() {
                     @Override
@@ -109,8 +111,9 @@ public class BottleListFragment extends Fragment{
                     }
                     @Override
                     public void onFavoriteButtonClick(int position) {
-                        bottleList.get(position).setLiked(!bottleList.get(position).getLiked());
-                        wineViewModel.updateWine(bottleList.get(position));
+                        Bottle bottle = bottleList.get(position);
+                        bottle.setLiked(!bottle.getLiked());
+                        wineViewModel.updateWine(bottle);
                     }
 
                 });
@@ -119,23 +122,37 @@ public class BottleListFragment extends Fragment{
 
         // Se un vino è stato selezionato, esegui la chiamata API
         if (selectedWine != null) {
-            long lastUpdate = 0; // Se hai un sistema di cache, sostituisci con un valore persistente
+            long lastUpdate = 0;
 
             wineViewModel.getBottles(selectedWine, lastUpdate).observe(getViewLifecycleOwner(),
                     result -> {
-                        if (result.isSuccess()) {
-                            int initialSize = this.bottleList.size();
-                            this.bottleList.clear();
-                            this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
-                            bottleAdapter.notifyDataSetChanged();
-                        } else {
-                            Snackbar.make(view,
-                                    getString(R.string.error_retireving_bottles),
-                                    Snackbar.LENGTH_SHORT).show();
-                        }
+                            if (result instanceof Result.WineSuccess) {
+                                this.bottleList.clear();
+                                this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
+                                bottleAdapter.notifyDataSetChanged();
+                            } else if (result instanceof Result.Error) {
+                                Snackbar.make(view, getString(R.string.error_retireving_bottles), Snackbar.LENGTH_SHORT).show();
+                            }
                     });
         }
+
+        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
+            if (result instanceof Result.WineSuccess) {
+                List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
+
+                // 🔹 Aggiorniamo lo stato dei cuori nella lista principale
+                for (Bottle bottle : bottleList) {
+                    bottle.setLiked(false); // Reset di default
+                    for (Bottle favorite : favoriteBottles) {
+                        if (bottle.getId().equals(favorite.getId())) {
+                            bottle.setLiked(true);
+                        }
+                    }
+                }
+                bottleAdapter.notifyDataSetChanged();
+            }
+        });
+
         return view;
     }
-
     }

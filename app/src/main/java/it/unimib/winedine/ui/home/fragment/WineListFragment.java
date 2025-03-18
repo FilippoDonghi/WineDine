@@ -66,6 +66,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     private WineAdapter adapter;
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
+    private WineViewModel wineViewModel;
 
 
 
@@ -80,6 +81,9 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
         );
 
+        wineViewModel = new ViewModelProvider(
+                requireActivity(),
+                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
         }
 
         @Override
@@ -98,6 +102,8 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
                 long lastUpdate = 0;
+
+
                 winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
 
                 Bundle bundle = new Bundle();

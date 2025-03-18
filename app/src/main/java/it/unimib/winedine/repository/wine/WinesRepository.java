@@ -89,6 +89,7 @@ public class WinesRepository implements BottleResponseCallback {
     public void onFailureFromLocal(Exception exception) {
         Result.Error resultError = new Result.Error(exception.getMessage());
         allWinesMutableLiveData.postValue(resultError);
+        favoriteWinesMutableLiveData.postValue(resultError);
     }
 
     @Override

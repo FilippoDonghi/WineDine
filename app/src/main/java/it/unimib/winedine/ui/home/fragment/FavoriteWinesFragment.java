@@ -30,7 +30,6 @@ import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.ServiceLocator;
 
 public class FavoriteWinesFragment extends Fragment {
-
     private WinesRepository winesRepository;
     private List<Bottle> bottleList;
     private BottleRecyclerAdapter bottleRecyclerAdapter;
@@ -40,7 +39,6 @@ public class FavoriteWinesFragment extends Fragment {
     private String selectedWine;
 
     public FavoriteWinesFragment() {
-
     }
 
 
@@ -57,8 +55,8 @@ public class FavoriteWinesFragment extends Fragment {
         wineViewModel= new ViewModelProvider(
                 requireActivity(),
                 new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
-                bottleList = new ArrayList<>();
-        }
+        bottleList = new ArrayList<>();
+    }
 
 
     @Override
@@ -91,7 +89,7 @@ public class FavoriteWinesFragment extends Fragment {
                                 if (!bottleList.get(position).getLiked()) {
                                     bottleList.remove(position);
                                     bottleRecyclerAdapter.notifyItemRemoved(position);
-                            }}
+                                }}
 
                         });
 

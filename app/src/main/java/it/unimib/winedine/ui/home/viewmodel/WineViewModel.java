@@ -12,7 +12,7 @@ public class WineViewModel extends ViewModel {
 
     private final WinesRepository winesRepository;
     private final int page;
-    private MutableLiveData<Result> bottlesListLiveData;
+    private MutableLiveData<Result> bottlesListLiveData = new MutableLiveData<>();
     private MutableLiveData<Result> favoriteWinesListLiveData;
 
   public WineViewModel(WinesRepository winesRepository) {
@@ -22,17 +22,20 @@ public class WineViewModel extends ViewModel {
 
 
     public MutableLiveData<Result> getBottles(String wine, long lastUpdate) {
-        if (bottlesListLiveData == null) {
-            fetchWines(wine, lastUpdate);
-        }
-        return bottlesListLiveData;
+      fetchWines(wine, lastUpdate);
+      return bottlesListLiveData;
     }
 
-    public MutableLiveData<Result> getFavoriteWinesListLiveData(){
-      if(favoriteWinesListLiveData == null){
-        getFavoriteWines();
-      }
-      return favoriteWinesListLiveData;
+    public MutableLiveData<Result> getFavoriteWinesListLiveData() {
+        if (favoriteWinesListLiveData == null) {
+            favoriteWinesListLiveData = new MutableLiveData<>();
+            loadFavoriteWines(); // Carica i preferiti inizialmente
+        }
+        return favoriteWinesListLiveData;
+    }
+
+    private void loadFavoriteWines() {
+        favoriteWinesListLiveData = winesRepository.getFavoriteWines();
     }
 
     private void getFavoriteWines() {
@@ -41,10 +44,14 @@ public class WineViewModel extends ViewModel {
 
     public void updateWine(Bottle bottle){
           winesRepository.updateWine(bottle);
+            getFavoriteWines();
     }
 
 
     private void fetchWines(String wine, long lastUpdate) {
-        bottlesListLiveData = winesRepository.fetchWines(wine, page, lastUpdate);
+        bottlesListLiveData.setValue(new Result.Loading()); // 🔹 Corretto: creiamo un'istanza della classe
+
+        winesRepository.fetchWines(wine, page, lastUpdate)
+                .observeForever(result -> bottlesListLiveData.postValue(result));
     }
 }

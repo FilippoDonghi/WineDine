@@ -72,7 +72,6 @@ public class BottleVisualizeFragment extends Fragment {
                 new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
         bottleList = new ArrayList<>();
 
-    // Ricevi la bottiglia e il tipo di vino dal Bundle
         if (getArguments() != null) {
             currentBottle = getArguments().getParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE);
             selectedWine = getArguments().getString("selectedWine"); // Ricevi il tipo di vino
@@ -140,7 +139,7 @@ public class BottleVisualizeFragment extends Fragment {
 
         Glide.with(getContext())
                 .load(currentBottle.getImageUrl())
-                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
+                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
                 .into(imageView);
 
         pairingButton = view.findViewById(R.id.button_pairing);
