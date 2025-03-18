@@ -64,9 +64,7 @@ public class BottleListFragment extends Fragment{
     private WineViewModel wineViewModel;
 
 
-    public BottleListFragment() {
-
-    }
+    public BottleListFragment() {}
 
 
     @Override

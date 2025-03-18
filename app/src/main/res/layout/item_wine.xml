@@ -59,7 +59,7 @@
                     android:ellipsize="end"
                     android:textAppearance="?attr/textAppearanceTitleLarge"
                     android:paddingBottom="4dp"/>
-                <CheckBox
+           <!--     <CheckBox
                     android:id="@+id/favoriteButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent">
-                </CheckBox>
+                </CheckBox> -->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

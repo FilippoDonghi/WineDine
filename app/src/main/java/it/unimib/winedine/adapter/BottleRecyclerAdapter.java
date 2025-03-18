@@ -114,7 +114,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_wine, viewGroup, false);
+                .inflate(R.layout.card_bottle, viewGroup, false);
 
         if (this.context == null) this.context = viewGroup.getContext();
         return new ViewHolder(view);
@@ -136,26 +136,6 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             // Make it visible or invisible based on heartVisible flag
             viewHolder.getFavoriteCheckbox().setVisibility(heartVisible ? View.VISIBLE : View.INVISIBLE);
         }
-
-
-
-
-/*
-        if (favoriteCheckbox != null) {
-           // Log.d("onBindViewHolder: favoriteCheckbox is not null");
-        viewHolder.getFavoriteCheckbox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    WineRoomDatabase.getDatabase(viewHolder.getTextViewTitle().getContext()).
-                            wineDao().insert(bottleList.get(position));
-                } else {
-                    WineRoomDatabase.getDatabase(viewHolder.getTextViewTitle().getContext()).
-                            wineDao().delete(bottleList.get(position));
-                }
-            }
-        });}*/
-
 
         context = viewHolder.getImageView().getContext();
         Glide.with(context)
