@@ -51,6 +51,8 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         private final TextView textViewPrice;
         private final ImageView imageView;
         private final CheckBox favoriteCheckbox;
+        private final TextView textViewViewAverageRating;
+        private final TextView textViewViewRatingCount;
 
 
         public ViewHolder(View view) {
@@ -58,6 +60,8 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             textViewTitle = view.findViewById(R.id.textViewTitle);
             textViewScore = view.findViewById(R.id.textViewScore);
             textViewPrice = view.findViewById(R.id.textViewPrice);
+            textViewViewAverageRating = view.findViewById(R.id.textViewAverageRating);
+            textViewViewRatingCount = view.findViewById(R.id.textViewRatingCount);
             imageView = view.findViewById(R.id.imageView);
             favoriteCheckbox = view.findViewById(R.id.favoriteButton);
 
@@ -87,6 +91,14 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
         public CheckBox getFavoriteCheckbox() {
             return favoriteCheckbox;
+        }
+
+        public TextView getTextViewViewAverageRating() {
+            return textViewViewAverageRating;
+        }
+
+        public TextView getTextViewViewRatingCount() {
+            return textViewViewRatingCount;
         }
 
         @Override
@@ -125,8 +137,22 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.getTextViewTitle().setText(bottleList.get(position).getTitle());
-        viewHolder.getTextViewScore().setText(bottleList.get(position).getScore());
+
         viewHolder.getTextViewPrice().setText(bottleList.get(position).getPrice());
+        viewHolder.getTextViewViewAverageRating().setText(bottleList.get(position).getAverageRating());
+        viewHolder.getTextViewViewRatingCount().setText(bottleList.get(position).getRatingCount());
+
+        try {
+            String originalRating = bottleList.get(position).getAverageRating();
+            String truncatedRating = originalRating.length() > 4 ?
+                    originalRating.substring(0, 4) : originalRating;
+            double ratingValue = Double.parseDouble(truncatedRating);
+            double scaledRating = ratingValue * 5;
+            String formattedRating = String.format("%.1f ★", scaledRating);
+            viewHolder.getTextViewViewAverageRating().setText(formattedRating);
+        } catch (NumberFormatException e) {
+            viewHolder.getTextViewViewAverageRating().setText("0.0 ★"); // Valore di default
+        }
 
 
         if (viewHolder.getFavoriteCheckbox() != null) {
