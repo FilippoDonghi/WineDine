@@ -55,7 +55,7 @@ import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 import it.unimib.winedine.util.ServiceLocator;
 
-public class WineListFragment extends Fragment implements BottleResponseCallback{
+public class WineListFragment extends Fragment{
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
@@ -172,46 +172,5 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }
-
-    @Override
-    public void onSuccessFromLocal(List<Bottle> bottleList) {
-        Log.i(TAG, "onSuccessFromLocal: " + bottleList.size());
-    }
-
-
-        @Override
-        public void onFailureFromRemote(Exception e) {
-
-                Log.e("API_ERROR", "Errore nel recupero delle raccomandazioni: " + e.getMessage());
-
-            Toast.makeText(getContext(), "Errore nel recupero delle raccomandazioni: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
-
-        }
-
-
-        @Override
-        public void onFailureFromLocal(Exception exception) {
-
-        }
-
-
-        @Override
-        public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
-
-        }
-
-        @Override
-        public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
-
-        }
-
-        @Override
-        public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
-
-        }
 
     }
