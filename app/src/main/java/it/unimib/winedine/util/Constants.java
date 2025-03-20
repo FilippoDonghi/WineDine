@@ -14,6 +14,7 @@ public class Constants {
     public static final String FIREBASE_REALTIME_DATABASE = "https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String FIREBASE_USERS_COLLECTION = "users";
 
+
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
 
     public static final int DATABASE_VERSION = 1;
@@ -25,7 +26,7 @@ public class Constants {
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
-    public static final String WINE_API_KEY = "341373218a09419da6050c57367aee0c";
+    public static final String WINE_API_KEY = "2a8406e466eb4ae1afe2b2ef2df59b08";
 
 
 
@@ -39,5 +40,6 @@ public class Constants {
 
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
     public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
+
 
 }

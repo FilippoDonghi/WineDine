@@ -21,6 +21,18 @@ public class WineAdapter extends BaseExpandableListAdapter {
         this.viniMappa = viniMappa;
     }
 
+    // Metodo per aggiornare la mappa dei vini
+    public void updateWinesMap(HashMap<String, List<String>> newViniMappa) {
+        this.viniMappa = newViniMappa; // Aggiorna la mappa dei vini
+        notifyDataSetChanged(); // Notifica l'adapter del cambiamento
+    }
+
+    // Metodo per aggiornare la lista delle categorie
+    public void updateCategories(List<String> newCategorie) {
+        this.categorie = newCategorie; // Aggiorna la lista delle categorie
+        notifyDataSetChanged(); // Notifica l'adapter del cambiamento
+    }
+
     @Override
     public int getGroupCount() {
         return categorie.size();
@@ -55,7 +67,6 @@ public class WineAdapter extends BaseExpandableListAdapter {
     public boolean hasStableIds() {
         return false;
     }
-
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {

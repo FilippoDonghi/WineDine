@@ -55,10 +55,11 @@ import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 import it.unimib.winedine.util.ServiceLocator;
 
-public class WineListFragment extends Fragment implements BottleResponseCallback{
+public class WineListFragment extends Fragment{
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
+    private HashMap<String, String> categoryMapping = new HashMap<>(); // Mappa per il legame tra nomi originali e formattati
     private HashMap<String, List<String>> winesMap = new HashMap<>();
     private ExpandableListView listView;
 
@@ -66,6 +67,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
     private WineViewModel wineViewModel;
+
 
 
     @Override
@@ -93,108 +95,82 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
 
             adapter = new WineAdapter(requireContext(), categories, winesMap);
             listView.setAdapter(adapter);
-            fetchCategories();
 
+            // Osserva i dati dal ViewModel
+            wineViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+                this.categories.clear();
+                this.categories.addAll(categories);
+                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                adapter.updateCategories(this.categories);
+            });
+
+            wineViewModel.getWinesMap().observe(getViewLifecycleOwner(), winesMap -> {
+                this.winesMap.clear();
+                this.winesMap.putAll(winesMap);
+                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                adapter.updateWinesMap(this.winesMap);
+            });
+
+            wineViewModel.getError().observe(getViewLifecycleOwner(), errorMessage -> {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            });
+
+            // Gestisci il click sugli elementi della lista
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-                String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
+                String selectedWine = adapter.getChild(groupPosition, childPosition).toString();
                 long lastUpdate = 0;
 
 
-
-                wineViewModel.fetchWines(selectedWine, lastUpdate);
+                // Naviga verso il fragment successivo
                 Bundle bundle = new Bundle();
-                bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
+                bundle.putString("selectedWine", selectedWine);
 
-                NavController navController = Navigation.findNavController(requireView());
+                NavController navController = Navigation.findNavController(view);
                 navController.navigate(R.id.bottleListFragment, bundle);
+
                 return true;
             });
+
+            // Carica i dati
+            wineViewModel.loadCategories();
+
             return view;
         }
 
-    private void fetchCategories() {
-        database.getCategoriesFromFirestore(new WineFireStoreDatabase.FirestoreCallback() {
-            @Override
-            public void onSuccess(List<String> fetchedCategories, HashMap<String, List<String>> fetchedWinesMap) {
-                categories.clear();
-                categories.addAll(fetchedCategories);
-
-                winesMap.clear();
-                winesMap.putAll(fetchedWinesMap);
-               formatWineNames();
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e(TAG, "Errore nel recupero dei dati da Firestore", e);
-            }
-        });
-    }
-
-    private void formatWineNames() {
+    private void formatCategoryAndWineNames() {
+        // Mappa temporanea per la versione formattata
         HashMap<String, List<String>> formattedWinesMap = new HashMap<>();
 
         for (Map.Entry<String, List<String>> entry : winesMap.entrySet()) {
             String originalCategory = entry.getKey();
+            String formattedCategory = formatWineName(originalCategory); // Formatta il nome
+
+            categoryMapping.put(formattedCategory, originalCategory); // Salva il legame tra formattato e originale
 
             List<String> formattedWines = new ArrayList<>();
             for (String wine : entry.getValue()) {
-                formattedWines.add(format(wine));
+                formattedWines.add(formatWineName(wine)); // Formatta il nome del vino
             }
 
-            formattedWinesMap.put(originalCategory, formattedWines);
+            formattedWinesMap.put(formattedCategory, formattedWines);
         }
 
+        // Aggiorna la lista delle categorie per l'UI
+        categories.clear();
+        categories.addAll(formattedWinesMap.keySet());
+
+        // Usa formattedWinesMap solo per l'UI
         winesMap.clear();
-        winesMap.putAll(formattedWinesMap);}
+        winesMap.putAll(formattedWinesMap);
+    }
 
     // Funzione di formattazione
-    private String format(String wine) {
+    private String formatWineName(String wine) {
         return Arrays.stream(wine.split("_"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }
 
-    @Override
-    public void onSuccessFromLocal(List<Bottle> bottleList) {
-        Log.i(TAG, "onSuccessFromLocal: " + bottleList.size());
-    }
 
-
-        @Override
-        public void onFailureFromRemote(Exception e) {
-
-                Log.e("API_ERROR", "Errore nel recupero delle raccomandazioni: " + e.getMessage());
-
-            Toast.makeText(getContext(), "Errore nel recupero delle raccomandazioni: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
-
-        }
-
-
-        @Override
-        public void onFailureFromLocal(Exception exception) {
-
-        }
-
-
-        @Override
-        public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
-
-        }
-
-        @Override
-        public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
-
-        }
-
-        @Override
-        public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
-
-        }
 
     }
