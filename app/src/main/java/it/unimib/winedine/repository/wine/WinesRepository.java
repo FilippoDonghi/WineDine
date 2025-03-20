@@ -17,6 +17,7 @@ import java.util.List;
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.database.WineDao;
+import it.unimib.winedine.database.WineFireStoreDatabase;
 import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
@@ -38,6 +39,7 @@ public class WinesRepository implements BottleResponseCallback {
     private final MutableLiveData<Result> favoriteWinesMutableLiveData;
     private final BaseBottleRemoteDataSource bottleRemoteDataSource;
     private final BaseBottleLocalDataSource bottleLocalDataSource;
+    private final WineFireStoreDatabase wineFireStoreDatabase;
 
 
     public WinesRepository(BaseBottleRemoteDataSource bottleRemoteDataSource, BaseBottleLocalDataSource bottleLocalDataSource) {
@@ -47,6 +49,7 @@ public class WinesRepository implements BottleResponseCallback {
         this.bottleRemoteDataSource.setBottleCallback(this);
         this.bottleLocalDataSource = bottleLocalDataSource;
         this.bottleLocalDataSource.setBottleCallback(this);
+        this.wineFireStoreDatabase = new WineFireStoreDatabase();
     }
 
     public MutableLiveData<Result> fetchWines(String wine, int number, long lastUpdate) {
@@ -133,4 +136,10 @@ public class WinesRepository implements BottleResponseCallback {
             favoriteWinesMutableLiveData.postValue(result);
         }
     }
+
+    public void getCategoriesFromFirestore(WineFireStoreDatabase.FirestoreCallback callback) {
+        wineFireStoreDatabase.getCategoriesFromFirestore(callback);
+    }
+
+
 }

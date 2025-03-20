@@ -96,48 +96,46 @@ public class WineListFragment extends Fragment{
             adapter = new WineAdapter(requireContext(), categories, winesMap);
             listView.setAdapter(adapter);
 
-            fetchCategories();
+            // Osserva i dati dal ViewModel
+            wineViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+                this.categories.clear();
+                this.categories.addAll(categories);
+                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                adapter.updateCategories(this.categories);
+            });
 
+            wineViewModel.getWinesMap().observe(getViewLifecycleOwner(), winesMap -> {
+                this.winesMap.clear();
+                this.winesMap.putAll(winesMap);
+                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                adapter.updateWinesMap(this.winesMap);
+            });
 
+            wineViewModel.getError().observe(getViewLifecycleOwner(), errorMessage -> {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            });
+
+            // Gestisci il click sugli elementi della lista
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-                String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
+                String selectedWine = adapter.getChild(groupPosition, childPosition).toString();
                 long lastUpdate = 0;
 
 
-                winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
-
+                // Naviga verso il fragment successivo
                 Bundle bundle = new Bundle();
-                bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
+                bundle.putString("selectedWine", selectedWine);
 
-                NavController navController = Navigation.findNavController(requireView());
+                NavController navController = Navigation.findNavController(view);
                 navController.navigate(R.id.bottleListFragment, bundle);
+
                 return true;
             });
+
+            // Carica i dati
+            wineViewModel.loadCategories();
+
             return view;
         }
-
-    private void fetchCategories() {
-        database.getCategoriesFromFirestore(new WineFireStoreDatabase.FirestoreCallback() {
-            @Override
-            public void onSuccess(List<String> fetchedCategories, HashMap<String, List<String>> fetchedWinesMap) {
-                categories.clear();
-                categories.addAll(fetchedCategories);
-
-                winesMap.clear();
-                winesMap.putAll(fetchedWinesMap);
-
-                // Formattare i nomi delle categorie e dei vini per la visualizzazione
-               formatCategoryAndWineNames();
-
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e(TAG, "Errore nel recupero dei dati da Firestore", e);
-            }
-        });
-    }
 
     private void formatCategoryAndWineNames() {
         // Mappa temporanea per la versione formattata
@@ -172,5 +170,7 @@ public class WineListFragment extends Fragment{
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }
+
+
 
     }
