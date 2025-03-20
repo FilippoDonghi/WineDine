@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.wine.WinesRepository;
+import it.unimib.winedine.util.Constants;
 
 public class WineViewModel extends ViewModel {
     private static final String TAG = WineViewModel.class.getSimpleName();
