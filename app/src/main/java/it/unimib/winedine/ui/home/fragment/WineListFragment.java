@@ -100,8 +100,8 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 long lastUpdate = 0;
 
 
-                winesRepository.fetchWines(selectedWine, Constants.RECOMMENDATION_NUMBER_VALUE, lastUpdate);
 
+                wineViewModel.fetchWines(selectedWine, lastUpdate);
                 Bundle bundle = new Bundle();
                 bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
 
@@ -121,10 +121,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
 
                 winesMap.clear();
                 winesMap.putAll(fetchedWinesMap);
-
-                // Formattare i nomi delle categorie e dei vini per la visualizzazione
                formatWineNames();
-
                 adapter.notifyDataSetChanged();
             }
 
@@ -136,8 +133,6 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     }
 
     private void formatWineNames() {
-
-        // Mappa temporanea per la versione formattata dei vini
         HashMap<String, List<String>> formattedWinesMap = new HashMap<>();
 
         for (Map.Entry<String, List<String>> entry : winesMap.entrySet()) {
@@ -151,7 +146,6 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
             formattedWinesMap.put(originalCategory, formattedWines);
         }
 
-        // Aggiorna la mappa dei vini
         winesMap.clear();
         winesMap.putAll(formattedWinesMap);}
 

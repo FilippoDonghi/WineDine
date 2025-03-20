@@ -98,7 +98,6 @@ public class BottleListFragment extends Fragment{
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-
         bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
                 new BottleRecyclerAdapter.OnItemClickListener() {
                     @Override
