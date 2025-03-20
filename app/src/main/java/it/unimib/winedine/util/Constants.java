@@ -14,7 +14,6 @@ public class Constants {
     public static final String FIREBASE_REALTIME_DATABASE = "https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/";
     public static final String FIREBASE_USERS_COLLECTION = "users";
 
-
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
 
     public static final int DATABASE_VERSION = 1;
@@ -40,6 +39,5 @@ public class Constants {
 
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
     public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
-
 
 }

@@ -59,7 +59,6 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     public static final String TAG = WineListFragment.class.getName();
 
     private List<String> categories = new ArrayList<>();
-    private HashMap<String, String> categoryMapping = new HashMap<>(); // Mappa per il legame tra nomi originali e formattati
     private HashMap<String, List<String>> winesMap = new HashMap<>();
     private ExpandableListView listView;
 
@@ -67,7 +66,6 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
     private WineViewModel wineViewModel;
-
 
 
     @Override
@@ -95,9 +93,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
 
             adapter = new WineAdapter(requireContext(), categories, winesMap);
             listView.setAdapter(adapter);
-
             fetchCategories();
-
 
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 String selectedWine = winesMap.get(categories.get(groupPosition)).get(childPosition);
@@ -127,7 +123,7 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
                 winesMap.putAll(fetchedWinesMap);
 
                 // Formattare i nomi delle categorie e dei vini per la visualizzazione
-               formatCategoryAndWineNames();
+               formatWineNames();
 
                 adapter.notifyDataSetChanged();
             }
@@ -139,35 +135,28 @@ public class WineListFragment extends Fragment implements BottleResponseCallback
         });
     }
 
-    private void formatCategoryAndWineNames() {
-        // Mappa temporanea per la versione formattata
+    private void formatWineNames() {
+
+        // Mappa temporanea per la versione formattata dei vini
         HashMap<String, List<String>> formattedWinesMap = new HashMap<>();
 
         for (Map.Entry<String, List<String>> entry : winesMap.entrySet()) {
             String originalCategory = entry.getKey();
-            String formattedCategory = formatWineName(originalCategory); // Formatta il nome
-
-            categoryMapping.put(formattedCategory, originalCategory); // Salva il legame tra formattato e originale
 
             List<String> formattedWines = new ArrayList<>();
             for (String wine : entry.getValue()) {
-                formattedWines.add(formatWineName(wine)); // Formatta il nome del vino
+                formattedWines.add(format(wine));
             }
 
-            formattedWinesMap.put(formattedCategory, formattedWines);
+            formattedWinesMap.put(originalCategory, formattedWines);
         }
 
-        // Aggiorna la lista delle categorie per l'UI
-        categories.clear();
-        categories.addAll(formattedWinesMap.keySet());
-
-        // Usa formattedWinesMap solo per l'UI
+        // Aggiorna la mappa dei vini
         winesMap.clear();
-        winesMap.putAll(formattedWinesMap);
-    }
+        winesMap.putAll(formattedWinesMap);}
 
     // Funzione di formattazione
-    private String formatWineName(String wine) {
+    private String format(String wine) {
         return Arrays.stream(wine.split("_"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
