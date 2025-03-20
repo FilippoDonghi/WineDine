@@ -8,13 +8,17 @@
     android:background="#00000000"
     app:strokeWidth="0dp"
     android:clickable="true"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_medium"
     android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
