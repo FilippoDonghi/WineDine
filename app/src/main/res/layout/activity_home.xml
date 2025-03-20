@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/home_menu"
+        android:background="#d1c9bc"
         app:labelVisibilityMode="labeled"
         />
 
@@ -34,7 +35,8 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="@android:color/white">
+        app:titleTextColor="@android:color/white"
+        tools:ignore="MissingConstraints">
 
         <ImageButton
             android:id="@+id/profile_menu"
@@ -42,6 +44,7 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:src="@drawable/ic_profile"
+            android:background="#d1c9bc"
             android:contentDescription="Profilo"
             />
 

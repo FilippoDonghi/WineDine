@@ -20,16 +20,16 @@
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusBottomEnd="12dp"
         app:boxStrokeColor="#d1c9bc"
-        app:boxBackgroundColor="#d1c9bc">
+        app:boxBackgroundColor="#d1c9bc"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:background="#d1c9bc"
-            android:drawablePadding="8dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Choose your wine"
+        android:textAlignment="center"
+        android:textColor="#d1c9bc"
+        android:textSize="30dp"/>
 
     <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -39,8 +39,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="20dp"
         android:layout_margin="12dp"
-        android:background="#d1c9bc"
-        android:backgroundTint="#d1c9bc">
+        android:backgroundTint="#422631">
 
         <ExpandableListView
             android:id="@+id/expandableListView"
@@ -48,7 +47,6 @@
             android:layout_height="wrap_content"
             android:divider="@color/cardview_dark_background"
             android:dividerHeight="1dp"
-            android:background="#d1c9bc"
             android:padding="12dp"
             android:layout_marginTop="12dp"
             android:scrollbarStyle="outsideOverlay"/>
