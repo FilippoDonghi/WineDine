@@ -25,7 +25,7 @@ public class Constants {
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
-    public static final String WINE_API_KEY = "2a8406e466eb4ae1afe2b2ef2df59b08";
+    public static final String WINE_API_KEY = "dddfaf25b91e47e2a27f31d82b48d5a6";
 
 
 
