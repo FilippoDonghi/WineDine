@@ -19,10 +19,14 @@ public abstract class Result {
             this.wineAPIResponse = wineAPIResponse;
         }
 
+
+
         public WineAPIResponse getData() {
             return wineAPIResponse;
         }
     }
+
+    public static class Loading extends Result {}
 
     public static final class UserSuccess extends Result {
         private final User user;

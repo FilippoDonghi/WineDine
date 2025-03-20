@@ -22,7 +22,11 @@
         android:id="@+id/favoriteWinesFragment"
         android:name="it.unimib.winedine.ui.home.fragment.FavoriteWinesFragment"
         android:label="fragment_favorite_wines"
-        tools:layout="@layout/fragment_favorite_wines" />
+        tools:layout="@layout/fragment_favorite_wines" >
+        <action
+            android:id="@+id/action_favoriteWinesFragment_to_visualizeBottleFragment"
+            app:destination="@id/visualizeBottleFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/wineListFragment"

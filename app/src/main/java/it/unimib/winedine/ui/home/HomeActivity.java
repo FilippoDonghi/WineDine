@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
 
 import it.unimib.winedine.R;
+import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.util.ServiceLocator;
 
@@ -51,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         // Aggiunto dentro il metodo onCreate
         ImageButton profileButton = findViewById(R.id.profile_menu);
         profileButton.setOnClickListener(view -> showProfileMenu(view));
+
     }
 
     @Override

@@ -35,11 +35,14 @@ public class WinesRepository implements BottleResponseCallback {
     public static final String TAG = WinesRepository.class.getName();
 
     private final MutableLiveData<Result> allWinesMutableLiveData;
+    private final MutableLiveData<Result> favoriteWinesMutableLiveData;
     private final BaseBottleRemoteDataSource bottleRemoteDataSource;
     private final BaseBottleLocalDataSource bottleLocalDataSource;
 
+
     public WinesRepository(BaseBottleRemoteDataSource bottleRemoteDataSource, BaseBottleLocalDataSource bottleLocalDataSource) {
-        this.allWinesMutableLiveData = new MutableLiveData<>();
+        allWinesMutableLiveData = new MutableLiveData<>();
+        favoriteWinesMutableLiveData = new MutableLiveData<>();
         this.bottleRemoteDataSource = bottleRemoteDataSource;
         this.bottleRemoteDataSource.setBottleCallback(this);
         this.bottleLocalDataSource = bottleLocalDataSource;
@@ -56,15 +59,24 @@ public class WinesRepository implements BottleResponseCallback {
         return allWinesMutableLiveData;
     }
 
+    public void updateWine(Bottle bottle) {
+        bottleLocalDataSource.updateWine(bottle);
+    }
+
+    public MutableLiveData<Result> getFavoriteWines() {
+        bottleLocalDataSource.getFavoriteWines();
+        return favoriteWinesMutableLiveData;
+    }
+
     @Override
     public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
-       bottleLocalDataSource.insertWines(wineAPIResponse.getRecommendedWines());
+        bottleLocalDataSource.insertWines(wineAPIResponse.getRecommendedWines());
     }
 
     @Override
     public void onFailureFromRemote(Exception exception) {
         Result.Error result = new Result.Error(exception.getMessage());
-       allWinesMutableLiveData.postValue(result);
+        allWinesMutableLiveData.postValue(result);
     }
 
     @Override
@@ -77,20 +89,48 @@ public class WinesRepository implements BottleResponseCallback {
     public void onFailureFromLocal(Exception exception) {
         Result.Error resultError = new Result.Error(exception.getMessage());
         allWinesMutableLiveData.postValue(resultError);
+        favoriteWinesMutableLiveData.postValue(resultError);
     }
 
     @Override
-    public void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles) {
+    public void onWinesFavoriteStatusChanged(Bottle bottle, List<Bottle> favoriteBottles) {
+        Result allWinesResult = allWinesMutableLiveData.getValue();
 
+        if (allWinesResult != null && allWinesResult.isSuccess()) {
+            List<Bottle> oldAllWines = ((Result.WineSuccess) allWinesResult).getData().getRecommendedWines();
+            if (oldAllWines.contains(bottle)) {
+                oldAllWines.set(oldAllWines.indexOf(bottle), bottle);
+                allWinesMutableLiveData.postValue(allWinesResult);
+            }
+        }
+        favoriteWinesMutableLiveData.postValue(new Result.WineSuccess(new WineAPIResponse(favoriteBottles)));
     }
 
-    @Override
-    public void onWinesFavoriteStatusChanged(List<Bottle> bottles) {
 
+    @Override
+    public void onWinesFavoriteStatusChanged(List<Bottle> favoriteBottles) {
+        favoriteWinesMutableLiveData.postValue(new Result.WineSuccess(new WineAPIResponse(favoriteBottles)));
     }
 
     @Override
     public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
+        Result allWinesResult = allWinesMutableLiveData.getValue();
 
+        if (allWinesResult != null && allWinesResult.isSuccess()) {
+            List<Bottle> oldAllWines = ((Result.WineSuccess) allWinesResult).getData().getRecommendedWines();
+            for (Bottle bottle : favoriteBottles) {
+                if (oldAllWines.contains(bottle)) {
+                    oldAllWines.set(oldAllWines.indexOf(bottle), bottle);
+                }
+            }
+            allWinesMutableLiveData.postValue(allWinesResult);
+        }
+
+        if (favoriteWinesMutableLiveData.getValue() != null &&
+                favoriteWinesMutableLiveData.getValue().isSuccess()) {
+            favoriteBottles.clear();
+            Result.WineSuccess result = new Result.WineSuccess(new WineAPIResponse(favoriteBottles));
+            favoriteWinesMutableLiveData.postValue(result);
+        }
     }
 }

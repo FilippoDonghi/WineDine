@@ -24,20 +24,31 @@ import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.unimib.winedine.R;
+import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.source.pairing.PairingMockDataSource;
 import it.unimib.winedine.ui.home.viewmodel.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.PairingViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
+import it.unimib.winedine.util.ServiceLocator;
 
 public class BottleVisualizeFragment extends Fragment {
     private PairingViewModel pairingViewModel;
     private Button pairingButton;
+    private WinesRepository winesRepository;
+    private WineViewModel wineViewModel;
+    private List<Bottle> bottleList;
+
+    BottleRecyclerAdapter bottleRecyclerAdapter;
 
     private Bottle currentBottle;
     private String selectedWine;
@@ -50,7 +61,17 @@ public class BottleVisualizeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Ricevi la bottiglia e il tipo di vino dal Bundle
+
+        winesRepository = ServiceLocator.getInstance().getWinesRepository(
+                requireActivity().getApplication(),
+                requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
+        );
+
+        wineViewModel= new ViewModelProvider(
+                requireActivity(),
+                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+        bottleList = new ArrayList<>();
+
         if (getArguments() != null) {
             currentBottle = getArguments().getParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE);
             selectedWine = getArguments().getString("selectedWine"); // Ricevi il tipo di vino
@@ -68,6 +89,24 @@ public class BottleVisualizeFragment extends Fragment {
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(currentBottle.getTitle());
         ((TextView) view.findViewById(R.id.textViewDescription)).setText(currentBottle.getDescription());
         TextView ratingView = view.findViewById(R.id.textViewAverageRating);
+
+        bottleRecyclerAdapter =
+                new BottleRecyclerAdapter(R.layout.item_wine, bottleList, selectedWine, true,
+                        new BottleRecyclerAdapter.OnItemClickListener() {
+                            @Override
+                            public void onBottleItemClick(Bottle bottle, String selectedWine) {
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE,
+                                        bottle);
+                            }
+                            @Override
+                            public void onFavoriteButtonClick(int position) {
+                                bottleList.get(position).setLiked(!bottleList.get(position).getLiked());
+                                wineViewModel.updateWine(bottleList.get(position));
+                            }
+
+                        });
+
 
         String originalRating = currentBottle.getAverageRating();
         pairingButton = view.findViewById(R.id.button_pairing);
@@ -100,7 +139,7 @@ public class BottleVisualizeFragment extends Fragment {
 
         Glide.with(getContext())
                 .load(currentBottle.getImageUrl())
-                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_error)))
+                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
                 .into(imageView);
 
         pairingButton = view.findViewById(R.id.button_pairing);
