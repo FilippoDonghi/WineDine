@@ -21,6 +21,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#d1c9bc"
         android:text="@string/welcome"/>
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginStart="@dimen/margin_medium"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#d1c9bc"
         android:text="@string/already_registered"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,7 +41,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
         style="?attr/textInputOutlinedStyle"
-        android:background="#05000000"
+        android:background="#80FFFFFF"
         app:startIconDrawable="@drawable/baseline_alternate_email_24"
         >
 
@@ -63,7 +65,7 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
         style="?attr/textInputOutlinedStyle"
-        android:background="#05000000"
+        android:background="#00000000"
         app:startIconDrawable="@drawable/baseline_password_24"
         >
 
@@ -72,24 +74,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:background="#00000000"/>
+            android:background="#80FFFFFF"/>
 
 
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
     <Button
         android:id="@+id/signupButton"
-        android:layout_marginTop="@dimen/margin_medium"
         style="@style/Widget.Material3.Button.ElevatedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/signup"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
         android:layout_gravity="center"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="50dp"
+        android:backgroundTint="#d1c9bc"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="@string/signup"
+
         />
 
 </LinearLayout>

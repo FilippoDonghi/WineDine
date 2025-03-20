@@ -43,7 +43,7 @@ public class WineViewModel extends ViewModel {
     public MutableLiveData<Result> getFavoriteWinesListLiveData() {
         if (favoriteWinesListLiveData == null) {
             favoriteWinesListLiveData = new MutableLiveData<>();
-            loadFavoriteWines(); // Carica i preferiti inizialmente
+            loadFavoriteWines();
         }
         return favoriteWinesListLiveData;
     }
@@ -62,8 +62,8 @@ public class WineViewModel extends ViewModel {
     }
 
 
-    private void fetchWines(String wine, long lastUpdate) {
-        bottlesListLiveData.setValue(new Result.Loading()); // 🔹 Corretto: creiamo un'istanza della classe
+    public void fetchWines(String wine, long lastUpdate) {
+        bottlesListLiveData.setValue(new Result.Loading());
 
         winesRepository.fetchWines(wine, page, lastUpdate)
                 .observeForever(result -> bottlesListLiveData.postValue(result));
