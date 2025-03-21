@@ -42,22 +42,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="30dp"
-                android:layout_toEndOf="@id/imageView"
                 android:layout_toStartOf="@id/favoriteButton"
+                android:layout_toEndOf="@id/imageView"
                 android:text="Titolo"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <!-- Dentro il container principale (es. LinearLayout verticale) -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_alignTop="@+id/textViewTitle"
-                android:layout_marginStart="27dp"
-                android:layout_marginTop="45dp"
+                android:layout_alignBottom="@+id/textViewPrice"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="132dp"
+                android:layout_marginBottom="-36dp"
                 android:layout_toEndOf="@+id/imageView"
-                android:gravity="center_vertical"> <!-- Aggiungi margine se necessario -->
+                android:gravity="center_vertical"
+                android:orientation="horizontal"> <!-- Aggiungi margine se necessario -->
 
                 <!-- Average Rating -->
                 <TextView
@@ -65,19 +68,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.5 ★"
+                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_red_dark"/>
+                    android:textStyle="bold" />
 
                 <!-- Rating Count -->
                 <TextView
                     android:id="@+id/textViewRatingCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="(1234 recensioni)"
-                    android:textSize="14sp"
                     android:textColor="@android:color/darker_gray"
-                    android:layout_marginStart="8dp"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -98,11 +101,10 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/selector_favorite"
+                android:layout_alignBaseline="@id/textViewTitle"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:layout_alignBaseline="@id/textViewTitle">
-            </CheckBox>
+                android:button="@drawable/selector_favorite"></CheckBox>
 
         </RelativeLayout>
     </LinearLayout>

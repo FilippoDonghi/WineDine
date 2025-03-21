@@ -15,6 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#d1c9bc"
+        android:backgroundTint="#d1c9bc"
         android:orientation="vertical">
 
         <!-- Immagine del Vino -->
@@ -23,6 +25,8 @@
             android:layout_height="200dp"
             android:elevation="2dp"
             android:layout_margin="8dp"
+            android:background="#d1c9bc"
+            android:backgroundTint="#d1c9bc"
             app:cardCornerRadius="15dp">
 
             <ImageView
@@ -116,7 +120,8 @@
                 android:layout_height="wrap_content"
                 android:text="Abbinamento"
                 android:textSize="16sp"
-                android:textColor="@android:color/white"
+                android:backgroundTint="#422631"
+                android:textColor="#d1c9bc"
                 android:layout_marginTop="8dp"/>
 
 

@@ -13,7 +13,7 @@
     <string name="login_with_google">Login with Google</string>
     <string name="create_a_new_account">Create new account</string>
     <string name="or">or</string>
-    <string name="signup">signup\n</string>
+    <string name="signup">signup</string>
 
     <!-- Errors -->
     <string name="error_email_login">Check the email address</string>
