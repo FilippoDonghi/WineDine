@@ -113,27 +113,28 @@ public class BottleVisualizeFragment extends Fragment {
         setupPairingViewModel();
         setupButton();
         try {
+            float ratingValue = Float.parseFloat(originalRating)*5;
+            int fullStars = (int) ratingValue;
+            boolean halfStar = (ratingValue - fullStars) >= 0.5;
 
-
-            // 2. Troncamento a 4 caratteri
-            String truncatedRating = originalRating.length() > 4 ?
-                    originalRating.substring(0, 4) :
-                    originalRating;
-
-            // 3. Conversione e scaling
-            double ratingValue = Double.parseDouble(truncatedRating);
-            double scaledRating = ratingValue * 5;
-
-            // 4. Formattazione con 1 decimale
-            String formattedRating = String.format("%.1f ★", scaledRating);
+            StringBuilder stars = new StringBuilder();
+            for (int i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    stars.append("★");
+                } else if (i == fullStars && halfStar) {
+                    stars.append("½");
+                } else {
+                    stars.append("☆");
+                }
+            }
+            String formattedRating = String.format("%.1f %s", ratingValue, stars.toString());
             ratingView.setText(formattedRating);
-
         } catch (NumberFormatException e) {
             // Gestione errori di conversione
-            ratingView.setText("0.0 ★");
+            ratingView.setText("0.0 ☆☆☆☆☆");
             Log.e("RatingError", "Formato rating non valido: " + originalRating, e);
         }
-        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(currentBottle.getRatingCount()+ " recensioni");
+        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(currentBottle.getRatingCount());
         ((TextView) view.findViewById(R.id.textViewScore)).setText(currentBottle.getScore());
         ((TextView) view.findViewById(R.id.textViewPrice)).setText(currentBottle.getPrice());
         ImageView imageView = view.findViewById(R.id.imageView);
