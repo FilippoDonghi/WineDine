@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+
+import it.unimib.winedine.R;
 
 public class WineAdapter extends BaseExpandableListAdapter {
     private Context context;
@@ -72,10 +75,13 @@ public class WineAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
+            convertView = inflater.inflate(R.layout.list_group_item, parent, false);
         }
-        TextView textView = convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(R.id.group_name);
         textView.setText((String) getGroup(groupPosition));
+
+        ImageView imageView = convertView.findViewById(R.id.group_icon);
+        imageView.setImageResource(R.drawable.calice);
         return convertView;
     }
 
@@ -83,9 +89,9 @@ public class WineAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            convertView = inflater.inflate(R.layout.list_child_item, parent, false);
         }
-        TextView textView = convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(R.id.child_name);
         textView.setText((String) getChild(groupPosition, childPosition));
         return convertView;
     }
