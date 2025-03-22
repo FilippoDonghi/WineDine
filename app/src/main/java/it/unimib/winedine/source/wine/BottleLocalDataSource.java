@@ -7,13 +7,16 @@ import java.util.List;
 import it.unimib.winedine.database.WineDao;
 import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.util.SharedPreferencesUtils;
 
 public class BottleLocalDataSource extends BaseBottleLocalDataSource {
 
     private final WineDao wineDao;
+    private final SharedPreferencesUtils sharedPreferencesUtil;
 
-    public BottleLocalDataSource(WineRoomDatabase winesRoomDatabase) {
+    public BottleLocalDataSource(WineRoomDatabase winesRoomDatabase, SharedPreferencesUtils sharedPreferencesUtil) {
         this.wineDao = winesRoomDatabase.wineDao();
+        this.sharedPreferencesUtil = sharedPreferencesUtil;
     }
 
     @Override
@@ -42,17 +45,12 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
                 for (Bottle bottle : bottleList) {
                     if (bottleList.contains(bottle)) {
                         bottleList.set(bottleList.indexOf(bottle), bottle);
-                    }
-                }
-
-
+                    }}
                 List<Long> insertedWinesIds = wineDao.insertBottlesList(bottleList);
                 for (int i = 0; i < bottleList.size(); i++) {
                     bottleList.get(i).setUid(insertedWinesIds.get(i));
                 }
-
-                responseCallback.onSuccessFromLocal(bottleList);
-            }
+                responseCallback.onSuccessFromLocal(bottleList);}
         });
     }
 
@@ -61,7 +59,6 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             int rowUpdatedCounter = wineDao.updateBottle(bottle);
 
-            // It means that the update succeeded because only one row had to be updated
             if (rowUpdatedCounter == 1) {
                 Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
                 responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
@@ -70,5 +67,23 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
             }
         });
     }
+
+    @Override
+    public void deleteFavoriteWines() {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Bottle> favoriteWines = wineDao.getLiked();
+            for (Bottle article : favoriteWines) {
+                article.setLiked(false);
+            }
+            int updatedRowsNumber = wineDao.updateListFavoriteBottle(favoriteWines);
+
+            if (updatedRowsNumber == favoriteWines.size()) {
+                responseCallback.onDeleteFavoriteWinesSuccess(favoriteWines);
+            } else {
+               responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+            }
+        });
+    }
+
 }
 

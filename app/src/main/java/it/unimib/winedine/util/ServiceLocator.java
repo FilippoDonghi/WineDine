@@ -61,20 +61,20 @@ public class ServiceLocator {
         BaseUserDataRemoteDataSource userDataRemoteDataSource =
                 new UserFirebaseDataSource(sharedPreferencesUtil);
 
-        // BaseArticleLocalDataSource newsLocalDataSource =
-         //       new ArticleLocalDataSource(getNewsDao(application), sharedPreferencesUtil);
+        BaseBottleLocalDataSource bottleLocalDataSource =
+                new BottleLocalDataSource(getWineDAO(application), sharedPreferencesUtil);
+
 
         return new UserRepository(userRemoteAuthenticationDataSource,
-                userDataRemoteDataSource);
+                userDataRemoteDataSource, bottleLocalDataSource);
     }
 
 
 
     public WinesRepository getWinesRepository(Application application, boolean debugMode) {
-
-
         BaseBottleRemoteDataSource bottleRemoteDataSource;
         BaseBottleLocalDataSource bottleLocalDataSource;
+        SharedPreferencesUtils sharedPreferencesUtil = new SharedPreferencesUtils(application);
 
         if (debugMode) {
             JSONParserUtils jsonParserUtil = new JSONParserUtils(application);
@@ -82,7 +82,7 @@ public class ServiceLocator {
         } else {
             bottleRemoteDataSource = new BottleRemoteDataSource();
         }
-        bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application));
+        bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application), sharedPreferencesUtil);
 
         return new WinesRepository(bottleRemoteDataSource, bottleLocalDataSource);
     }

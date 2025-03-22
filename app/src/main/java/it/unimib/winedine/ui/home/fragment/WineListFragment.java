@@ -118,7 +118,7 @@ public class WineListFragment extends Fragment{
             // Gestisci il click sugli elementi della lista
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 String selectedWine = adapter.getChild(groupPosition, childPosition).toString();
-                long lastUpdate = 0;
+                long aalastUpdate = 0;
 
 
                 // Naviga verso il fragment successivo

@@ -76,17 +76,14 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
-                    Log.d("AUTH", "Login riuscito: " + firebaseUser.getEmail());
                     userResponseCallback.onSuccessFromAuthentication(
                             new User(firebaseUser.getDisplayName(), email, firebaseUser.getUid())
                     );
                 } else {
-                    Log.e("AUTH", "Login riuscito, ma FirebaseUser è null! (Verifica persistenza)");
                     userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }
             } else {
-                Log.e("AUTH", "Autenticazione fallita: " + task.getException().getMessage());
-                userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
+                    userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
             }
         });
     }
@@ -94,12 +91,10 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
     @Override
     public void signInWithGoogle(String idToken) {
         if (idToken !=  null) {
-            // Got an ID token from Google. Use it to authenticate with Firebase.
             AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success");
+
                     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                     if (firebaseUser != null) {
                         userResponseCallback.onSuccessFromAuthentication(
@@ -113,14 +108,12 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
                                 getErrorMessage(task.getException()));
                     }
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.getException());
                     userResponseCallback.onFailureFromAuthentication(getErrorMessage(task.getException()));
                 }
             });
         }
     }
-
 
 
     private String getErrorMessage(Exception exception) {

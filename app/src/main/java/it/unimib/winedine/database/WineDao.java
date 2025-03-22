@@ -41,6 +41,9 @@ import it.unimib.winedine.model.Bottle;
     @Update
     int updateBottle(Bottle bottle);
 
+    @Query("DELETE from Bottle WHERE liked = 0")
+    void deleteCached();
+
     @Update
     int updateListFavoriteBottle(List<Bottle> bottles);
     }

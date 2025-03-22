@@ -20,4 +20,5 @@ public abstract class  BaseBottleLocalDataSource {
     public abstract void updateWine(Bottle bottle);
 
     public abstract void getFavoriteWines();
+    public abstract void deleteFavoriteWines();
 }

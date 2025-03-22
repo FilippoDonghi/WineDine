@@ -67,9 +67,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
             if (favoriteCheckbox != null) {
                 favoriteCheckbox.setOnClickListener(this);}
-
             view.setOnClickListener(this);
-
     }
 
 
@@ -102,10 +100,9 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         }
 
         @Override
-    public void onClick(View v) {
+        public void onClick(View v) {
 
             if (v.getId() == R.id.favoriteButton) {
-                //setImageViewFavoriteNews(!newsList.get(getAdapterPosition()).isFavorite());
                 onItemClickListener.onFavoriteButtonClick(getAdapterPosition());
             } else {
                 onItemClickListener.onBottleItemClick(bottleList.get(getAdapterPosition()), selectedWine);
@@ -117,7 +114,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         this.layout = layout;
         this.bottleList = bottleList;
         this.onItemClickListener = onItemClickListener;
-        this.selectedWine = selectedWine; // Inizializza selectedWine
+        this.selectedWine = selectedWine;
         this.heartVisible = heartVisible;
     }
 
@@ -156,10 +153,11 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
 
         if (viewHolder.getFavoriteCheckbox() != null) {
-            // Set the current state based on the bottle's liked status
             viewHolder.getFavoriteCheckbox().setChecked(bottleList.get(position).getLiked());
 
-            // Make it visible or invisible based on heartVisible flag
+            //imposta la visibilità della CheckBox in base al valore di heartVisible.
+            //se heartVisible è true, la CheckBox sarà visibile (View.VISIBLE).
+            //Se heartVisible è false, la CheckBox sarà invisibile (View.INVISIBLE)
             viewHolder.getFavoriteCheckbox().setVisibility(heartVisible ? View.VISIBLE : View.INVISIBLE);
         }
 

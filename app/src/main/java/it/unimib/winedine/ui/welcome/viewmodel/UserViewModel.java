@@ -19,10 +19,6 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<Result> userPreferencesMutableLiveData;
     private boolean authenticationError;
 
-
-
-
-
     public UserViewModel(IUserRepository userRepository) {
         this.userRepository = userRepository;
         authenticationError = false;
@@ -50,9 +46,9 @@ public class UserViewModel extends ViewModel {
         return userFavoriteNewsMutableLiveData;
     }
 
-    public void saveUserPreferences(String favoriteCountry, Set<String> favoriteTopics, String idToken) {
+    public void saveUserPreferences(String idToken) {
         if (idToken != null) {
-            userRepository.saveUserPreferences(favoriteCountry, favoriteTopics, idToken);
+            userRepository.saveUserPreferences(idToken);
         }
     }
 

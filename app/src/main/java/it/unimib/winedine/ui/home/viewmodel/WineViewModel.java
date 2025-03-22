@@ -41,15 +41,10 @@ public class WineViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getFavoriteWinesListLiveData() {
-        if (favoriteWinesListLiveData == null) {
-            favoriteWinesListLiveData = new MutableLiveData<>();
-            loadFavoriteWines();
-        }
+            if (favoriteWinesListLiveData == null) {
+                getFavoriteWines();
+            }
         return favoriteWinesListLiveData;
-    }
-
-    private void loadFavoriteWines() {
-        favoriteWinesListLiveData = winesRepository.getFavoriteWines();
     }
 
     private void getFavoriteWines() {
@@ -58,9 +53,7 @@ public class WineViewModel extends ViewModel {
 
     public void updateWine(Bottle bottle){
           winesRepository.updateWine(bottle);
-            getFavoriteWines();
     }
-
 
     public void fetchWines(String wine, long lastUpdate) {
         bottlesListLiveData.setValue(new Result.Loading());
@@ -79,6 +72,14 @@ public class WineViewModel extends ViewModel {
 
     public LiveData<String> getError() {
         return error;
+    }
+
+    public void removeFromFavorite(Bottle bottle) {
+        winesRepository.updateWine(bottle);
+    }
+
+    public void deleteAllFavoriteWines() {
+        winesRepository.deleteFavoriteWines();
     }
 
     public void loadCategories() {

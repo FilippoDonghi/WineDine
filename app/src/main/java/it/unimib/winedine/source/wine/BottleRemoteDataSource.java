@@ -42,7 +42,10 @@ public class BottleRemoteDataSource extends BaseBottleRemoteDataSource {
                                    @NonNull Response<WineAPIResponse> response) {
 
                 if (response.body() != null && response.isSuccessful()) {
+
+                    //qui faccio una cosa in più rispetto al prof
                     List<Bottle> bottleList = response.body().getRecommendedWines();
+
                     responseCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
                 } else {
                     responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));

@@ -18,7 +18,7 @@ public abstract class BaseUserDataRemoteDataSource {
 
     public abstract void getUserPreferences(String idToken);
 
-    public abstract void saveUserPreferences(String favoriteCountry, Set<String> favoriteTopics, String idToken);
+    public abstract void saveUserPreferences(String idToken);
 }
 
 

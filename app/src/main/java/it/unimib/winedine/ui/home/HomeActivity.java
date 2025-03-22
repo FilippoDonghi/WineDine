@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private NavController navController;
     private UserViewModel userViewModel;
-    private FirebaseUser currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNav, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        // Aggiunto dentro il metodo onCreate
+
         ImageButton profileButton = findViewById(R.id.profile_menu);
         profileButton.setOnClickListener(view -> showProfileMenu(view));
 
@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+
         return navController.navigateUp();
     }
 
@@ -67,11 +68,7 @@ public class HomeActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.action_favorites) {
-               // navController.navigate(R.id.favoritesFragment);
-                return true;
-            }
-            else if (id == R.id.action_logout) {
+            if (id == R.id.action_logout) {
                userViewModel.logout();
                 return true;
             }
@@ -79,9 +76,5 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         popupMenu.show();
-    }
-
-    private void performLogout() {
-        // Implementa la logica di logout
     }
 }

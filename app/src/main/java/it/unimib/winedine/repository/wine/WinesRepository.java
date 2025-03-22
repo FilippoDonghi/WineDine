@@ -54,7 +54,7 @@ public class WinesRepository implements BottleResponseCallback {
 
     public MutableLiveData<Result> fetchWines(String wine, int number, long lastUpdate) {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdate > FRESH_TIMEOUT) {    //fa la chiamata API
+        if (currentTime - lastUpdate > FRESH_TIMEOUT) {
             bottleRemoteDataSource.getWines(wine);
         } else {
             bottleLocalDataSource.getWines();
@@ -64,6 +64,10 @@ public class WinesRepository implements BottleResponseCallback {
 
     public void updateWine(Bottle bottle) {
         bottleLocalDataSource.updateWine(bottle);
+    }
+
+    public void deleteFavoriteWines() {
+        bottleLocalDataSource.deleteFavoriteWines();
     }
 
     public MutableLiveData<Result> getFavoriteWines() {
