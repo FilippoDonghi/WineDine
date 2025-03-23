@@ -2,6 +2,8 @@ package it.unimib.winedine.ui.home.fragment;
 
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -46,11 +48,15 @@ import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.adapter.WineAdapter;
 import it.unimib.winedine.database.WineFireStoreDatabase;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.User;
 import it.unimib.winedine.model.WineAPIResponse;
+import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 import it.unimib.winedine.util.ServiceLocator;
@@ -67,8 +73,6 @@ public class WineListFragment extends Fragment{
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
     private WineViewModel wineViewModel;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,18 +100,17 @@ public class WineListFragment extends Fragment{
             adapter = new WineAdapter(requireContext(), categories, winesMap);
             listView.setAdapter(adapter);
 
-            // Osserva i dati dal ViewModel
             wineViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
                 this.categories.clear();
                 this.categories.addAll(categories);
-                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                formatCategoryAndWineNames();
                 adapter.updateCategories(this.categories);
             });
 
             wineViewModel.getWinesMap().observe(getViewLifecycleOwner(), winesMap -> {
                 this.winesMap.clear();
                 this.winesMap.putAll(winesMap);
-                formatCategoryAndWineNames(); // Chiama il metodo di formattazione
+                formatCategoryAndWineNames();
                 adapter.updateWinesMap(this.winesMap);
             });
 
@@ -118,8 +121,6 @@ public class WineListFragment extends Fragment{
             // Gestisci il click sugli elementi della lista
             listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 String selectedWine = adapter.getChild(groupPosition, childPosition).toString();
-                long aalastUpdate = 0;
-
 
                 // Naviga verso il fragment successivo
                 Bundle bundle = new Bundle();
@@ -136,6 +137,7 @@ public class WineListFragment extends Fragment{
 
             return view;
         }
+
 
     private void formatCategoryAndWineNames() {
         // Mappa temporanea per la versione formattata

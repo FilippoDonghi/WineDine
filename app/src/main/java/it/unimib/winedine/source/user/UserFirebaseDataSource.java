@@ -98,6 +98,12 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
 
     @Override
     public void saveUserPreferences(String idToken) {
-
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).setValue(idToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i(TAG, "fattoooo");
+            }
+        });
     }
 }
+

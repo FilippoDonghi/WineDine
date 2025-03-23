@@ -65,24 +65,6 @@ public class LoginFragment extends Fragment {
 
     public LoginFragment() {}
 
-    private String getErrorMessage(String errorType) {
-        switch (errorType) {
-            case INVALID_CREDENTIALS_ERROR:
-                return requireActivity().getString(R.string.error_password_login);
-            case INVALID_USER_ERROR:
-                return requireActivity().getString(R.string.error_email_login);
-            default:
-                return requireActivity().getString(R.string.error_unexpected);
-        }
-    }
-    private void retrieveUserInformationAndStartActivity(User user, View view) {
-        userViewModel.getUserPreferences(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userPreferences -> {
-
-                }
-        );
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,18 +92,16 @@ public class LoginFragment extends Fragment {
                 .build();
         startIntentSenderForResult = new ActivityResultContracts.StartIntentSenderForResult();
 
-        //questo serve per farmi restituire l'account che ho scelto nel login con google
+
         activityResultLauncher = registerForActivityResult(startIntentSenderForResult, activityResult -> {
             if (activityResult.getResultCode() == Activity.RESULT_OK) {
                 Log.d(TAG, "result.getResultCode() == Activity.RESULT_OK");
 
-                //quando seleziono l'account entro in questo try catch
                 try {
                     SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(activityResult.getData());
                     String idToken = credential.getGoogleIdToken();
 
                     if (idToken !=  null) {
-                       //restituiscimi i dati relativi all'account di google
                         userViewModel.getGoogleUserMutableLiveData(idToken).observe(getViewLifecycleOwner(), authenticationResult -> {
                             if (authenticationResult.isSuccess()) {
                                 User user = ((Result.UserSuccess) authenticationResult).getData();
@@ -146,23 +126,14 @@ public class LoginFragment extends Fragment {
         });
     }
 
-
-
-
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://winedine-6b29b-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         editTextEmail = view.findViewById(R.id.textInputEmail);
         editTextPassword = view.findViewById(R.id.textInputPassword);
@@ -211,9 +182,6 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean isEmailOk(String email) {
-        // Check if the email is valid through the use of this library:
-        // https://commons.apache.org/proper/commons-validator/
-
         if (!EmailValidator.getInstance().isValid((email))) {
             editTextEmail.setError(getString(R.string.error_email_login));
             return false;
@@ -232,6 +200,26 @@ public class LoginFragment extends Fragment {
             editTextPassword.setError(null);
             return true;
         }
+    }
+
+    private String getErrorMessage(String errorType) {
+        switch (errorType) {
+            case INVALID_CREDENTIALS_ERROR:
+                return requireActivity().getString(R.string.error_password_login);
+            case INVALID_USER_ERROR:
+                return requireActivity().getString(R.string.error_email_login);
+            default:
+                return requireActivity().getString(R.string.error_unexpected);
+        }
+    }
+
+    //rivedere questa funzione
+    private void retrieveUserInformationAndStartActivity(User user, View view) {
+        userViewModel.getUserPreferences(user.getIdToken()).observe(
+                getViewLifecycleOwner(), userPreferences -> {
+
+                }
+        );
     }
     }
 

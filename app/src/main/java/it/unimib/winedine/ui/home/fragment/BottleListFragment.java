@@ -2,7 +2,12 @@ package it.unimib.winedine.ui.home.fragment;
 
 import static com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableStrategy.LOG;
 
+import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_EMAIL;
+import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_FILENAME;
+import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_ID_TOKEN;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -43,14 +48,19 @@ import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.model.User;
 import it.unimib.winedine.model.WineAPIResponse;
+import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.JSONParserUtils;
 import it.unimib.winedine.util.ServiceLocator;
+import it.unimib.winedine.util.SharedPreferencesUtils;
 
 public class BottleListFragment extends Fragment{
 
@@ -62,7 +72,7 @@ public class BottleListFragment extends Fragment{
     private List<Bottle> bottleList;
     private BottleRecyclerAdapter bottleAdapter;
     private WineViewModel wineViewModel;
-
+    private UserViewModel userViewModel;
 
     public BottleListFragment() {
 
@@ -77,6 +87,11 @@ public class BottleListFragment extends Fragment{
             selectedWine = getArguments().getString("selectedWine");
         }
 
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
         winesRepository = ServiceLocator.getInstance().getWinesRepository(
                         requireActivity().getApplication(),
                         requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
@@ -150,7 +165,21 @@ public class BottleListFragment extends Fragment{
                 bottleAdapter.notifyDataSetChanged();
             }
         });
+        // Recupero dell'idToken e dell'email dall'utente loggato
+            String idToken = userViewModel.getLoggedUser().getIdToken();
+            String email = userViewModel.getLoggedUser().getEmail();
 
+        // Chiamata per salvare idToken ed email nelle SharedPreferences
+            saveUserInfo(idToken, email);
         return view;
     }
-    }
+
+    public void saveUserInfo(String idToken, String email) {
+        SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils(getContext());
+        sharedPreferencesUtils.writeStringData(SHARED_PREFERENCES_FILENAME, SHARED_PREFERENCES_ID_TOKEN, idToken );
+        sharedPreferencesUtils.writeStringData(SHARED_PREFERENCES_FILENAME, SHARED_PREFERENCES_EMAIL, email );
+        userViewModel.saveUserPreferences(
+                sharedPreferencesUtils.readStringData(Constants.SHARED_PREFERENCES_FILENAME,
+                        Constants.SHARED_PREFERENCES_ID_TOKEN)
+        );
+    }}

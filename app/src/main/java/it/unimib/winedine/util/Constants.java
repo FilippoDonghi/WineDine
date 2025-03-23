@@ -39,7 +39,8 @@ public class Constants {
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
 
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
-    public static final String SHARED_PREFERNECES_LAST_UPDATE = "last_update";
+    public static final String SHARED_PREFERENCES_ID_TOKEN = "id_token";
+    public static final String SHARED_PREFERENCES_EMAIL = "email";
     public static final String FIREBASE_FAVORITE_WINES_COLLECTION = "favorite_wines";
 
 }
