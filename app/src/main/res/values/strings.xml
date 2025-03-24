@@ -17,7 +17,8 @@
 
     <!-- Errors -->
     <string name="error_email_login">Check the email address</string>
-    <string name="error_password_login">The password must have at least 8 characters</string>
+    <string name="error_password_login">The credentials you entered are incorrect</string>
+    <string name="error_invalid_password">The password must be at least 8 characters long</string>
     <string name="error_retrieving_news">There was an error retrieving the news</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="error_unexpected">error unexpected</string>

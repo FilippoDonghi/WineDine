@@ -143,17 +143,39 @@ public class LoginFragment extends Fragment {
         Button loginGoogleButton = view.findViewById(R.id.loginGoogleButton);
 
         loginButton.setOnClickListener(v -> {
-            if (editTextEmail.getText() != null && isEmailOk(editTextEmail.getText().toString())) {
-                if (editTextPassword.getText() != null && isPasswordOk(editTextPassword.getText().toString())) {
-                    Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
+            String email = editTextEmail.getText() != null ? editTextEmail.getText().toString() : "";
+            String password = editTextPassword.getText() != null ? editTextPassword.getText().toString() : "";
 
-                } else {
-                    editTextPassword.setError(getString(R.string.error_password_login));
-                }
-            } else {
+            if (!isEmailOk(email)) {
                 editTextEmail.setError(getString(R.string.error_email_login));
+                return;
             }
+
+            if (!isPasswordOk(password)) {
+                editTextPassword.setError(getString(R.string.error_password_login));
+                return;
+            }
+
+            // Usa getUser() con isUserRegistered=true per il login
+            userViewModel.getUser(email, password, true)
+                    .observe(getViewLifecycleOwner(), result -> {
+                        if (result != null) {
+                            if (result.isSuccess()) {
+                                // Login riuscito
+                                Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
+                            } else {
+                                // Mostra errore e stampa log
+                                String errorMessage = getErrorMessage(((Result.Error) result).getMessage());
+
+                                // Stampa il log dell'errore
+                                Log.e("LoginError", "Credenziali errate: " + errorMessage);
+
+                                Snackbar.make(requireView(), errorMessage, Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         });
+
         loginGoogleButton.setOnClickListener(v -> oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(requireActivity(), new OnSuccessListener<BeginSignInResult>() {
                     @Override
@@ -194,7 +216,7 @@ public class LoginFragment extends Fragment {
     private boolean isPasswordOk(String password) {
         // Check if the password length is correct
         if (password.isEmpty() || password.length() < Constants.MINIMUM_LENGTH_PASSWORD) {
-            editTextPassword.setError(getString(R.string.error_password_login));
+            editTextPassword.setError(getString(R.string.error_invalid_password));
             return false;
         } else {
             editTextPassword.setError(null);

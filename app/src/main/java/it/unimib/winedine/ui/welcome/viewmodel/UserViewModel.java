@@ -1,6 +1,8 @@
 package it.unimib.winedine.ui.welcome.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -85,8 +87,24 @@ public class UserViewModel extends ViewModel {
         userFavoriteNewsMutableLiveData = userRepository.getUserFavoriteWines(idToken);
     }
 
-    public void getUser(String email, String password, boolean isUserRegistered) {
-        userRepository.getUser(email, password, isUserRegistered);
+    public LiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
+        // Crea un nuovo LiveData per questa specifica chiamata
+        MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
+
+        // Osserva il LiveData del repository
+        userRepository.getUser(email, password, isUserRegistered)
+                .observeForever(new Observer<Result>() {
+                    @Override
+                    public void onChanged(Result result) {
+                        if (result != null) {
+                            resultLiveData.postValue(result);
+                            // Rimuovi l'observer dopo aver ricevuto il risultato
+                            userRepository.getUser(email, password, isUserRegistered).removeObserver(this);
+                        }
+                    }
+                });
+
+        return resultLiveData;
     }
 
     public boolean isAuthenticationError() {
