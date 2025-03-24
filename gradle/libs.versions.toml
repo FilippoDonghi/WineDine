@@ -1,7 +1,9 @@
 [versions]
 agp = "8.6.0"
+appcompatVersion = "1.4.0"
 commonsValidator = "1.7"
 converterGson = "2.11.0"
+core = "1.15.0"
 firebaseBom = "33.9.0"
 glideVersion = "4.16.0"
 googlePlayServicesAuth = "20.7.0"
@@ -14,6 +16,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
+materialVersion = "1.6.0"
 playServicesAuth = "21.3.0"
 retrofit = "2.11.0"
 navigationFragment = "2.8.6"
@@ -23,8 +26,10 @@ roomRuntime = "2.6.1"
 shimmer = "0.5.0"
 
 [libraries]
+appcompat-v140 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 commons-validator = { module = "commons-validator:commons-validator", version.ref = "commonsValidator" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+core = { module = "androidx.core:core", version.ref = "core" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
@@ -38,6 +43,7 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material-v160 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-auth-v2070 = { module = "com.google.android.gms:play-services-auth", version.ref = "googlePlayServicesAuth" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

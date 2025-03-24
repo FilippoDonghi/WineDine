@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "it.unimib.winedine"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "it.unimib.winedine"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -56,7 +56,9 @@ dependencies {
     implementation(libs.commons.validator)
     implementation(libs.github.glide)
     implementation(libs.shimmer)
-
+    implementation (libs.appcompat.v140)
+    implementation (libs.material.v160)
+    implementation (libs.core)
 
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)

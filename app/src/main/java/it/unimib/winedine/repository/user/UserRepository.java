@@ -75,8 +75,54 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
 
     @Override
     public MutableLiveData<Result> logout() {
+        MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
+
         userRemoteDataSource.logout();
-        return userMutableLiveData;
+
+        // Aggiungi listener esplicito
+        userRemoteDataSource.setUserResponseCallback(new UserResponseCallback() {
+            @Override
+            public void onSuccessLogout() {
+                resultLiveData.postValue(new Result.UserSuccess(null));
+            }
+
+            @Override
+            public void onSuccessFromAuthentication(User user) {
+
+            }
+
+            @Override
+            public void onFailureFromAuthentication(String message) {
+                resultLiveData.postValue(new Result.Error(message));
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabase(User user) {
+
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabase(List<Bottle> bottleList) {
+
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabaseFavorites() {
+
+            }
+
+            @Override
+            public void onSuccessFromGettingUserPreferences() {
+
+            }
+
+            @Override
+            public void onFailureFromRemoteDatabase(String message) {
+
+            }
+        });
+
+        return resultLiveData;
     }
 
     @Override

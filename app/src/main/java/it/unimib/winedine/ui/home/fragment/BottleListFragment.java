@@ -94,9 +94,11 @@ public class BottleListFragment extends Fragment{
 
         IUserRepository userRepository = ServiceLocator.getInstance().
                 getUserRepository(requireActivity().getApplication());
+
         userViewModel = new ViewModelProvider(
                 requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+
         winesRepository = ServiceLocator.getInstance().getWinesRepository(
                         requireActivity().getApplication(),
                         requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)

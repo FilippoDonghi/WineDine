@@ -2,9 +2,11 @@ package it.unimib.winedine.source.user;
 
 import static it.unimib.winedine.util.Constants.*;
 
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.HandlerCompat;
 
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.logging.Handler;
 
 import it.unimib.winedine.model.User;
 
@@ -44,21 +48,27 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
         }
     }
 
-    @Override
     public void logout() {
         FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() == null) {
                     firebaseAuth.removeAuthStateListener(this);
-                    Log.d(TAG, "User logged out");
+                    Log.d(TAG, "Firebase logout completato");
                     userResponseCallback.onSuccessLogout();
                 }
             }
         };
+
         firebaseAuth.addAuthStateListener(authStateListener);
         firebaseAuth.signOut();
-    }
+
+        HandlerCompat.createAsync(Looper.getMainLooper()).postDelayed(() -> {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+            if (firebaseAuth.getCurrentUser() != null) {
+                userResponseCallback.onFailureFromAuthentication("Timeout durante il logout");
+            }
+        }, 10000);}
 
     @Override
     public void signUp(String email, String password) {

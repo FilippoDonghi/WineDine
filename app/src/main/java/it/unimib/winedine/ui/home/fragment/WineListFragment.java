@@ -73,12 +73,20 @@ public class WineListFragment extends Fragment{
     private WineFireStoreDatabase database;
     private WinesRepository winesRepository;
     private WineViewModel wineViewModel;
+    private UserViewModel userViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         database = new WineFireStoreDatabase();
+
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
         winesRepository = ServiceLocator.getInstance().getWinesRepository(
                 requireActivity().getApplication(),

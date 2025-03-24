@@ -28,5 +28,15 @@
 
     <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
     <string name="recipe_image">recipe_image</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_confirmation">Sei sicuro di voler uscire?</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="logging_out">Uscita in corso...</string>
+    <string name="logout_error">Errore durante il logout</string>
+    <string name="logout">Esci</string>
 
+    <string name="error_title">Errore</string>
+    <string name="logout_error_message">Si è verificato un errore durante il logout. Riprova.</string>
+    <string name="ok">OK</string>
 </resources>

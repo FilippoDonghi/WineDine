@@ -73,14 +73,18 @@ public class UserViewModel extends ViewModel {
         return userRepository.getLoggedUser();
     }
 
-    public MutableLiveData<Result> logout() {
-        if (userMutableLiveData == null) {
-            userMutableLiveData = userRepository.logout();
-        } else {
-            userRepository.logout();
-        }
+    public LiveData<Result> logout() {
+        MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
 
-        return userMutableLiveData;
+        userRepository.logout().observeForever(result -> {
+            if (result != null) {
+                resultLiveData.postValue(result);
+            } else {
+                resultLiveData.postValue(new Result.Error("Errore sconosciuto durante il logout"));
+            }
+        });
+
+        return resultLiveData;
     }
 
     private void getUserFavoriteNews(String idToken) {
