@@ -41,6 +41,7 @@ public class Constants {
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
     public static final String SHARED_PREFERENCES_ID_TOKEN = "id_token";
     public static final String SHARED_PREFERENCES_EMAIL = "email";
+    public static final String SHARED_PREFERENCES_FAVORITE_WINES= "favorites";
     public static final String FIREBASE_FAVORITE_WINES_COLLECTION = "favorite_wines";
 
 }

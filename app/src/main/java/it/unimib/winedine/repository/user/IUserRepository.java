@@ -3,8 +3,10 @@ package it.unimib.winedine.repository.user;
 import androidx.lifecycle.MutableLiveData;
 
 
+import java.util.List;
 import java.util.Set;
 
+import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
 
@@ -19,6 +21,7 @@ public interface IUserRepository {
     void signIn(String email, String password);
     void signInWithGoogle(String token);
     void saveUserPreferences(String idToken);
+    void saveUserFavoriteWines(String idToken, Bottle bottle);
 }
 
 

@@ -3,8 +3,10 @@ package it.unimib.winedine.ui.welcome.viewmodel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.List;
 import java.util.Set;
 
+import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
@@ -49,6 +51,12 @@ public class UserViewModel extends ViewModel {
     public void saveUserPreferences(String idToken) {
         if (idToken != null) {
             userRepository.saveUserPreferences(idToken);
+        }
+    }
+
+    public void saveUserFavoriteWines(String idToken, Bottle bottle) {
+        if (idToken != null) {
+            userRepository.saveUserFavoriteWines(idToken, bottle);
         }
     }
 

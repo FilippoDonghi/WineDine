@@ -3,6 +3,7 @@ package it.unimib.winedine.ui.home.fragment;
 import static com.bumptech.glide.load.engine.executor.GlideExecutor.UncaughtThrowableStrategy.LOG;
 
 import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_EMAIL;
+import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_FAVORITE_WINES;
 import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_FILENAME;
 import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_ID_TOKEN;
 
@@ -41,11 +42,15 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
+import it.unimib.winedine.database.WineDao;
+import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
@@ -127,8 +132,12 @@ public class BottleListFragment extends Fragment{
                         Bottle bottle = bottleList.get(position);
                         bottle.setLiked(!bottle.getLiked());
                         wineViewModel.updateWine(bottle);
-                    }
+                        // Recupero l'idToken dell'utente loggato
+                        String idToken = userViewModel.getLoggedUser().getIdToken();
 
+                        // Salvo la bottiglia nei preferiti su Firebase
+                        userViewModel.saveUserFavoriteWines(idToken, bottle);
+                    }
                 });
 
         recyclerView.setAdapter(bottleAdapter);
@@ -153,7 +162,6 @@ public class BottleListFragment extends Fragment{
             if (result instanceof Result.WineSuccess) {
                 List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
 
-                // 🔹 Aggiorniamo lo stato dei cuori nella lista principale
                 for (Bottle bottle : bottleList) {
                     bottle.setLiked(false); // Reset di default
                     for (Bottle favorite : favoriteBottles) {
@@ -162,7 +170,7 @@ public class BottleListFragment extends Fragment{
                         }
                     }
                 }
-                bottleAdapter.notifyDataSetChanged();
+                bottleAdapter.notifyDataSetChanged(); // 🔥 FORZA IL REFRESH
             }
         });
         // Recupero dell'idToken e dell'email dall'utente loggato
@@ -182,4 +190,8 @@ public class BottleListFragment extends Fragment{
                 sharedPreferencesUtils.readStringData(Constants.SHARED_PREFERENCES_FILENAME,
                         Constants.SHARED_PREFERENCES_ID_TOKEN)
         );
-    }}
+    }
+
+
+
+}

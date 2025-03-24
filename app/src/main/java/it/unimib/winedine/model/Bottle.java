@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "Bottle")
 public class Bottle implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)

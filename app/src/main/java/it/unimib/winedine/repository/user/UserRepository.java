@@ -100,6 +100,11 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     }
 
     @Override
+    public void saveUserFavoriteWines(String idToken, Bottle bottle){
+        userDataRemoteDataSource.saveUserFavoriteWines(idToken, bottle);
+    }
+
+    @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);
@@ -124,6 +129,9 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
         bottleLocalDataSource.insertWines(bottleList);
     }
 
+    public void onSuccessFromRemoteDatabaseFavorites() {
+
+    }
 
     @Override
     public void onSuccessFromGettingUserPreferences() {

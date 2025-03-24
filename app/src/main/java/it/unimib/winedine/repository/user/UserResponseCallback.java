@@ -10,6 +10,7 @@ public interface UserResponseCallback {
     void onFailureFromAuthentication(String message);
     void onSuccessFromRemoteDatabase(User user);
     void onSuccessFromRemoteDatabase(List<Bottle> bottleList);
+    void onSuccessFromRemoteDatabaseFavorites();
     void onSuccessFromGettingUserPreferences();
     void onFailureFromRemoteDatabase(String message);
     void onSuccessLogout();

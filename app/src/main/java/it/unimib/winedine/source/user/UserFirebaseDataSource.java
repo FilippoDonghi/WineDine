@@ -15,8 +15,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import it.unimib.winedine.model.Bottle;
@@ -69,27 +71,28 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
         });
     }
 
-
     @Override
     public void getUserFavoriteWines(String idToken) {
-        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken).
-                child(FIREBASE_FAVORITE_WINES_COLLECTION).get().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.d(TAG, "Error getting data", task.getException());
-                        userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
-                    }
-                    else {
-                        Log.d(TAG, "Successful read: " + task.getResult().getValue());
-
+        databaseReference.child(FIREBASE_USERS_COLLECTION).child(idToken)
+                .child(FIREBASE_FAVORITE_WINES_COLLECTION)
+                .addValueEventListener(new ValueEventListener() { // Usa ValueEventListener invece di get()
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<Bottle> bottlesList = new ArrayList<>();
-                        for(DataSnapshot ds : task.getResult().getChildren()) {
+                        for(DataSnapshot ds : snapshot.getChildren()) {
                             Bottle bottle = ds.getValue(Bottle.class);
                             bottlesList.add(bottle);
                         }
                         userResponseCallback.onSuccessFromRemoteDatabase(bottlesList);
                     }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        userResponseCallback.onFailureFromRemoteDatabase(error.getMessage());
+                    }
                 });
     }
+
 
     @Override
     public void getUserPreferences(String idToken) {
@@ -105,5 +108,39 @@ public class UserFirebaseDataSource extends BaseUserDataRemoteDataSource {
             }
         });
     }
-}
+
+    @Override
+    public void saveUserFavoriteWines(String idToken, Bottle bottle) {
+        DatabaseReference favoriteWinesRef = databaseReference
+                .child(FIREBASE_USERS_COLLECTION)
+                .child(idToken)
+                .child(FIREBASE_FAVORITE_WINES_COLLECTION);
+
+        if (bottle.getLiked()) {
+            // Aggiungi la bottiglia ai preferiti
+            favoriteWinesRef.child(bottle.getId()).setValue(bottle)
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.d(TAG, "Error saving favorite wine", task.getException());
+                            userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                        } else {
+                            Log.d(TAG, "Successfully saved favorite wine: " + bottle.getId());
+                            userResponseCallback.onSuccessFromRemoteDatabaseFavorites();
+                        }
+                    });
+        } else {
+            // Rimuovi la bottiglia dai preferiti se è stata deselezionata
+            favoriteWinesRef.child(bottle.getId()).removeValue()
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.d(TAG, "Error removing favorite wine", task.getException());
+                            userResponseCallback.onFailureFromRemoteDatabase(task.getException().getLocalizedMessage());
+                        } else {
+                            Log.d(TAG, "Successfully removed favorite wine: " + bottle.getId());
+                            userResponseCallback.onSuccessFromRemoteDatabaseFavorites();
+                        }
+                    });
+        }
+
+    }}
 

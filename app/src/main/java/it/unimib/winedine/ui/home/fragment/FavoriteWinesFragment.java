@@ -23,9 +23,12 @@ import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
 import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
+import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.ServiceLocator;
 
@@ -37,6 +40,7 @@ public class FavoriteWinesFragment extends Fragment {
     private RecyclerView recyclerView;
     private CircularProgressIndicator circularProgressIndicator;
     private String selectedWine;
+    private UserViewModel userViewModel;
 
     public FavoriteWinesFragment() {
     }
@@ -46,6 +50,11 @@ public class FavoriteWinesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance().
+                getUserRepository(requireActivity().getApplication());
+        userViewModel = new ViewModelProvider(
+                requireActivity(),
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
         winesRepository = ServiceLocator.getInstance().getWinesRepository(
                 requireActivity().getApplication(),
@@ -81,16 +90,20 @@ public class FavoriteWinesFragment extends Fragment {
                             }
                             @Override
                             public void onFavoriteButtonClick(int position) {
-                                // Toggle liked status
-                                bottleList.get(position).setLiked(!bottleList.get(position).getLiked());
-                                // Update in database
-                                wineViewModel.updateWine(bottleList.get(position));
-                                // If we're in favorites and removing from favorites, also remove from list
-                                if (!bottleList.get(position).getLiked()) {
+                                Bottle bottle = bottleList.get(position);
+                                bottle.setLiked(!bottle.getLiked());
+
+                                // Aggiorna il database locale
+                                wineViewModel.updateWine(bottle);
+
+                                // Aggiungi questa parte per aggiornare Firebase
+                                String idToken = userViewModel.getLoggedUser().getIdToken();
+                                userViewModel.saveUserFavoriteWines(idToken, bottle);
+
+                                if (!bottle.getLiked()) {
                                     bottleList.remove(position);
                                     bottleRecyclerAdapter.notifyItemRemoved(position);
                                 }}
-
                         });
 
         recyclerView.setAdapter(bottleRecyclerAdapter);

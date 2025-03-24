@@ -41,6 +41,9 @@ import it.unimib.winedine.model.Bottle;
     @Update
     int updateBottle(Bottle bottle);
 
+    @Query("UPDATE Bottle SET liked = :liked WHERE uid = :id")
+    int updateLikedStatus(long id, boolean liked);
+
     @Query("DELETE from Bottle WHERE liked = 0")
     void deleteCached();
 

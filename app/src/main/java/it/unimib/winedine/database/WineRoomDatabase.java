@@ -28,8 +28,7 @@ import it.unimib.winedine.util.Constants;
                 synchronized (WineRoomDatabase.class) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                        WineRoomDatabase.class, Constants.SAVED_BOTTLES_DATABASE)
-                                .allowMainThreadQueries().build();
+                                        WineRoomDatabase.class, Constants.SAVED_BOTTLES_DATABASE).build();
                     }
                 }
             }

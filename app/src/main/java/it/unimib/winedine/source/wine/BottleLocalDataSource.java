@@ -2,6 +2,8 @@ package it.unimib.winedine.source.wine;
 
 import static it.unimib.winedine.util.Constants.UNEXPECTED_ERROR;
 
+import android.util.Log;
+
 import java.util.List;
 
 import it.unimib.winedine.database.WineDao;
@@ -57,13 +59,20 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     @Override
     public void updateWine(Bottle bottle) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            int rowUpdatedCounter = wineDao.updateBottle(bottle);
+            Log.d("DB_UPDATE", "Tentativo di aggiornare bottle con ID: " + bottle.getUid() + " a liked = " + bottle.getLiked());
 
-            if (rowUpdatedCounter == 1) {
+            int rowUpdatedCounter = wineDao.updateLikedStatus(bottle.getUid(), bottle.getLiked());
+
+            Log.d("DB_UPDATE", "Righe aggiornate: " + rowUpdatedCounter);
+
+            if (rowUpdatedCounter > 0) {
                 Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
+                Log.d("DB_UPDATE", "Bottiglia aggiornata nel DB: " + updatedBottle.getLiked());
+
                 responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
             } else {
-                responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
+                Log.e("DB_UPDATE", "Errore: nessuna riga aggiornata");
+                responseCallback.onFailureFromLocal(new Exception("Errore nell'aggiornamento del 'liked'"));
             }
         });
     }
