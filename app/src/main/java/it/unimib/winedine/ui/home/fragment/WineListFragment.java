@@ -1,64 +1,34 @@
 package it.unimib.winedine.ui.home.fragment;
 
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Source;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import it.unimib.winedine.R;
-import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.adapter.WineAdapter;
 import it.unimib.winedine.database.WineFireStoreDatabase;
-import it.unimib.winedine.model.Bottle;
-import it.unimib.winedine.model.User;
-import it.unimib.winedine.model.WineAPIResponse;
 import it.unimib.winedine.repository.user.IUserRepository;
-import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
-import it.unimib.winedine.util.Constants;
-import it.unimib.winedine.util.JSONParserUtils;
 import it.unimib.winedine.util.ServiceLocator;
 
 public class WineListFragment extends Fragment{

@@ -38,19 +38,16 @@ public class PairingRepository implements PairingResponseCallback {
         return allPairingsRecipeMutableLiveData;
     }
 
+    private void getRecipesForPairings(String[] ingredients) {
+        pairingRemoteDataSource.getRecipesForPairings(ingredients);
+    }
+
     public MutableLiveData<Result> getAllRecipesForPairingsMutableLiveData() {
         return allRecipesForPairingsMutableLiveData;
     }
 
-    public MutableLiveData<Result> fetchRecipesForPairings(String[] ingredients) {
-        pairingRemoteDataSource.getRecipesForPairings(ingredients);
-        return allRecipesForPairingsMutableLiveData;
-    }
-
-
     @Override
     public void onPairingSuccess(PairingAPIResponse pairingResponse, long lastUpdate) {
-        // Ottieni gli ingredienti dalla risposta e cerca le ricette
         if (pairingResponse.getPairings() != null) {
             getRecipesForPairings(pairingResponse.getPairings());
         }
@@ -70,13 +67,6 @@ public class PairingRepository implements PairingResponseCallback {
     @Override
     public void onAllRequestsCompleted(List<Recipe> aggregatedRecipes) {
         allRecipesForPairingsMutableLiveData.postValue(new Result.RecipesSuccess(aggregatedRecipes));
-    }
-
-
-
-    // Metodo helper per ottenere ricette
-    private void getRecipesForPairings(String[] ingredients) {
-        pairingRemoteDataSource.getRecipesForPairings(ingredients);
     }
 }
 

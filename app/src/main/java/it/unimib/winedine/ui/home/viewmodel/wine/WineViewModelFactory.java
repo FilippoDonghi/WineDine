@@ -1,4 +1,4 @@
-package it.unimib.winedine.ui.home.viewmodel;
+package it.unimib.winedine.ui.home.viewmodel.wine;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

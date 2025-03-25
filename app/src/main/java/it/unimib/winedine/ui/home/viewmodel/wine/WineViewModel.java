@@ -1,21 +1,16 @@
-package it.unimib.winedine.ui.home.viewmodel;
+package it.unimib.winedine.ui.home.viewmodel.wine;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import it.unimib.winedine.database.WineFireStoreDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.wine.WinesRepository;
-import it.unimib.winedine.util.Constants;
 
 public class WineViewModel extends ViewModel {
     private static final String TAG = WineViewModel.class.getSimpleName();

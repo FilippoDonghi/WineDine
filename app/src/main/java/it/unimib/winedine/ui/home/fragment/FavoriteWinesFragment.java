@@ -20,13 +20,12 @@ import java.util.List;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
-import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.Constants;

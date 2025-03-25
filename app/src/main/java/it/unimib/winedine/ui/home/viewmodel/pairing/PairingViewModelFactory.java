@@ -1,11 +1,10 @@
-package it.unimib.winedine.ui.home.viewmodel;
+package it.unimib.winedine.ui.home.viewmodel.pairing;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import it.unimib.winedine.repository.pairing.PairingRepository;
-import it.unimib.winedine.repository.wine.WinesRepository;
 
 public class PairingViewModelFactory implements ViewModelProvider.Factory{
     private final PairingRepository pairingRepository;

@@ -2,10 +2,16 @@ package it.unimib.winedine.ui.home;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -15,6 +21,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,6 +32,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.logging.Handler;
 
 import it.unimib.winedine.R;
@@ -77,8 +86,33 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showProfileMenu(View anchorView) {
-        PopupMenu popupMenu = new PopupMenu(HomeActivity.this, anchorView);
+
+        PopupMenu popupMenu = new PopupMenu(this, anchorView);
         popupMenu.inflate(R.menu.menu_profile);
+
+// Cambia il colore dell'icona
+        MenuItem logoutItem = popupMenu.getMenu().findItem(R.id.action_logout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            logoutItem.setIconTintList(ColorStateList.valueOf(Color.WHITE));
+        }
+
+// Cambia il colore del testo
+        logoutItem.setTitle(HtmlCompat.fromHtml(
+                "<font color='#FFFFFF'>Logout</font>", HtmlCompat.FROM_HTML_MODE_LEGACY
+        ));
+
+        popupMenu.show();
+
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            Object menuHelper = field.get(popupMenu);
+            Class<?> classPopupHelper = Class.forName(menuHelper.getClass().getName());
+            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+            setForceIcons.invoke(menuHelper, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -86,7 +120,6 @@ public class HomeActivity extends AppCompatActivity {
             if (id == R.id.action_logout) {
                 // Mostra un dialog di conferma
                 new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle(R.string.logout_title)
                         .setMessage(R.string.logout_confirmation)
                         .setPositiveButton(R.string.yes, (dialog, which) -> performLogout())
                         .setNegativeButton(R.string.no, null)

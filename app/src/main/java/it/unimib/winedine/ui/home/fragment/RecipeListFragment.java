@@ -39,7 +39,7 @@ public class RecipeListFragment extends Fragment {
                 List<Recipe> recipes = Arrays.asList(recipesArray);
                 Log.d("RECIPE_DEBUG", "Ricevute " + recipes.size() + " ricette");
                 adapter = new RecipeRecyclerAdapter(recipes, recipe -> {
-                    // Gestione click
+
                 });
                 recyclerView.setAdapter(adapter);
             }

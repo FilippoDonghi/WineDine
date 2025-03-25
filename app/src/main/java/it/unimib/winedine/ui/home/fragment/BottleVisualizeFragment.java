@@ -14,27 +14,24 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
-import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
-import it.unimib.winedine.ui.home.viewmodel.PairingViewModel;
-import it.unimib.winedine.ui.home.viewmodel.PairingViewModelFactory;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModel;
-import it.unimib.winedine.ui.home.viewmodel.WineViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
+import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
+import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.ServiceLocator;
 
@@ -150,10 +147,9 @@ public class BottleVisualizeFragment extends Fragment {
             pairingViewModel.getPairingAndRecipes(selectedWine);
         });
 
-// Sposta l'osservatore FUORI dal click listener
+
         pairingViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result instanceof Result.Loading) {
-                // Mostra un loading indicator
             } else if (result instanceof Result.RecipesSuccess) {
                 List<Recipe> recipes = ((Result.RecipesSuccess) result).getRecipes();
                 if (recipes.isEmpty()) {

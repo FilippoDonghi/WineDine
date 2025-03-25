@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">Wine&amp;Dine</string>
 
-    <string name="pick_a_country">Pick a country</string>
-    <string name="pick_categories">Pick some categories</string>
-
     <string name="welcome">Welcome!</string>
     <string name="already_registered">Are you already registered?</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
-    <string name="password_forgotten">Did you forget your password?</string>
+
     <string name="login">Login</string>
     <string name="login_with_google">Login with Google</string>
     <string name="create_a_new_account">Create new account</string>
@@ -19,24 +16,20 @@
     <string name="error_email_login">Check the email address</string>
     <string name="error_password_login">The credentials you entered are incorrect</string>
     <string name="error_invalid_password">The password must be at least 8 characters long</string>
-    <string name="error_retrieving_news">There was an error retrieving the news</string>
+    <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="error_unexpected">error unexpected</string>
     <string name="error_collision_user">collision user</string>
     <string name="wineSection">Wine</string>
     <string name="favoriteSection">Favorite</string>
 
-    <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
-    <string name="recipe_image">recipe_image</string>
-    <string name="logout_title">Logout</string>
-    <string name="logout_confirmation">Sei sicuro di voler uscire?</string>
-    <string name="yes">Sì</string>
-    <string name="no">No</string>
-    <string name="logging_out">Uscita in corso...</string>
-    <string name="logout_error">Errore durante il logout</string>
-    <string name="logout">Esci</string>
 
-    <string name="error_title">Errore</string>
-    <string name="logout_error_message">Si è verificato un errore durante il logout. Riprova.</string>
-    <string name="ok">OK</string>
+    <string name="recipe_image">recipe_image</string>
+    <string name="logout_confirmation">Are you sure you want to exit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="logging_out">Release in progress...</string>
+    <string name="logout_error">Error while logging out</string>
+    <string name="logout">Logout</string>
+
 </resources>
