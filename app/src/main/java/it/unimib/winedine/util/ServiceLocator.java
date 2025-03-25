@@ -4,10 +4,13 @@ import android.app.Application;
 
 
 import it.unimib.winedine.database.WineRoomDatabase;
+import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.user.UserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.service.WineAPIService;
+import it.unimib.winedine.source.pairing.BasePairingRemoteDataSource;
+import it.unimib.winedine.source.pairing.PairingRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.winedine.source.user.UserAuthenticationFirebaseDataSource;
@@ -27,20 +30,14 @@ public class ServiceLocator {
 
     private ServiceLocator() {}
 
-    /**
-     * Returns an instance of ServiceLocator class.
-     * @return An instance of ServiceLocator.
-     */
     public static ServiceLocator getInstance() {
         if (INSTANCE == null) {
             synchronized(ServiceLocator.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new ServiceLocator();
-                }
-            }
+                }}
         }
-        return INSTANCE;
-    }
+        return INSTANCE; }
 
     OkHttpClient client = new OkHttpClient.Builder()
             .addInterceptor(chain -> {
@@ -70,7 +67,6 @@ public class ServiceLocator {
     }
 
 
-
     public WinesRepository getWinesRepository(Application application, boolean debugMode) {
         BaseBottleRemoteDataSource bottleRemoteDataSource;
         BaseBottleLocalDataSource bottleLocalDataSource;
@@ -85,6 +81,15 @@ public class ServiceLocator {
         bottleLocalDataSource = new BottleLocalDataSource(getWineDAO(application), sharedPreferencesUtil);
 
         return new WinesRepository(bottleRemoteDataSource, bottleLocalDataSource);
+    }
+
+    public PairingRepository getPairingRepository(Application application, boolean debugMode) {
+        BasePairingRemoteDataSource pairingRemoteDataSource;
+        SharedPreferencesUtils sharedPreferencesUtil = new SharedPreferencesUtils(application);
+
+        pairingRemoteDataSource = new PairingRemoteDataSource();
+
+        return new PairingRepository(pairingRemoteDataSource);
     }
 
     public WineAPIService getWinesAPIService() {

@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
     <!-- Testo descrittivo abbinamento -->
     <TextView
         android:id="@+id/text_pairing"

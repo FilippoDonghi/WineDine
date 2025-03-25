@@ -37,22 +37,20 @@
     <fragment
         android:id="@+id/visualizeBottleFragment"
         android:name="it.unimib.winedine.ui.home.fragment.BottleVisualizeFragment"
-        android:label="fragment_bottle_visualize"
         tools:layout="@layout/fragment_visualize_bottle">
-        <argument
-            android:name="recipes"
-            app:argType="it.unimib.winedine.model.Recipe[]" />
-    <action
-        android:id="@+id/action_bottleVisualizeFragment_to_recipeListFragment"
-        app:destination="@id/recipeListFragment" />
+
+        <action
+            android:id="@+id/action_bottleVisualizeFragment_to_recipeListFragment"
+            app:destination="@id/recipeListFragment" />
     </fragment>
 
-
     <fragment
-    android:id="@+id/recipeListFragment"
-    android:name="it.unimib.winedine.ui.home.fragment.RecipeListFragment"
-    android:label="Ricette">
-
+        android:id="@+id/recipeListFragment"
+        android:name="it.unimib.winedine.ui.home.fragment.RecipeListFragment">
+        <argument
+            android:name="recipes"
+            app:argType="it.unimib.winedine.model.Recipe[]"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

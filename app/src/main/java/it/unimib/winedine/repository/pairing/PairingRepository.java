@@ -1,7 +1,5 @@
 package it.unimib.winedine.repository.pairing;
 
-import static it.unimib.winedine.util.Constants.FRESH_TIMEOUT;
-
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -14,80 +12,71 @@ import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.RecipeAPIResponse;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.service.WineAPIService;
-import it.unimib.winedine.source.pairing.BasePairingLocalDataSource;
 import it.unimib.winedine.source.pairing.BasePairingRemoteDataSource;
+import it.unimib.winedine.source.pairing.PairingRemoteDataSource;
 import it.unimib.winedine.util.Constants;
 import it.unimib.winedine.util.ServiceLocator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PairingRepository {
-    private final WineAPIService wineAPIService;
-    private PairingResponseCallback callback;
-    private List<Recipe> aggregatedRecipes = new ArrayList<>();
-    private int pendingRequests = 0;
+public class PairingRepository implements PairingResponseCallback {
 
-    public PairingRepository() {
-        this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();
+    private final BasePairingRemoteDataSource pairingRemoteDataSource;
+    private final MutableLiveData<Result> allPairingsRecipeMutableLiveData;
+    private final MutableLiveData<Result> allRecipesForPairingsMutableLiveData;
+
+    public PairingRepository(BasePairingRemoteDataSource pairingRemoteDataSource) {
+        allPairingsRecipeMutableLiveData = new MutableLiveData<>();
+        allRecipesForPairingsMutableLiveData = new MutableLiveData<>();
+        this.pairingRemoteDataSource = new PairingRemoteDataSource();
+        this.pairingRemoteDataSource.setPairingCallback(this);
     }
 
-    public void setCallback(PairingResponseCallback callback) {
-        this.callback = callback;
+    public MutableLiveData<Result> fetchPairingAndRecipes(String wine) {
+        pairingRemoteDataSource.getPairingAndRecipes(wine);
+        return allPairingsRecipeMutableLiveData;
     }
 
-    public void fetchPairingAndRecipes(String wine) {
-        Log.d("API_DEBUG", "Pairing URL: " +
-                "https://api.spoonacular.com/food/wine/dishes?wine=" + wine +
-                "&apiKey=" + Constants.WINE_API_KEY);
-        wineAPIService.getPairings(wine, Constants.WINE_API_KEY)
-                .enqueue(new Callback<PairingAPIResponse>() {
-                    @Override
-                    public void onResponse(Call<PairingAPIResponse> call, Response<PairingAPIResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            callback.onPairingSuccess(response.body(), System.currentTimeMillis());
-                            fetchRecipesForPairings(response.body().getPairings());
-                        } else {
-                            callback.onFailure(new Exception("Pairing API error"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PairingAPIResponse> call, Throwable t) {
-                        callback.onFailure(new Exception(t));
-                    }
-                });
+    public MutableLiveData<Result> getAllRecipesForPairingsMutableLiveData() {
+        return allRecipesForPairingsMutableLiveData;
     }
 
-    private void fetchRecipesForPairings(String[] ingredients) {
-        pendingRequests = ingredients.length;
-        for (String ingredient : ingredients) {
-            wineAPIService.getRecipes(
-                    ingredient,
-                    25, // maxFat
-                    3,  // number
-                    Constants.WINE_API_KEY
-            ).enqueue(new Callback<RecipeAPIResponse>() {
-                @Override
-                public void onResponse(Call<RecipeAPIResponse> call, Response<RecipeAPIResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        aggregatedRecipes.addAll(response.body().getResults());
-                        callback.onRecipeSuccess(response.body().getResults());
-                    }
-                    checkCompletion();
-                }
+    public MutableLiveData<Result> fetchRecipesForPairings(String[] ingredients) {
+        pairingRemoteDataSource.getRecipesForPairings(ingredients);
+        return allRecipesForPairingsMutableLiveData;
+    }
 
-                @Override
-                public void onFailure(Call<RecipeAPIResponse> call, Throwable t) {
-                    checkCompletion();
-                }
-            });
+
+    @Override
+    public void onPairingSuccess(PairingAPIResponse pairingResponse, long lastUpdate) {
+        // Ottieni gli ingredienti dalla risposta e cerca le ricette
+        if (pairingResponse.getPairings() != null) {
+            getRecipesForPairings(pairingResponse.getPairings());
         }
     }
 
-    private void checkCompletion() {
-        if (--pendingRequests == 0) {
-            callback.onAllRequestsCompleted(aggregatedRecipes);
-        }
+    @Override
+    public void onRecipeSuccess(List<Recipe> recipes) {
+
+    }
+
+    @Override
+    public void onFailure(Exception exception) {
+        allPairingsRecipeMutableLiveData.postValue(new Result.Error(exception.getMessage()));
+
+    }
+
+    @Override
+    public void onAllRequestsCompleted(List<Recipe> aggregatedRecipes) {
+        allRecipesForPairingsMutableLiveData.postValue(new Result.RecipesSuccess(aggregatedRecipes));
+    }
+
+
+
+    // Metodo helper per ottenere ricette
+    private void getRecipesForPairings(String[] ingredients) {
+        pairingRemoteDataSource.getRecipesForPairings(ingredients);
     }
 }
+

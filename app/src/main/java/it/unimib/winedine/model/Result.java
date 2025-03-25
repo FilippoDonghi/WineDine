@@ -1,5 +1,7 @@
 package it.unimib.winedine.model;
 
+import java.util.List;
+
 public abstract class Result {
 
     private Result() {
@@ -8,10 +10,6 @@ public abstract class Result {
         return !(this instanceof Error);
     }
 
-    /**
-     * Class that represents a successful action during the interaction
-     * with a Web Service or a local database.
-     */
     public static final class WineSuccess extends Result {
         private final WineAPIResponse wineAPIResponse;
 
@@ -19,10 +17,20 @@ public abstract class Result {
             this.wineAPIResponse = wineAPIResponse;
         }
 
-
-
         public WineAPIResponse getData() {
             return wineAPIResponse;
+        }
+    }
+
+    public static final class RecipesSuccess extends Result {
+        private final List<Recipe> recipes;
+
+        public RecipesSuccess(List<Recipe> recipes) {
+            this.recipes = recipes;
+        }
+
+        public List<Recipe> getRecipes() {
+            return recipes;
         }
     }
 
@@ -37,6 +45,7 @@ public abstract class Result {
             return user;
         }
     }
+
     public static final class Error extends Result {
         private final String message;
         public Error(String message) {
@@ -47,5 +56,6 @@ public abstract class Result {
         }
     }
 }
+
 
 

@@ -8,6 +8,7 @@ public class PairingAPIResponse {
 
 
     public String[] getPairings() {
+
         return pairings;
     }
 

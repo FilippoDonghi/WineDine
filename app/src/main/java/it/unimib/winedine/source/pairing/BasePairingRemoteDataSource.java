@@ -13,7 +13,8 @@ public abstract class BasePairingRemoteDataSource {
         this.responseCallback = responseCallback;
     }
 
-    public abstract void getPairings(String wine);
+    public abstract void getPairingAndRecipes(String wine);
+    public abstract void getRecipesForPairings(String[] ingredients);
 }
 
 
