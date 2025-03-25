@@ -82,12 +82,11 @@ public class LoginFragment extends Fragment {
                         .build())
                 .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
-                        // Your server's client ID, not your Android client ID.
                         .setServerClientId(getString(R.string.default_web_client_id))
-                        // Only show accounts previously used to sign in.
+
                         .setFilterByAuthorizedAccounts(false)
                         .build())
-                // Automatically sign in when exactly one credential is retrieved.
+
                 .setAutoSelectEnabled(true)
                 .build();
         startIntentSenderForResult = new ActivityResultContracts.StartIntentSenderForResult();
@@ -108,7 +107,7 @@ public class LoginFragment extends Fragment {
                                 //saveLoginData(user.getEmail(), null, user.getIdToken());
                                 Log.i(TAG, "Logged as: " + user.getEmail());
                                 userViewModel.setAuthenticationError(false);
-                                retrieveUserInformationAndStartActivity(user, getView());
+                                goToNextPage(getView());
                             } else {
                                 userViewModel.setAuthenticationError(true);
                                 Snackbar.make(requireActivity().findViewById(android.R.id.content),
@@ -134,6 +133,10 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (userViewModel.getLoggedUser() != null) {
+            goToNextPage(view);
+        }
 
         editTextEmail = view.findViewById(R.id.textInputEmail);
         editTextPassword = view.findViewById(R.id.textInputPassword);
@@ -203,6 +206,18 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    private void goToNextPage(View view) {
+        SharedPreferencesUtils sharedPreferencesUtil =
+                new SharedPreferencesUtils(requireActivity().getApplication());
+
+        if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILENAME,
+                SHARED_PREFERENCES_ID_TOKEN) != null){
+            startActivity(new Intent(getContext(), HomeActivity.class));
+        } else {
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeActivity);
+        }
+    }
+
     private boolean isEmailOk(String email) {
         if (!EmailValidator.getInstance().isValid((email))) {
             editTextEmail.setError(getString(R.string.error_email_login));
@@ -214,7 +229,6 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean isPasswordOk(String password) {
-        // Check if the password length is correct
         if (password.isEmpty() || password.length() < Constants.MINIMUM_LENGTH_PASSWORD) {
             editTextPassword.setError(getString(R.string.error_invalid_password));
             return false;
@@ -233,15 +247,6 @@ public class LoginFragment extends Fragment {
             default:
                 return requireActivity().getString(R.string.error_unexpected);
         }
-    }
-
-    //rivedere questa funzione
-    private void retrieveUserInformationAndStartActivity(User user, View view) {
-        userViewModel.getUserPreferences(user.getIdToken()).observe(
-                getViewLifecycleOwner(), userPreferences -> {
-
-                }
-        );
     }
     }
 

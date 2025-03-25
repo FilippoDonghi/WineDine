@@ -58,7 +58,7 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
 
     @Override
     public void updateWine(Bottle bottle) {
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+       /* WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             Log.d("DB_UPDATE", "Tentativo di aggiornare bottle con ID: " + bottle.getUid() + " a liked = " + bottle.getLiked());
 
             int rowUpdatedCounter = wineDao.updateLikedStatus(bottle.getUid(), bottle.getLiked());
@@ -73,6 +73,15 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
             } else {
                 Log.e("DB_UPDATE", "Errore: nessuna riga aggiornata");
                 responseCallback.onFailureFromLocal(new Exception("Errore nell'aggiornamento del 'liked'"));
+            }
+        });*/
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            int rowUpdatedCounter = wineDao.updateBottle(bottle);
+            if(rowUpdatedCounter == 1){
+                Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
+                responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
+            } else {
+                responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
     }
