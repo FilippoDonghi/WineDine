@@ -144,6 +144,4 @@ public class WinesRepository implements BottleResponseCallback {
     public void getCategoriesFromFirestore(WineFireStoreDatabase.FirestoreCallback callback) {
         wineFireStoreDatabase.getCategoriesFromFirestore(callback);
     }
-
-
 }

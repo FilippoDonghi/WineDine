@@ -106,7 +106,7 @@ public class BottleListFragment extends Fragment{
                         String idToken = userViewModel.getLoggedUser().getIdToken();
 
                         // Salvo la bottiglia nei preferiti su Firebase
-                        userViewModel.saveUserFavoriteWines(idToken, bottle);
+                      userViewModel.saveUserFavoriteWines(idToken, bottle);
                     }
                 });
 
@@ -128,7 +128,7 @@ public class BottleListFragment extends Fragment{
                     });
         }
 
-        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
+  /*      wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result instanceof Result.WineSuccess) {
                 List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
 
@@ -142,7 +142,7 @@ public class BottleListFragment extends Fragment{
                 }
                 bottleAdapter.notifyDataSetChanged(); // 🔥 FORZA IL REFRESH
             }
-        });
+        }); */
         // Recupero dell'idToken e dell'email dall'utente loggato
             String idToken = userViewModel.getLoggedUser().getIdToken();
             String email = userViewModel.getLoggedUser().getEmail();
