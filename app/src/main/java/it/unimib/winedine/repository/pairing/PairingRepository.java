@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.winedine.model.DishAPIResponse;
 import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.RecipeAPIResponse;
@@ -25,10 +26,12 @@ public class PairingRepository implements PairingResponseCallback {
     private final BasePairingRemoteDataSource pairingRemoteDataSource;
     private final MutableLiveData<Result> allPairingsRecipeMutableLiveData;
     private final MutableLiveData<Result> allRecipesForPairingsMutableLiveData;
+    private final MutableLiveData<Result> allDishesMutableLiveData;
 
     public PairingRepository(BasePairingRemoteDataSource pairingRemoteDataSource) {
         allPairingsRecipeMutableLiveData = new MutableLiveData<>();
         allRecipesForPairingsMutableLiveData = new MutableLiveData<>();
+        allDishesMutableLiveData = new MutableLiveData<>();
         this.pairingRemoteDataSource = new PairingRemoteDataSource();
         this.pairingRemoteDataSource.setPairingCallback(this);
     }
@@ -40,6 +43,11 @@ public class PairingRepository implements PairingResponseCallback {
 
     private void getRecipesForPairings(String[] ingredients) {
         pairingRemoteDataSource.getRecipesForPairings(ingredients);
+    }
+
+    public MutableLiveData<Result> fetchDishes(int id) {
+        pairingRemoteDataSource.getDishes(id);
+        return allDishesMutableLiveData;
     }
 
     public MutableLiveData<Result> getAllRecipesForPairingsMutableLiveData() {
@@ -61,12 +69,16 @@ public class PairingRepository implements PairingResponseCallback {
     @Override
     public void onFailure(Exception exception) {
         allPairingsRecipeMutableLiveData.postValue(new Result.Error(exception.getMessage()));
-
+        allDishesMutableLiveData.postValue(new Result.Error(exception.getMessage()));
     }
 
     @Override
     public void onAllRequestsCompleted(List<Recipe> aggregatedRecipes) {
         allRecipesForPairingsMutableLiveData.postValue(new Result.RecipesSuccess(aggregatedRecipes));
     }
-}
+
+    @Override
+    public void onDishesSuccess(DishAPIResponse dishAPIResponse) {
+        allDishesMutableLiveData.postValue(new Result.DishSuccess(dishAPIResponse));
+}}
 

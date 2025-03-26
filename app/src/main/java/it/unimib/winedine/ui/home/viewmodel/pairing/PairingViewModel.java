@@ -11,11 +11,12 @@ import it.unimib.winedine.repository.pairing.PairingRepository;
 public class PairingViewModel extends ViewModel {
     private final PairingRepository pairingRepository;
     private final MutableLiveData<Result> recipesLiveData = new MutableLiveData<>();
+    private MutableLiveData<Result> allDishesMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+
 
     public PairingViewModel(PairingRepository pairingRepository) {
         this.pairingRepository = pairingRepository;
-
         pairingRepository.getAllRecipesForPairingsMutableLiveData().observeForever(result -> {
             if (result != null) {
                 recipesLiveData.postValue(result);
@@ -32,9 +33,14 @@ public class PairingViewModel extends ViewModel {
         return recipesLiveData;
     }
 
+    public MutableLiveData<Result> getDishes(int id) {
+        fetchDishes(id);
+        return allDishesMutableLiveData;
+    }
 
-    public void observeRecipes(LifecycleOwner owner, Observer<Result> observer) {
-        recipesLiveData.observe(owner, observer);
+    public void fetchDishes(int id) {
+        allDishesMutableLiveData.setValue(new Result.Loading());
+        pairingRepository.fetchDishes(id).observeForever(result -> allDishesMutableLiveData.postValue(result));
     }
     }
 

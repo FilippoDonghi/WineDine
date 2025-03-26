@@ -15,6 +15,7 @@ public abstract class BasePairingRemoteDataSource {
 
     public abstract void getPairingAndRecipes(String wine);
     public abstract void getRecipesForPairings(String[] ingredients);
+    public abstract void getDishes(int id);
 }
 
 

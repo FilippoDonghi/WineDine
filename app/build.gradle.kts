@@ -61,6 +61,7 @@ dependencies {
     implementation (libs.core)
 
     implementation(libs.room.runtime)
+    implementation(libs.runner)
     annotationProcessor(libs.room.compiler)
 
 

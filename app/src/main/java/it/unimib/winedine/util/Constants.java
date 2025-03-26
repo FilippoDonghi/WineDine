@@ -43,4 +43,6 @@ public class Constants {
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
+    public static final String DISH_ENDPOINT = "recipes/{id}/information";
+    public static final String ID_PARAMETER = "id";
 }

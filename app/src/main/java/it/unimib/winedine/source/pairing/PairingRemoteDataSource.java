@@ -1,5 +1,8 @@
 package it.unimib.winedine.source.pairing;
 
+import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
+import static it.unimib.winedine.util.Constants.RETROFIT_ERROR;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -7,6 +10,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unimib.winedine.model.DishAPIResponse;
 import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.RecipeAPIResponse;
@@ -87,5 +91,26 @@ public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
         if (--pendingRequests == 0) {
             responseCallback.onAllRequestsCompleted(aggregatedRecipes);
         }
+    }
+
+    @Override
+    public void getDishes(int id) {
+        Call<DishAPIResponse> dishResponseCall = wineAPIService.getDish(id, Constants.WINE_API_KEY);
+        Log.d("API_DEBUG", "Dish URL: https://api.spoonacular.com/recipes/" + id + "/information?apiKey=" + Constants.WINE_API_KEY);
+        dishResponseCall.enqueue(new Callback<DishAPIResponse>() {
+
+            @Override
+            public void onResponse(@NonNull Call<DishAPIResponse> call,
+                                   @NonNull Response<DishAPIResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    responseCallback.onDishesSuccess(response.body());
+                } else {
+                responseCallback.onFailure(new Exception(API_KEY_ERROR));
+            }}
+            @Override
+            public void onFailure(@NonNull Call<DishAPIResponse> call, @NonNull Throwable t) {
+                responseCallback.onFailure(new Exception(RETROFIT_ERROR));
+            }
+        });
     }
 }

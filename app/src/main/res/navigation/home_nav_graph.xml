@@ -51,6 +51,14 @@
             android:name="recipes"
             app:argType="it.unimib.winedine.model.Recipe[]"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_recipeListFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="it.unimib.winedine.ui.home.fragment.RecipeDetailFragment">
     </fragment>
 
 </navigation>

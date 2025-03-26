@@ -34,6 +34,18 @@ public abstract class Result {
         }
     }
 
+    public static final class DishSuccess extends Result {
+        private final DishAPIResponse dishAPIResponse;
+
+       public DishSuccess(DishAPIResponse dishAPIResponse) {
+           this.dishAPIResponse = dishAPIResponse;
+       }
+
+       public DishAPIResponse getDish() {
+           return dishAPIResponse;
+       }
+    }
+
     public static class Loading extends Result {}
 
     public static final class UserSuccess extends Result {

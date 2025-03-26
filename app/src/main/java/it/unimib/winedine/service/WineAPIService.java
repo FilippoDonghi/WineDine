@@ -2,12 +2,14 @@ package it.unimib.winedine.service;
 
 import static it.unimib.winedine.util.Constants.*;
 
+import it.unimib.winedine.model.DishAPIResponse;
 import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.model.RecipeAPIResponse;
 import it.unimib.winedine.model.WineAPIResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface WineAPIService {
@@ -28,6 +30,12 @@ public interface WineAPIService {
             @Query(QUERY_PARAMETER) String ingredient,
             @Query(MAX_FAT_PARAMETER) int maxFat,
             @Query(NUMBER_PARAMETER) int number,
+            @Query("apiKey") String apiKey
+    );
+
+    @GET(DISH_ENDPOINT)
+    Call<DishAPIResponse> getDish(
+            @Path("id") int recipeId,
             @Query("apiKey") String apiKey
     );
 }
