@@ -33,7 +33,6 @@ public class RecipeDetailFragment extends Fragment {
     private TextView servingsTextView;
     private TextView sourceUrlTextView;
     private TextView spoonacularTextView;
-    private TextView summaryTextView;
 
     private PairingViewModel pairingViewModel;
 
@@ -60,7 +59,6 @@ public class RecipeDetailFragment extends Fragment {
         servingsTextView = view.findViewById(R.id.text_servings);
         sourceUrlTextView = view.findViewById(R.id.text_source_url);
         spoonacularTextView = view.findViewById(R.id.text_spoonecular);
-        summaryTextView = view.findViewById(R.id.text_summary);
 
 
         if (getArguments() != null) {
@@ -79,12 +77,12 @@ public class RecipeDetailFragment extends Fragment {
 
                     readyTimeTextView.setText("Tempo di preparazione: " + dishAPIResponse.getReadyInMinutes() + " min");
                     servingsTextView.setText("Porzioni: " + dishAPIResponse.getServings());
-                    summaryTextView.setText(dishAPIResponse.getSummary());
 
                     // Imposta il link alla fonte
                     sourceUrlTextView.setText("Vedi ricetta completa");
                     sourceUrlTextView.setOnClickListener(v -> {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dishAPIResponse.getSourceUrl()));
+                        Log.d("URL_DEBUG", "URL: " + dishAPIResponse.getSourceUrl());
                         startActivity(browserIntent);
                     });
 

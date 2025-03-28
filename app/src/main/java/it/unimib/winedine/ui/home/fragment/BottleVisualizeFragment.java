@@ -91,7 +91,7 @@ public class BottleVisualizeFragment extends Fragment {
         TextView ratingView = view.findViewById(R.id.textViewAverageRating);
 
         bottleRecyclerAdapter =
-                new BottleRecyclerAdapter(R.layout.item_wine, bottleList, selectedWine, true,
+                new BottleRecyclerAdapter(R.layout.fragment_visualize_bottle, bottleList, selectedWine, true,
                         new BottleRecyclerAdapter.OnItemClickListener() {
                             @Override
                             public void onBottleItemClick(Bottle bottle, String selectedWine) {
