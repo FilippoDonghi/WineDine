@@ -52,7 +52,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         private final TextView textViewAverageRating;
         private final TextView textViewRatingCount;
         private final RatingBar ratingBar;
-        private final Button btnPrice;
+        private final TextView textPrice;
         private final ImageView imageView;
         private final CheckBox favoriteCheckbox;
 
@@ -63,7 +63,7 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             textViewAverageRating = view.findViewById(R.id.textViewAverageRating);
             textViewRatingCount = view.findViewById(R.id.textViewRatingCount);
             ratingBar = view.findViewById(R.id.rating_bar);
-            btnPrice = view.findViewById(R.id.btn_price);
+            textPrice = view.findViewById(R.id.priceText);
             imageView = view.findViewById(R.id.imageView);
             favoriteCheckbox = view.findViewById(R.id.favoriteButton);
 
@@ -90,9 +90,9 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             return ratingBar;
         }
 
-        public Button getBtnPrice() {
-            return btnPrice;
-        }
+       public TextView getViewPrice() {
+            return textPrice;
+       }
 
         public TextView getTextViewAverageRating() {
             return textViewAverageRating;
@@ -138,9 +138,10 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Bottle bottle = bottleList.get(position);
         viewHolder.getTextViewTitle().setText(bottle.getTitle());
-        viewHolder.getTextViewRatingCount().setText(bottle.getRatingCount()+" Recensioni");
+        int ratingCount = (int) Double.parseDouble(bottle.getRatingCount());
+        viewHolder.getTextViewRatingCount().setText(ratingCount+" reviews");
 
-        viewHolder.getBtnPrice().setText(bottle.getPrice() + " €");
+        viewHolder.getViewPrice().setText(bottle.getPrice());
         String originalRating = bottle.getAverageRating();
 
         try {

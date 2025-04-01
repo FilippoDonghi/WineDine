@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,6 +89,8 @@ public class BottleVisualizeFragment extends Fragment {
 
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(currentBottle.getTitle());
         ((TextView) view.findViewById(R.id.textViewDescription)).setText(currentBottle.getDescription());
+
+        RatingBar ratingBar = view.findViewById(R.id.rating_bar);
         TextView ratingView = view.findViewById(R.id.textViewAverageRating);
 
         bottleRecyclerAdapter =
@@ -107,33 +110,24 @@ public class BottleVisualizeFragment extends Fragment {
 
                         });
 
+        int ratingCount = (int) Double.parseDouble(currentBottle.getRatingCount());
+        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(ratingCount +" reviews");
+        double score = Double.parseDouble(currentBottle.getScore()); // Converte la stringa in double
+        String formattedScore = String.format("%.1f/100", score * 100); // Formatta con una cifra decimale
+        ((TextView) view.findViewById(R.id.textViewScore)).setText(formattedScore);
+        ((TextView) view.findViewById(R.id.priceText)).setText(currentBottle.getPrice());
+
         String originalRating = currentBottle.getAverageRating();
-
         try {
-            float ratingValue = Float.parseFloat(originalRating)*5;
-            int fullStars = (int) ratingValue;
-            boolean halfStar = (ratingValue - fullStars) >= 0.5;
-
-            StringBuilder stars = new StringBuilder();
-            for (int i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    stars.append("★");
-                } else if (i == fullStars && halfStar) {
-                    stars.append("½");
-                } else {
-                    stars.append("☆");
-                }
-            }
-            String formattedRating = String.format("%.1f %s", ratingValue, stars.toString());
-            ratingView.setText(formattedRating);
+            float ratingValue = Float.parseFloat(originalRating) * 5; // Scala il rating su 5 stelle
+            ratingBar.setRating(ratingValue);
+            ratingView.setText(String.format("%.1f", ratingValue));
         } catch (NumberFormatException e) {
-            // Gestione errori di conversione
-            ratingView.setText("0.0 ☆☆☆☆☆");
+            ratingBar.setRating(0);
+            ratingView.setText("0.0");
             Log.e("RatingError", "Formato rating non valido: " + originalRating, e);
         }
-        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(currentBottle.getRatingCount());
-        ((TextView) view.findViewById(R.id.textViewScore)).setText(currentBottle.getScore());
-        ((TextView) view.findViewById(R.id.textViewPrice)).setText(currentBottle.getPrice());
+
         ImageView imageView = view.findViewById(R.id.imageView);
 
         Glide.with(getContext())
