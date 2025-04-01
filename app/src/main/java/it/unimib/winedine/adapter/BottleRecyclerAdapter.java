@@ -2,19 +2,21 @@ package it.unimib.winedine.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
@@ -47,21 +49,21 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView textViewTitle;
-        private final TextView textViewScore;
-        private final TextView textViewPrice;
+        private final TextView textViewAverageRating;
+        private final TextView textViewRatingCount;
+        private final RatingBar ratingBar;
+        private final Button btnPrice;
         private final ImageView imageView;
         private final CheckBox favoriteCheckbox;
-        private final TextView textViewViewAverageRating;
-        private final TextView textViewViewRatingCount;
 
 
         public ViewHolder(View view) {
             super(view);
             textViewTitle = view.findViewById(R.id.textViewTitle);
-            textViewScore = view.findViewById(R.id.textViewScore);
-            textViewPrice = view.findViewById(R.id.textViewPrice);
-            textViewViewAverageRating = view.findViewById(R.id.textViewAverageRating);
-            textViewViewRatingCount = view.findViewById(R.id.textViewRatingCount);
+            textViewAverageRating = view.findViewById(R.id.textViewAverageRating);
+            textViewRatingCount = view.findViewById(R.id.textViewRatingCount);
+            ratingBar = view.findViewById(R.id.rating_bar);
+            btnPrice = view.findViewById(R.id.btn_price);
             imageView = view.findViewById(R.id.imageView);
             favoriteCheckbox = view.findViewById(R.id.favoriteButton);
 
@@ -75,13 +77,6 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             return textViewTitle;
         }
 
-        public TextView getTextViewScore() {
-            return textViewScore;
-        }
-
-        public TextView getTextViewPrice() {
-            return textViewPrice;
-        }
 
         public ImageView getImageView() {
             return imageView;
@@ -91,12 +86,20 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
             return favoriteCheckbox;
         }
 
-        public TextView getTextViewViewAverageRating() {
-            return textViewViewAverageRating;
+        public RatingBar getRatingBar() {
+            return ratingBar;
         }
 
-        public TextView getTextViewViewRatingCount() {
-            return textViewViewRatingCount;
+        public Button getBtnPrice() {
+            return btnPrice;
+        }
+
+        public TextView getTextViewAverageRating() {
+            return textViewAverageRating;
+        }
+
+        public TextView getTextViewRatingCount() {
+            return textViewRatingCount;
         }
 
         @Override
@@ -133,24 +136,22 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.getTextViewTitle().setText(bottleList.get(position).getTitle());
+        Bottle bottle = bottleList.get(position);
+        viewHolder.getTextViewTitle().setText(bottle.getTitle());
+        viewHolder.getTextViewRatingCount().setText(bottle.getRatingCount()+" Recensioni");
 
-        viewHolder.getTextViewPrice().setText(bottleList.get(position).getPrice());
-        viewHolder.getTextViewViewAverageRating().setText(bottleList.get(position).getAverageRating());
-        viewHolder.getTextViewViewRatingCount().setText(bottleList.get(position).getRatingCount());
+        viewHolder.getBtnPrice().setText(bottle.getPrice() + " €");
+        String originalRating = bottle.getAverageRating();
 
         try {
-            String originalRating = bottleList.get(position).getAverageRating();
-            String truncatedRating = originalRating.length() > 4 ?
-                    originalRating.substring(0, 4) : originalRating;
-            double ratingValue = Double.parseDouble(truncatedRating);
-            double scaledRating = ratingValue * 5;
-            String formattedRating = String.format("%.1f ★", scaledRating);
-            viewHolder.getTextViewViewAverageRating().setText(formattedRating);
+            float ratingValue = Float.parseFloat(originalRating) * 5; // Scala il rating su 5 stelle
+            viewHolder.getRatingBar().setRating(ratingValue);
+            viewHolder.getTextViewAverageRating().setText(String.format("%.1f", ratingValue));
         } catch (NumberFormatException e) {
-            viewHolder.getTextViewViewAverageRating().setText("0.0 ★"); // Valore di default
+            viewHolder.getRatingBar().setRating(0);
+            viewHolder.getTextViewAverageRating().setText("0.0");
+            Log.e("RatingError", "Formato rating non valido: " + originalRating, e);
         }
-
 
         if (viewHolder.getFavoriteCheckbox() != null) {
             viewHolder.getFavoriteCheckbox().setChecked(bottleList.get(position).getLiked());
