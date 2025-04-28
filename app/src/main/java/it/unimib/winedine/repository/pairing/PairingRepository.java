@@ -22,63 +22,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PairingRepository implements PairingResponseCallback {
+    private final BasePairingRemoteDataSource remoteDataSource;
+    private final MutableLiveData<Result> pairingLiveData = new MutableLiveData<>();
 
-    private final BasePairingRemoteDataSource pairingRemoteDataSource;
-    private final MutableLiveData<Result> allPairingsRecipeMutableLiveData;
-    private final MutableLiveData<Result> allRecipesForPairingsMutableLiveData;
-    private final MutableLiveData<Result> allDishesMutableLiveData;
-
-    public PairingRepository(BasePairingRemoteDataSource pairingRemoteDataSource) {
-        allPairingsRecipeMutableLiveData = new MutableLiveData<>();
-        allRecipesForPairingsMutableLiveData = new MutableLiveData<>();
-        allDishesMutableLiveData = new MutableLiveData<>();
-        this.pairingRemoteDataSource = new PairingRemoteDataSource();
-        this.pairingRemoteDataSource.setPairingCallback(this);
+    public PairingRepository(BasePairingRemoteDataSource remoteDataSource) {
+        this.remoteDataSource = remoteDataSource;
+        this.remoteDataSource.setPairingCallback(this);
     }
 
-    public MutableLiveData<Result> fetchPairingAndRecipes(String wine) {
-        pairingRemoteDataSource.getPairingAndRecipes(wine);
-        return allPairingsRecipeMutableLiveData;
-    }
-
-    private void getRecipesForPairings(String[] ingredients) {
-        pairingRemoteDataSource.getRecipesForPairings(ingredients);
-    }
-
-    public MutableLiveData<Result> fetchDishes(int id) {
-        pairingRemoteDataSource.getDishes(id);
-        return allDishesMutableLiveData;
-    }
-
-    public MutableLiveData<Result> getAllRecipesForPairingsMutableLiveData() {
-        return allRecipesForPairingsMutableLiveData;
+    public MutableLiveData<Result> getPairing(String wine) {
+        remoteDataSource.getPairing(wine);
+        return pairingLiveData;
     }
 
     @Override
-    public void onPairingSuccess(PairingAPIResponse pairingResponse, long lastUpdate) {
-        if (pairingResponse.getPairings() != null) {
-            getRecipesForPairings(pairingResponse.getPairings());
-        }
-    }
-
-    @Override
-    public void onRecipeSuccess(List<Recipe> recipes) {
-
+    public void onPairingSuccess(PairingAPIResponse response) {
+        pairingLiveData.postValue(new Result.PairingSuccess(response));
     }
 
     @Override
     public void onFailure(Exception exception) {
-        allPairingsRecipeMutableLiveData.postValue(new Result.Error(exception.getMessage()));
-        allDishesMutableLiveData.postValue(new Result.Error(exception.getMessage()));
+        pairingLiveData.postValue(new Result.Error(exception.getMessage()));
     }
-
-    @Override
-    public void onAllRequestsCompleted(List<Recipe> aggregatedRecipes) {
-        allRecipesForPairingsMutableLiveData.postValue(new Result.RecipesSuccess(aggregatedRecipes));
-    }
-
-    @Override
-    public void onDishesSuccess(DishAPIResponse dishAPIResponse) {
-        allDishesMutableLiveData.postValue(new Result.DishSuccess(dishAPIResponse));
-}}
-
+}

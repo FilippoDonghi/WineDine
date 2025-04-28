@@ -20,7 +20,10 @@ import com.bumptech.glide.Glide;
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.DishAPIResponse;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.repository.pairing.DishRepository;
 import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModel;
+import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
 import it.unimib.winedine.util.ServiceLocator;
@@ -34,19 +37,18 @@ public class RecipeDetailFragment extends Fragment {
     private TextView sourceUrlTextView;
     private TextView spoonacularTextView;
 
-    private PairingViewModel pairingViewModel;
+    private DishViewModel dishViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PairingRepository pairingRepository = ServiceLocator.getInstance().getPairingRepository(
+        DishRepository dishRepository = ServiceLocator.getInstance().getDishRepository(
                 requireActivity().getApplication(),
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
 
-        pairingViewModel = new ViewModelProvider(
-                requireActivity(),
-                new PairingViewModelFactory(pairingRepository)).get(PairingViewModel.class);
+        dishViewModel = new ViewModelProvider(requireActivity(),
+                new DishViewModelFactory(dishRepository)).get(DishViewModel.class);
     }
 
     @Override
@@ -59,44 +61,44 @@ public class RecipeDetailFragment extends Fragment {
         servingsTextView = view.findViewById(R.id.text_servings);
         sourceUrlTextView = view.findViewById(R.id.text_source_url);
         spoonacularTextView = view.findViewById(R.id.text_spoonecular);
-
-
         if (getArguments() != null) {
-            int recipeId = getArguments().getInt("recipe_id");
-            pairingViewModel.getDishes(recipeId).observe(getViewLifecycleOwner(), result -> {
-                if (result instanceof Result.DishSuccess) {
-                    DishAPIResponse dishAPIResponse = ((Result.DishSuccess) result).getDish();
-
-                    // Popola la UI con i dettagli della ricetta
-                    titleTextView.setText(dishAPIResponse.getTitle());
-
-                    Glide.with(this)
-                            .load(dishAPIResponse.getImage())
-                            .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
-                            .into(recipeImageView);
-
-                    readyTimeTextView.setText("Tempo di preparazione: " + dishAPIResponse.getReadyInMinutes() + " min");
-                    servingsTextView.setText("Porzioni: " + dishAPIResponse.getServings());
-
-                    // Imposta il link alla fonte
-                    sourceUrlTextView.setText("Vedi ricetta completa");
-                    sourceUrlTextView.setOnClickListener(v -> {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dishAPIResponse.getSourceUrl()));
-                        Log.d("URL_DEBUG", "URL: " + dishAPIResponse.getSourceUrl());
-                        startActivity(browserIntent);
-                    });
-
-                    spoonacularTextView.setText("Vedi valori nutrizionali");
-                    spoonacularTextView.setOnClickListener(v -> {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dishAPIResponse.getSpoonacularSourceUrl()));
-                        startActivity(browserIntent);
-                    });
-
-                }
-            });
+            DishAPIResponse dish = getArguments().getParcelable("dishDetails");
+            if (dish != null) {
+                updateUI(dish);
+            } else {
+                int recipeId = getArguments().getInt("recipe_id");
+                dishViewModel.fetchDish(recipeId);
+                dishViewModel.getDishResult().observe(getViewLifecycleOwner(), result -> {
+                    if (result instanceof Result.DishSuccess) {
+                        updateUI(((Result.DishSuccess) result).getDish());
+                    }
+                });
+            }
         }
 
         return view;
+    }
+
+    private void updateUI(DishAPIResponse dish) {
+        titleTextView.setText(dish.getTitle());
+
+        Glide.with(this).load(dish.getImage())
+                .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
+                .into(recipeImageView);
+
+        readyTimeTextView.setText("Tempo di preparazione: " + dish.getReadyInMinutes() + " min");
+        servingsTextView.setText("Porzioni: " + dish.getServings());
+
+        sourceUrlTextView.setText("Vedi ricetta completa");
+        sourceUrlTextView.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSourceUrl()));
+            Log.d("URL_DEBUG", "URL: " + dish.getSourceUrl());
+            startActivity(browserIntent);
+        });
+        spoonacularTextView.setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSpoonacularSourceUrl()));
+            startActivity(browserIntent);
+        });
     }
 }
 

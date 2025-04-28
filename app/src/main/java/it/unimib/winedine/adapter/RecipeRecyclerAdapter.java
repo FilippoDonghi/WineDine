@@ -1,5 +1,6 @@
 package it.unimib.winedine.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,13 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(recipeList.get(position), listener);
+    }
+
+    public void updateData(List<Recipe> newRecipes) {
+        this.recipeList.clear();
+        this.recipeList.addAll(newRecipes);
+        notifyDataSetChanged();
+        Log.d("ADAPTER_DEBUG", "Aggiornamento dati: " + newRecipes.size());
     }
 
     @Override

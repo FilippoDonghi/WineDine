@@ -15,22 +15,29 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
+import it.unimib.winedine.model.PairingAPIResponse;
 import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.repository.pairing.RecipeRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.pairing.RecipeViewModel;
+import it.unimib.winedine.ui.home.viewmodel.pairing.RecipeViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
@@ -39,7 +46,9 @@ import it.unimib.winedine.util.ServiceLocator;
 public class BottleVisualizeFragment extends Fragment {
 
     private PairingViewModel pairingViewModel;
+    private RecipeViewModel recipeViewModel;
     private WineViewModel wineViewModel;
+
 
     BottleRecyclerAdapter bottleRecyclerAdapter;
 
@@ -56,6 +65,7 @@ public class BottleVisualizeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //wine
         WinesRepository winesRepository = ServiceLocator.getInstance().getWinesRepository(
                 requireActivity().getApplication(),
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
@@ -63,8 +73,10 @@ public class BottleVisualizeFragment extends Fragment {
         wineViewModel= new ViewModelProvider(
                 requireActivity(),
                 new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+
         bottleList = new ArrayList<>();
 
+        //pairing
         PairingRepository pairingRepository = ServiceLocator.getInstance().getPairingRepository(
                 requireActivity().getApplication(),
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
@@ -72,6 +84,16 @@ public class BottleVisualizeFragment extends Fragment {
         pairingViewModel = new ViewModelProvider(
                 requireActivity(),
                 new PairingViewModelFactory(pairingRepository)).get(PairingViewModel.class);
+
+        //recipe
+        RecipeRepository recipeRepository = ServiceLocator.getInstance().getRecipeRepository(
+                requireActivity().getApplication(),
+                requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
+
+        recipeViewModel = new ViewModelProvider(
+                requireActivity(),
+                new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
+
 
         if (getArguments() != null) {
             currentBottle = getArguments().getParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE);
@@ -81,10 +103,23 @@ public class BottleVisualizeFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(currentBottle.getTitle());
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        pairingViewModel.getPairingResult().removeObservers(getViewLifecycleOwner());
+        recipeViewModel.getRecipesResult().removeObservers(getViewLifecycleOwner());
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_visualize_bottle, container, false);
 
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(currentBottle.getTitle());
@@ -136,38 +171,56 @@ public class BottleVisualizeFragment extends Fragment {
                 .into(imageView);
 
         pairingButton = view.findViewById(R.id.button_pairing);
-
         pairingButton.setOnClickListener(v -> {
-            pairingViewModel.getPairingAndRecipes(selectedWine);
-        });
+            // Rimuovi osservatori precedenti
+            pairingViewModel.getPairingResult().removeObservers(getViewLifecycleOwner());
+            recipeViewModel.getRecipesResult().removeObservers(getViewLifecycleOwner());
 
+            pairingViewModel.fetchPairing(selectedWine);
 
-        pairingViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), result -> {
-            if (result instanceof Result.Loading) {
-            } else if (result instanceof Result.RecipesSuccess) {
-                List<Recipe> recipes = ((Result.RecipesSuccess) result).getRecipes();
-                if (recipes.isEmpty()) {
-                    Toast.makeText(requireContext(), "Nessuna ricetta trovata", Toast.LENGTH_SHORT).show();
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArray("recipes", recipes.toArray(new Recipe[0]));
-                    Navigation.findNavController(view).navigate(
-                            R.id.action_bottleVisualizeFragment_to_recipeListFragment,
-                            bundle
-                    );
+            pairingViewModel.getPairingResult().observe(getViewLifecycleOwner(), pairingResult -> {
+                if (pairingResult instanceof Result.PairingSuccess) {
+                    PairingAPIResponse response = ((Result.PairingSuccess) pairingResult).getPairing();
+                    String[] ingredients = response.getPairings();
+
+                    if (ingredients == null || ingredients.length == 0) {
+                        Toast.makeText(requireContext(), "Nessun ingrediente trovato", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    recipeViewModel.fetchRecipes(ingredients);
+
+                    recipeViewModel.getRecipesResult().observe(getViewLifecycleOwner(), recipeResult -> {
+                        if (recipeResult instanceof Result.RecipesSuccess) {
+                            List<Recipe> recipes = ((Result.RecipesSuccess) recipeResult).getRecipes();
+
+                            // Verifica lo stato di navigazione
+                            NavController navController = Navigation.findNavController(view);
+                            if (navController.getCurrentDestination().getId() == R.id.visualizeBottleFragment) {
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArray("recipes", recipes.toArray(new Recipe[0]));
+
+                                // Naviga sostituendo il fragment precedente
+                                NavOptions navOptions = new NavOptions.Builder()
+                                        .setPopUpTo(R.id.recipeListFragment, true) // Rimuovi tutte le istanze precedenti
+                                        .build();
+
+                                navController.navigate(
+                                        R.id.action_bottleVisualizeFragment_to_recipeListFragment,
+                                        bundle,
+                                        navOptions
+                                );
+                            }
+                        }
+                    });
                 }
-            } else if (result instanceof Result.Error) {
-                Toast.makeText(requireContext(),
-                        ((Result.Error) result).getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
+            });
         });
+
+
         return view;
-    }
-    }
 
-
-
+}}
 
 
 

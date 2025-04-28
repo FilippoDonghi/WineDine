@@ -40,6 +40,7 @@ public class Recipe implements Parcelable {
         this.image = source.readString();
         this.imageType = source.readString();
     }
+
     protected Recipe(Parcel in) {
         this.id = in.readInt();
         this.title = in.readString();

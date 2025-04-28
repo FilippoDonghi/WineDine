@@ -4,13 +4,19 @@ import android.app.Application;
 
 
 import it.unimib.winedine.database.WineRoomDatabase;
+import it.unimib.winedine.repository.pairing.DishRepository;
 import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.repository.pairing.RecipeRepository;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.user.UserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.service.WineAPIService;
+import it.unimib.winedine.source.pairing.BaseDishRemoteDataSource;
 import it.unimib.winedine.source.pairing.BasePairingRemoteDataSource;
+import it.unimib.winedine.source.pairing.BaseRecipeRemoteDataSource;
+import it.unimib.winedine.source.pairing.DishRemoteDataSource;
 import it.unimib.winedine.source.pairing.PairingRemoteDataSource;
+import it.unimib.winedine.source.pairing.RecipeRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
 import it.unimib.winedine.source.user.UserAuthenticationFirebaseDataSource;
@@ -83,14 +89,23 @@ public class ServiceLocator {
         return new WinesRepository(bottleRemoteDataSource, bottleLocalDataSource);
     }
 
+    public RecipeRepository getRecipeRepository(Application application, boolean debugMode) {
+        BaseRecipeRemoteDataSource recipeRemoteDataSource = new RecipeRemoteDataSource();
+        return new RecipeRepository(recipeRemoteDataSource);
+    }
+
+    public DishRepository getDishRepository(Application application, boolean debugMode) {
+        BaseDishRemoteDataSource dishRemoteDataSource = new DishRemoteDataSource();
+        return new DishRepository(dishRemoteDataSource);
+    }
+
+
     public PairingRepository getPairingRepository(Application application, boolean debugMode) {
-        BasePairingRemoteDataSource pairingRemoteDataSource;
-        SharedPreferencesUtils sharedPreferencesUtil = new SharedPreferencesUtils(application);
-
-        pairingRemoteDataSource = new PairingRemoteDataSource();
-
+        BasePairingRemoteDataSource pairingRemoteDataSource = new PairingRemoteDataSource();
         return new PairingRepository(pairingRemoteDataSource);
     }
+
+
 
     public WineAPIService getWinesAPIService() {
         Retrofit retrofit = new Retrofit.Builder()

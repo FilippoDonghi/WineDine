@@ -37,16 +37,20 @@
     <fragment
         android:id="@+id/visualizeBottleFragment"
         android:name="it.unimib.winedine.ui.home.fragment.BottleVisualizeFragment"
+        android:label="VisualizeBottleFragment"
         tools:layout="@layout/fragment_visualize_bottle">
 
         <action
             android:id="@+id/action_bottleVisualizeFragment_to_recipeListFragment"
-            app:destination="@id/recipeListFragment" />
+            app:destination="@id/recipeListFragment"
+            app:popUpTo="@id/recipeListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/recipeListFragment"
-        android:name="it.unimib.winedine.ui.home.fragment.RecipeListFragment">
+        android:name="it.unimib.winedine.ui.home.fragment.RecipeListFragment"
+        android:label="RecipeListFragment">
         <argument
             android:name="recipes"
             app:argType="it.unimib.winedine.model.Recipe[]"

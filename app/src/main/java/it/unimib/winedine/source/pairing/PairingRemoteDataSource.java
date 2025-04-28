@@ -2,6 +2,7 @@ package it.unimib.winedine.source.pairing;
 
 import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
 import static it.unimib.winedine.util.Constants.RETROFIT_ERROR;
+import static it.unimib.winedine.util.Constants.WINE_API_KEY;
 
 import android.util.Log;
 
@@ -29,88 +30,25 @@ public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
     public PairingRemoteDataSource() {
         this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();
     }
-
     @Override
-    public void getPairingAndRecipes(String wine) {
-        Call<PairingAPIResponse> pairingResponseCall = wineAPIService.getPairings(wine, Constants.WINE_API_KEY);
-
-        Log.d("API_DEBUG", "Pairing URL: " + "https://api.spoonacular.com/food/wine/dishes?wine=" + wine + "&apiKey=" + Constants.WINE_API_KEY);
-
-        pairingResponseCall.enqueue(new Callback<PairingAPIResponse>() {
-
-                    @Override
-                    public void onResponse(@NonNull Call<PairingAPIResponse> call,
-                                           @NonNull Response<PairingAPIResponse> response) {
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            String[] ingredients = response.body().getPairings();
-                            responseCallback.onPairingSuccess(response.body(), System.currentTimeMillis());
-                            getRecipesForPairings(ingredients);
-                        } else {
-                            responseCallback.onFailure(new Exception("Pairing API error"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<PairingAPIResponse> call, @NonNull Throwable t) {
-                        responseCallback.onFailure(new Exception(t));
-                    }
-                });
-    }
-
-    public void getRecipesForPairings(String[] ingredients) {
-        Log.d("API_DEBUG", "Cercando ricette per " + ingredients.length + " ingredienti");
-        pendingRequests = ingredients.length;
-
-        for (String ingredient : ingredients) {
-            Log.d("API_DEBUG", "Chiamata API per: " + ingredient);
-            wineAPIService.getRecipes(ingredient, 25, 3, Constants.WINE_API_KEY)
-                    .enqueue(new Callback<RecipeAPIResponse>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RecipeAPIResponse> call,
-                                               @NonNull Response<RecipeAPIResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                Log.d("API_DEBUG", "Trovate " + response.body().getResults().size() + " ricette per " + ingredient);
-                                aggregatedRecipes.addAll(response.body().getResults());
-                            } else {
-                                Log.e("API_ERROR", "Errore per " + ingredient + ": " + response.code());
-                            }
-                            checkCompletion();
-                        }
-
-                        @Override
-                        public void onFailure(Call<RecipeAPIResponse> call, Throwable t) {
-                            Log.e("API_ERROR", "Fallimento per " + ingredient + ": " + t.getMessage());
-                            checkCompletion();
-                        }
-                    });
-        }
-    }
-
-    private void checkCompletion() {
-        if (--pendingRequests == 0) {
-            responseCallback.onAllRequestsCompleted(aggregatedRecipes);
-        }
-    }
-
-    @Override
-    public void getDishes(int id) {
-        Call<DishAPIResponse> dishResponseCall = wineAPIService.getDish(id, Constants.WINE_API_KEY);
-        Log.d("API_DEBUG", "Dish URL: https://api.spoonacular.com/recipes/" + id + "/information?apiKey=" + Constants.WINE_API_KEY);
-        dishResponseCall.enqueue(new Callback<DishAPIResponse>() {
-
+    public void getPairing(String wine) {
+        Call<PairingAPIResponse> call = wineAPIService.getPairings(wine, WINE_API_KEY);
+        call.enqueue(new Callback<PairingAPIResponse>() {
             @Override
-            public void onResponse(@NonNull Call<DishAPIResponse> call,
-                                   @NonNull Response<DishAPIResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    responseCallback.onDishesSuccess(response.body());
+            public void onResponse(@NonNull Call<PairingAPIResponse> call,
+                                   @NonNull Response<PairingAPIResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    responseCallback.onPairingSuccess(response.body());
+                    Log.d("API_DEBUG", "Chiamata API pairing per: " + wine);
                 } else {
-                responseCallback.onFailure(new Exception(API_KEY_ERROR));
-            }}
+                    responseCallback.onFailure(new Exception("Pairing API error"));
+                }
+            }
+
             @Override
-            public void onFailure(@NonNull Call<DishAPIResponse> call, @NonNull Throwable t) {
-                responseCallback.onFailure(new Exception(RETROFIT_ERROR));
+            public void onFailure(@NonNull Call<PairingAPIResponse> call,
+                                  @NonNull Throwable t) {
+                responseCallback.onFailure(new Exception(t));
             }
         });
-    }
-}
+    }}

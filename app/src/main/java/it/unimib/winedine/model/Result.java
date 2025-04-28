@@ -34,6 +34,17 @@ public abstract class Result {
         }
     }
 
+    public static final class PairingSuccess extends Result {
+       private final PairingAPIResponse pairingAPIResponse;
+
+       public PairingSuccess(PairingAPIResponse pairingAPIResponse){
+           this.pairingAPIResponse = pairingAPIResponse;
+       }
+       public PairingAPIResponse getPairing() {
+           return pairingAPIResponse;
+       }
+    }
+
     public static final class DishSuccess extends Result {
         private final DishAPIResponse dishAPIResponse;
 

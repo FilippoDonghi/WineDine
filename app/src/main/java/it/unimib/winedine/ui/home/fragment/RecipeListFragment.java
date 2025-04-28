@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +28,11 @@ import it.unimib.winedine.adapter.RecipeRecyclerAdapter;
 import it.unimib.winedine.model.DishAPIResponse;
 import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.repository.pairing.DishRepository;
 import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
+import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModel;
+import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
@@ -39,59 +43,96 @@ import it.unimib.winedine.util.ServiceLocator;
 public class RecipeListFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecipeRecyclerAdapter adapter;
-    private PairingViewModel pairingViewModel;
+    private DishViewModel dishViewModel;
+    private List<Recipe> currentRecipes = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PairingRepository pairingRepository = ServiceLocator.getInstance().getPairingRepository(
+        DishRepository dishRepository = ServiceLocator.getInstance().getDishRepository(
                 requireActivity().getApplication(),
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
 
-        pairingViewModel = new ViewModelProvider(
-                requireActivity(),
-                new PairingViewModelFactory(pairingRepository)).get(PairingViewModel.class);
+        dishViewModel = new ViewModelProvider(requireActivity(),
+                new DishViewModelFactory(dishRepository)).get(DishViewModel.class);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        updateRecipesFromBundle();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateRecipesFromBundle();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
-
-        recyclerView = view.findViewById(R.id.recyclerView_recipes);
+        recyclerView = view.findViewById(R.id.recyclerView_recipes); // Inizializza la RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        return view;
+    }
 
-        if (getArguments() != null) {
-            Recipe[] recipesArray = (Recipe[]) getArguments().getParcelableArray("recipes");
-            if (recipesArray != null) {
-                List<Recipe> recipes = Arrays.asList(recipesArray);
-                Log.d("RECIPE_DEBUG", "Ricevute " + recipes.size() + " ricette");
-                adapter = new RecipeRecyclerAdapter(recipes, recipe -> {
+    private void updateRecipesFromBundle() {
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("recipes")) {
+            Recipe[] recipesArray = (Recipe[]) args.getParcelableArray("recipes");
+            if (recipesArray != null && recipesArray.length > 0) {
+                currentRecipes = new ArrayList<>(Arrays.asList(recipesArray)); // Usa una nuova lista
 
-                    int recipeId = recipe.getId();
-                    pairingViewModel.getDishes(recipeId).observe(getViewLifecycleOwner(), result -> {
-                        if (result instanceof Result.DishSuccess) {
-                            DishAPIResponse dishAPIResponse = ((Result.DishSuccess) result).getDish();
-                            Log.d("RECIPE_SUCCESS", "Dettagli della ricetta: " + dishAPIResponse.toString());
-
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("dishDetails", recipe);
-                            Navigation.findNavController(requireView()).navigate(R.id.action_recipeListFragment_to_recipeDetailFragment, bundle);
-
-                        } else if (result instanceof Result.Error) {
-                            Toast.makeText(requireContext(), "Nessuna ricetta trovata", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    RecipeDetailFragment fragment = new RecipeDetailFragment();
-                });
-
-                recyclerView.setAdapter(adapter);
+                if (adapter == null) {
+                    setupAdapter();
+                } else {
+                    adapter.updateData(currentRecipes);
+                    recyclerView.scheduleLayoutAnimation(); // Forza l'aggiornamento
+                }
             }
         }
+    }
 
-        return view;
-        }}
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        currentRecipes.clear();
+        if (adapter != null) {
+            adapter.updateData(new ArrayList<>()); // Resetta l'adapter
+            adapter = null;
+        }
+        dishViewModel.getDishResult().removeObservers(getViewLifecycleOwner());
+    }
+
+    private void setupAdapter() {
+        adapter = new RecipeRecyclerAdapter(currentRecipes, recipe -> {
+            // Rimuovi osservatori precedenti
+            dishViewModel.getDishResult().removeObservers(getViewLifecycleOwner());
+
+            dishViewModel.fetchDish(recipe.getId());
+            dishViewModel.getDishResult().observe(getViewLifecycleOwner(), result -> {
+                if (result instanceof Result.DishSuccess) {
+                    navigateToDetail(((Result.DishSuccess) result).getDish());
+                } else if (result instanceof Result.Error) {
+                    Toast.makeText(requireContext(), "Errore nel caricamento", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+        recyclerView.setAdapter(adapter);
+    }
 
 
+
+    private void navigateToDetail(DishAPIResponse dish) {
+        NavController navController = Navigation.findNavController(getView());
+        if (navController.getCurrentDestination().getId() == R.id.recipeListFragment) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("dishDetails", dish);
+            navController.navigate(R.id.action_recipeListFragment_to_recipeDetailFragment, bundle);
+        }
+    }
+}
 
 

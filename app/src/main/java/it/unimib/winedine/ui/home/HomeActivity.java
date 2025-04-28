@@ -83,8 +83,13 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-
         return navController.navigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        navController.navigateUp();
     }
 
     private void showProfileMenu(View anchorView) {
