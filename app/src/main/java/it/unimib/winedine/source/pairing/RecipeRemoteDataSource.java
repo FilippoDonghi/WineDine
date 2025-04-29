@@ -22,6 +22,7 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
     private final WineAPIService wineAPIService;
     private List<Recipe> aggregatedRecipes = new ArrayList<>();
     private int pendingRequests = 0;
+    private Call currentCall;
 
     public RecipeRemoteDataSource() {
         this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();
@@ -29,11 +30,10 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
 
     @Override
     public void getRecipesForPairings(String[] ingredients) {
-        Log.d("API_DEBUG", "Cercando ricette per " + ingredients.length + " ingredienti");
         pendingRequests = ingredients.length;
         for (String ingredient : ingredients) {
-            wineAPIService.getRecipes(ingredient, 25, 3, WINE_API_KEY)
-                    .enqueue(new Callback<RecipeAPIResponse>() {
+            currentCall= wineAPIService.getRecipes(ingredient, 25, 3, WINE_API_KEY);
+                    currentCall.enqueue(new Callback<RecipeAPIResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<RecipeAPIResponse> call,
                                                @NonNull Response<RecipeAPIResponse> response) {
@@ -50,6 +50,13 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
                             checkCompletion();
                         }
                     });
+        }
+    }
+
+    @Override
+    public void cancelPendingRequests() {
+        if (currentCall != null && !currentCall.isCanceled()) {
+            currentCall.cancel();
         }
     }
 

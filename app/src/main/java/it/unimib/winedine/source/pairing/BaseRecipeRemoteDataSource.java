@@ -9,4 +9,5 @@ public abstract class BaseRecipeRemoteDataSource {
         this.responseCallback = responseCallback;
     }
     public abstract void getRecipesForPairings(String[] ingredients);
+    public abstract void cancelPendingRequests();
 }

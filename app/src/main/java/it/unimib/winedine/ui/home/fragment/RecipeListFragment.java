@@ -30,11 +30,14 @@ import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.pairing.DishRepository;
 import it.unimib.winedine.repository.pairing.PairingRepository;
+import it.unimib.winedine.repository.pairing.RecipeRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.DishViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
+import it.unimib.winedine.ui.home.viewmodel.pairing.RecipeViewModel;
+import it.unimib.winedine.ui.home.viewmodel.pairing.RecipeViewModelFactory;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.util.Constants;
@@ -45,6 +48,7 @@ public class RecipeListFragment extends Fragment {
     private RecipeRecyclerAdapter adapter;
     private DishViewModel dishViewModel;
     private List<Recipe> currentRecipes = new ArrayList<>();
+    private RecipeViewModel recipeViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,18 +60,38 @@ public class RecipeListFragment extends Fragment {
 
         dishViewModel = new ViewModelProvider(requireActivity(),
                 new DishViewModelFactory(dishRepository)).get(DishViewModel.class);
+
+        RecipeRepository recipeRepository = ServiceLocator.getInstance().getRecipeRepository(
+                requireActivity().getApplication(),
+                requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode));
+
+        recipeViewModel = new ViewModelProvider(requireActivity(),
+                new RecipeViewModelFactory(recipeRepository)).get(RecipeViewModel.class);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        updateRecipesFromBundle();
+        setupAdapter();
+        observeRecipes();
+    }
+
+    private void observeRecipes() {
+        recipeViewModel.getRecipesResult().observe(getViewLifecycleOwner(), result -> {
+            if (result instanceof Result.RecipesSuccess) {
+                // Aggiorna i dati dell'adapter con le nuove ricette
+                currentRecipes = ((Result.RecipesSuccess) result).getRecipes();
+                adapter.updateData(currentRecipes);
+                Log.d("RECIPE_DEBUG", "Ricette ricevute: " + currentRecipes.size());
+            } else if (result instanceof Result.Error) {
+                Toast.makeText(requireContext(), "Errore nel caricamento", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateRecipesFromBundle();
     }
 
     @Override
@@ -78,22 +102,6 @@ public class RecipeListFragment extends Fragment {
         return view;
     }
 
-    private void updateRecipesFromBundle() {
-        Bundle args = getArguments();
-        if (args != null && args.containsKey("recipes")) {
-            Recipe[] recipesArray = (Recipe[]) args.getParcelableArray("recipes");
-            if (recipesArray != null && recipesArray.length > 0) {
-                currentRecipes = new ArrayList<>(Arrays.asList(recipesArray)); // Usa una nuova lista
-
-                if (adapter == null) {
-                    setupAdapter();
-                } else {
-                    adapter.updateData(currentRecipes);
-                    recyclerView.scheduleLayoutAnimation(); // Forza l'aggiornamento
-                }
-            }
-        }
-    }
 
     @Override
     public void onDestroyView() {
@@ -122,8 +130,6 @@ public class RecipeListFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
     }
-
-
 
     private void navigateToDetail(DishAPIResponse dish) {
         NavController navController = Navigation.findNavController(getView());

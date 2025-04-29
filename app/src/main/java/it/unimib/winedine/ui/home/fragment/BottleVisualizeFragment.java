@@ -172,7 +172,9 @@ public class BottleVisualizeFragment extends Fragment {
 
         pairingButton = view.findViewById(R.id.button_pairing);
         pairingButton.setOnClickListener(v -> {
-            // Rimuovi osservatori precedenti
+            pairingViewModel.resetPairingResult();
+            recipeViewModel.resetRecipesResult();
+
             pairingViewModel.getPairingResult().removeObservers(getViewLifecycleOwner());
             recipeViewModel.getRecipesResult().removeObservers(getViewLifecycleOwner());
 
@@ -188,35 +190,15 @@ public class BottleVisualizeFragment extends Fragment {
                         return;
                     }
 
+                    // Avvia la richiesta delle ricette PRIMA della navigazione
                     recipeViewModel.fetchRecipes(ingredients);
 
-                    recipeViewModel.getRecipesResult().observe(getViewLifecycleOwner(), recipeResult -> {
-                        if (recipeResult instanceof Result.RecipesSuccess) {
-                            List<Recipe> recipes = ((Result.RecipesSuccess) recipeResult).getRecipes();
-
-                            // Verifica lo stato di navigazione
-                            NavController navController = Navigation.findNavController(view);
-                            if (navController.getCurrentDestination().getId() == R.id.visualizeBottleFragment) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArray("recipes", recipes.toArray(new Recipe[0]));
-
-                                // Naviga sostituendo il fragment precedente
-                                NavOptions navOptions = new NavOptions.Builder()
-                                        .setPopUpTo(R.id.recipeListFragment, true) // Rimuovi tutte le istanze precedenti
-                                        .build();
-
-                                navController.navigate(
-                                        R.id.action_bottleVisualizeFragment_to_recipeListFragment,
-                                        bundle,
-                                        navOptions
-                                );
-                            }
-                        }
-                    });
+                    // Naviga solo dopo aver avviato la richiesta
+                    NavController navController = Navigation.findNavController(v);
+                    navController.navigate(R.id.action_bottleVisualizeFragment_to_recipeListFragment);
                 }
             });
         });
-
 
         return view;
 

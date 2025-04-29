@@ -27,6 +27,7 @@ public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
     private List<Recipe> aggregatedRecipes = new ArrayList<>();
     private int pendingRequests = 0;
 
+
     public PairingRemoteDataSource() {
         this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();
     }
@@ -51,4 +52,9 @@ public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
                 responseCallback.onFailure(new Exception(t));
             }
         });
-    }}
+    }
+
+
+
+
+}

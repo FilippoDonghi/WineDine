@@ -74,16 +74,28 @@ public class WineAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.list_group_item, parent, false);
         }
-        TextView textView = convertView.findViewById(R.id.group_name);
-        textView.setText((String) getGroup(groupPosition));
+        String categoryName = (String) getGroup(groupPosition);
+        ((TextView) convertView.findViewById(R.id.group_name)).setText(categoryName);
 
         ImageView imageView = convertView.findViewById(R.id.group_icon);
-        imageView.setImageResource(R.drawable.calice);
+
+        String drawableName = categoryName
+                .toLowerCase()
+                .replace(" ", "_");
+        int resId = context.getResources()
+                .getIdentifier(drawableName, "drawable", context.getPackageName());
+        if (resId != 0) {
+            imageView.setImageResource(resId);
+        } else {
+            // fallback generico
+            imageView.setImageResource(R.drawable.calice);
+        }
         return convertView;
     }
+
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {

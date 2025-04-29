@@ -68,7 +68,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
         this.recipeList.clear();
         this.recipeList.addAll(newRecipes);
         notifyDataSetChanged();
-        Log.d("ADAPTER_DEBUG", "Aggiornamento dati: " + newRecipes.size());
+        Log.d("ADAPTER_DEBUG", "Dati completamente sostituiti: " + newRecipes.size());
     }
 
     @Override
