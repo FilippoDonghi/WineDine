@@ -65,7 +65,7 @@ public class WineListFragment extends Fragment{
 
         wineViewModel = new ViewModelProvider(
                 requireActivity(),
-                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+                new WineViewModelFactory(winesRepository, userRepository)).get(WineViewModel.class);
         }
 
         @Override

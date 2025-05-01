@@ -62,14 +62,12 @@ public class FavoriteWinesFragment extends Fragment {
 
         wineViewModel= new ViewModelProvider(
                 requireActivity(),
-                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+                new WineViewModelFactory(winesRepository, userRepository)).get(WineViewModel.class);
         bottleList = new ArrayList<>();
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite_wines, container, false);
 
@@ -77,52 +75,63 @@ public class FavoriteWinesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        bottleRecyclerAdapter =
-                new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
-                        new BottleRecyclerAdapter.OnItemClickListener() {
-                            @Override
-                            public void onBottleItemClick(Bottle bottle, String selectedWine) {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
-                                bundle.putString("selectedWine", selectedWine);
-                                Navigation.findNavController(view).navigate(R.id.action_favoriteWinesFragment_to_visualizeBottleFragment, bundle);
-                            }
-                            @Override
-                            public void onFavoriteButtonClick(int position) {
-                                Bottle bottle = bottleList.get(position);
-                                bottle.setLiked(!bottle.getLiked());
+        bottleRecyclerAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
+                new BottleRecyclerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onBottleItemClick(Bottle bottle, String selectedWine) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
+                        bundle.putString("selectedWine", selectedWine);
+                        Navigation.findNavController(view).navigate(R.id.action_favoriteWinesFragment_to_visualizeBottleFragment, bundle);
+                    }
 
-                                // Aggiorna il database locale
-                                wineViewModel.updateWine(bottle);
+                    @Override
+                    public void onFavoriteButtonClick(int position) {
+                        Bottle bottle = bottleList.get(position);
+                        bottle.setLiked(!bottle.getLiked());
 
-                                // Aggiungi questa parte per aggiornare Firebase
-                                String idToken = userViewModel.getLoggedUser().getIdToken();
-                                userViewModel.saveUserFavoriteWines(idToken, bottle);
+                        // Aggiorna il database locale
+                        wineViewModel.updateWine(bottle);
 
-                                if (!bottle.getLiked()) {
-                                    bottleList.remove(position);
-                                    bottleRecyclerAdapter.notifyItemRemoved(position);
-                                }}
-                        });
+                        // Aggiorna Firebase
+                        String idToken = userViewModel.getLoggedUser().getIdToken();
+                        userViewModel.saveUserFavoriteWines(idToken, bottle);
 
-        recyclerView.setAdapter(bottleRecyclerAdapter);
-
-        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(),
-                result -> {
-                    if (result.isSuccess()) {
-                        int initialSize = this.bottleList.size();
-                        this.bottleList.clear();
-                        this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
-                        bottleRecyclerAdapter.notifyItemRangeInserted(initialSize, this.bottleList.size());
-                        recyclerView.setVisibility(View.VISIBLE);
-                        circularProgressIndicator.setVisibility(View.GONE);
-                    } else {
-                        Snackbar.make(view,
-                                "error",
-                                Snackbar.LENGTH_SHORT).show();
+                        // Rimuove il vino dalla lista se non è più nei preferiti
+                        if (!bottle.getLiked()) {
+                            bottleList.remove(position);
+                            bottleRecyclerAdapter.notifyItemRemoved(position);
+                        }
                     }
                 });
 
+        recyclerView.setAdapter(bottleRecyclerAdapter);
+
+        // Osserva il LiveData di wineViewModel per i vini preferiti
+        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
+            if (result.isSuccess()) {
+                bottleList.clear();
+                bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
+                bottleRecyclerAdapter.notifyDataSetChanged();
+                recyclerView.setVisibility(View.VISIBLE);
+                circularProgressIndicator.setVisibility(View.GONE);
+            } else {
+                Snackbar.make(view, "Error loading wines", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        // Recupera i vini preferiti tramite il ViewModel dell'utente
+        String idToken = userViewModel.getLoggedUser().getIdToken();
+        wineViewModel.refreshFavoriteWines(idToken);
+
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String idToken = userViewModel.getLoggedUser().getIdToken();
+        wineViewModel.refreshFavoriteWines(idToken);
     }
 }

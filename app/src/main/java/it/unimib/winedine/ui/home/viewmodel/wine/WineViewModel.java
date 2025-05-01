@@ -10,12 +10,17 @@ import java.util.List;
 import it.unimib.winedine.database.WineFireStoreDatabase;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.model.WineAPIResponse;
+import it.unimib.winedine.repository.user.IUserRepository;
+import it.unimib.winedine.repository.user.UserRepository;
+import it.unimib.winedine.repository.wine.BottleResponseCallback;
 import it.unimib.winedine.repository.wine.WinesRepository;
 
 public class WineViewModel extends ViewModel {
     private static final String TAG = WineViewModel.class.getSimpleName();
 
     private final WinesRepository winesRepository;
+    private final IUserRepository userRepository;
     private final MutableLiveData<List<String>> categories = new MutableLiveData<>();
     private final MutableLiveData<HashMap<String, List<String>>> winesMap = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
@@ -24,8 +29,9 @@ public class WineViewModel extends ViewModel {
     private MutableLiveData<Result> favoriteWinesListLiveData;
 
 
-  public WineViewModel(WinesRepository winesRepository) {
+  public WineViewModel(WinesRepository winesRepository, IUserRepository userRepository) {
         this.winesRepository = winesRepository;
+        this.userRepository = userRepository;
         this.page = 1;
   }
 
@@ -84,5 +90,25 @@ public class WineViewModel extends ViewModel {
         winesRepository.updateWine(bottle);
     }
 
+    public void refreshFavoriteWines(String idToken) {
+        userRepository.getUserFavoriteWines(idToken, new IUserRepository.FavoriteWinesCallback() {
+            @Override
+            public void onSuccess(List<Bottle> favoriteWines) {
+                favoriteWinesListLiveData.postValue(new Result.WineSuccess(new WineAPIResponse(favoriteWines)));
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                // Gestiamo l'errore
+                favoriteWinesListLiveData.postValue(new Result.Error(errorMessage));
+            }
+        });
+    }
+
+    public LiveData<Result> getFavoriteWinesLiveData() {
+        return favoriteWinesListLiveData;
+    }
 }
+
+
 

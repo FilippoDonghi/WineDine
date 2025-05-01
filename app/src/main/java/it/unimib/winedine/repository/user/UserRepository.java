@@ -151,6 +151,47 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     }
 
     @Override
+    public void getUserFavoriteWines(String idToken, FavoriteWinesCallback callback) {
+        userDataRemoteDataSource.setUserResponseCallback(new UserResponseCallback() {
+            @Override
+            public void onSuccessFromAuthentication(User user) {
+            }
+
+            @Override
+            public void onFailureFromAuthentication(String message) {
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabase(User user) {
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabase(List<Bottle> bottles) {
+                callback.onSuccess(bottles);
+            }
+
+            @Override
+            public void onSuccessFromRemoteDatabaseFavorites() {
+            }
+
+            @Override
+            public void onSuccessFromGettingUserPreferences() {
+            }
+
+            @Override
+            public void onFailureFromRemoteDatabase(String errorMessage) {
+                callback.onFailure(errorMessage);
+            }
+
+            @Override
+            public void onSuccessLogout() {
+            }
+        });
+                userDataRemoteDataSource.getUserFavoriteWines(idToken);
+    }
+
+
+            @Override
     public void onSuccessFromAuthentication(User user) {
         if (user != null) {
             userDataRemoteDataSource.saveUserData(user);

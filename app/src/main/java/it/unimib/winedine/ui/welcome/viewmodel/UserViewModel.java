@@ -126,4 +126,8 @@ public class UserViewModel extends ViewModel {
     private void getUserData(String token) {
         userMutableLiveData = userRepository.getGoogleUser(token);
     }
+
+    public void getUserFavoriteWines(String idToken, IUserRepository.FavoriteWinesCallback callback) {
+        userRepository.getUserFavoriteWines(idToken);
+    }
 }

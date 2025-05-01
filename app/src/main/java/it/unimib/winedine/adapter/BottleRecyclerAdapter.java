@@ -156,10 +156,6 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
 
         if (viewHolder.getFavoriteCheckbox() != null) {
             viewHolder.getFavoriteCheckbox().setChecked(bottleList.get(position).getLiked());
-
-            //imposta la visibilità della CheckBox in base al valore di heartVisible.
-            //se heartVisible è true, la CheckBox sarà visibile (View.VISIBLE).
-            //Se heartVisible è false, la CheckBox sarà invisibile (View.INVISIBLE)
             viewHolder.getFavoriteCheckbox().setVisibility(heartVisible ? View.VISIBLE : View.INVISIBLE);
         }
 

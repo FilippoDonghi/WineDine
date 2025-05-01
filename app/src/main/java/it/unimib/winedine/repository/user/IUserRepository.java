@@ -11,6 +11,11 @@ import it.unimib.winedine.model.Result;
 import it.unimib.winedine.model.User;
 
 public interface IUserRepository {
+
+    interface FavoriteWinesCallback {
+        void onSuccess(List<Bottle> favoriteWines);  // Successo nel recupero dei vini preferiti
+        void onFailure(String errorMessage);          // Errore nel recupero dei vini preferiti
+    }
     MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered);
     MutableLiveData<Result> getGoogleUser(String idToken);
     MutableLiveData<Result> getUserFavoriteWines(String idToken);
@@ -22,6 +27,7 @@ public interface IUserRepository {
     void signInWithGoogle(String token);
     void saveUserPreferences(String idToken);
     void saveUserFavoriteWines(String idToken, Bottle bottle);
+    void getUserFavoriteWines(String idToken, FavoriteWinesCallback callback);
 }
 
 

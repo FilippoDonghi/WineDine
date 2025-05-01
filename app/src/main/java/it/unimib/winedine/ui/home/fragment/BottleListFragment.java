@@ -51,22 +51,19 @@ public class BottleListFragment extends Fragment {
     private UserViewModel userViewModel;
 
     public BottleListFragment() {
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             selectedWine = getArguments().getString("selectedWine");
         }
 
-        IUserRepository userRepository = ServiceLocator.getInstance().
-                getUserRepository(requireActivity().getApplication());
+        IUserRepository userRepository = ServiceLocator.getInstance()
+                .getUserRepository(requireActivity().getApplication());
 
-        userViewModel = new ViewModelProvider(
-                requireActivity(),
+        userViewModel = new ViewModelProvider(requireActivity(),
                 new UserViewModelFactory(userRepository)).get(UserViewModel.class);
 
         winesRepository = ServiceLocator.getInstance().getWinesRepository(
@@ -74,9 +71,8 @@ public class BottleListFragment extends Fragment {
                 requireActivity().getApplication().getResources().getBoolean(R.bool.debug_mode)
         );
 
-        wineViewModel = new ViewModelProvider(
-                requireActivity(),
-                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+        wineViewModel = new ViewModelProvider(requireActivity(),
+                new WineViewModelFactory(winesRepository, userRepository)).get(WineViewModel.class);
 
         bottleList = new ArrayList<>();
     }
@@ -85,20 +81,19 @@ public class BottleListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // Ricarica i dati dei vini preferiti ogni volta che il fragment viene visualizzato
+        // Carica i vini preferiti
         wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result instanceof Result.WineSuccess) {
                 List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
-
                 Log.d(TAG, "Loaded favorite wines from Firebase: " + favoriteBottles.size() + " items");
 
                 // Crea una mappa dei preferiti per un rapido accesso
                 Set<String> favoriteIds = new HashSet<>();
                 for (Bottle favorite : favoriteBottles) {
-                    favoriteIds.add(favorite.getId()); // Usa l'ID del vino per confronto
+                    favoriteIds.add(favorite.getId());
                 }
 
-                // Aggiorna il campo liked dei vini in bottleList
+                // Aggiorna lo stato "liked" per ogni bottiglia in base ai preferiti
                 for (Bottle bottle : bottleList) {
                     if (favoriteIds.contains(bottle.getId())) {
                         if (!bottle.getLiked()) {
@@ -113,34 +108,34 @@ public class BottleListFragment extends Fragment {
                     }
                 }
 
-                // Notifica l'adapter di aggiornare la vista
+                // Notifica l'adapter per aggiornare la vista
                 bottleAdapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "Error fetching favorite wines");
             }
         });
 
-        // Carica i vini basati sulla selezione (se esiste)
+        // Carica i vini in base alla selezione, se esiste
         if (selectedWine != null) {
             wineViewModel.getBottles(selectedWine).observe(getViewLifecycleOwner(), result -> {
                 if (result instanceof Result.WineSuccess) {
-
                     Log.d(TAG, "Loaded wines from API: " + bottleList.size() + " items");
-                    // Aggiungi i vini ricevuti nella lista (e aggiorna liked dopo)
+
+                    // Aggiungi i vini ricevuti nella lista
                     this.bottleList.clear();
                     this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
-                    // Dopo aver aggiornato la lista dei vini, sincronizza i preferiti
+
+                    // Sincronizza lo stato di "liked" tra i preferiti e i vini
                     wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), favoriteResult -> {
                         if (favoriteResult instanceof Result.WineSuccess) {
                             List<Bottle> favoriteBottles = ((Result.WineSuccess) favoriteResult).getData().getRecommendedWines();
 
-                            // Crea una mappa dei preferiti per un rapido accesso
                             Set<String> favoriteIds = new HashSet<>();
                             for (Bottle favorite : favoriteBottles) {
                                 favoriteIds.add(favorite.getId());
                             }
 
-                            // Aggiorna liked per ogni bottiglia
+                            // Aggiorna lo stato "liked" per ogni bottiglia
                             for (Bottle bottle : bottleList) {
                                 if (favoriteIds.contains(bottle.getId())) {
                                     if (!bottle.getLiked()) {
@@ -166,7 +161,6 @@ public class BottleListFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,9 +174,8 @@ public class BottleListFragment extends Fragment {
                     @Override
                     public void onBottleItemClick(Bottle bottle, String selectedWine) {
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle); // Passa la bottiglia
-                        bundle.putString("selectedWine", selectedWine); // Passa il tipo di vino
-
+                        bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
+                        bundle.putString("selectedWine", selectedWine);
                         Navigation.findNavController(view).navigate(R.id.action_bottleListFragment_to_visualizeBottleFragment, bundle);
                     }
 
@@ -194,59 +187,12 @@ public class BottleListFragment extends Fragment {
 
                         String idToken = userViewModel.getLoggedUser().getIdToken();
                         userViewModel.saveUserFavoriteWines(idToken, bottle);
+
+                        bottleAdapter.notifyDataSetChanged();
                     }
                 });
 
         recyclerView.setAdapter(bottleAdapter);
-
-        // Carica prima i vini preferiti
-        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
-            if (result instanceof Result.WineSuccess) {
-                List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
-
-                // Aggiungi il log per diagnosticare i preferiti
-                Log.d(TAG, "Loaded favorite wines from Firebase: " + favoriteBottles.size() + " items");
-
-                // Crea una mappa dei preferiti per un rapido accesso
-                Set<String> favoriteIds = new HashSet<>();
-                for (Bottle favorite : favoriteBottles) {
-                    favoriteIds.add(favorite.getId()); // Usa l'ID del vino per confronto
-                }
-
-                // Aggiungi i vini preferiti alla lista dei vini
-                wineViewModel.getBottles(selectedWine).observe(getViewLifecycleOwner(), apiResult -> {
-                    if (apiResult instanceof Result.WineSuccess) {
-                        // Aggiungi il log per diagnosticare i vini caricati dall'API
-                        Log.d(TAG, "Loaded wines from API: " + bottleList.size() + " items");
-
-                        this.bottleList.clear();
-                        this.bottleList.addAll(((Result.WineSuccess) apiResult).getData().getRecommendedWines());
-
-                        // Sincronizza lo stato di "liked" tra i preferiti e i vini
-                        for (Bottle bottle : bottleList) {
-                            if (favoriteIds.contains(bottle.getId())) {
-                                if (!bottle.getLiked()) {
-                                    bottle.setLiked(true);
-                                    Log.d(TAG, "Bottle " + bottle.getTitle() + " set to liked = true");
-                                }
-                            } else {
-                                if (bottle.getLiked()) {
-                                    bottle.setLiked(false);
-                                    Log.d(TAG, "Bottle " + bottle.getTitle() + " set to liked = false");
-                                }
-                            }
-                        }
-
-                        bottleAdapter.notifyDataSetChanged();
-                    } else if (apiResult instanceof Result.Error) {
-                        Snackbar.make(view, getString(R.string.error_retireving_bottles), Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-
-            } else {
-                Log.d(TAG, "Error fetching favorite wines");
-            }
-        });
 
         return view;
     }

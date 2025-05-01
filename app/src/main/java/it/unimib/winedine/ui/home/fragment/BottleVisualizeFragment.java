@@ -33,6 +33,7 @@ import it.unimib.winedine.model.Recipe;
 import it.unimib.winedine.model.Result;
 import it.unimib.winedine.repository.pairing.PairingRepository;
 import it.unimib.winedine.repository.pairing.RecipeRepository;
+import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModel;
 import it.unimib.winedine.ui.home.viewmodel.pairing.PairingViewModelFactory;
@@ -64,6 +65,8 @@ public class BottleVisualizeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance()
+                .getUserRepository(requireActivity().getApplication());
 
         //wine
         WinesRepository winesRepository = ServiceLocator.getInstance().getWinesRepository(
@@ -72,7 +75,7 @@ public class BottleVisualizeFragment extends Fragment {
 
         wineViewModel= new ViewModelProvider(
                 requireActivity(),
-                new WineViewModelFactory(winesRepository)).get(WineViewModel.class);
+                new WineViewModelFactory(winesRepository, userRepository)).get(WineViewModel.class);
 
         bottleList = new ArrayList<>();
 
