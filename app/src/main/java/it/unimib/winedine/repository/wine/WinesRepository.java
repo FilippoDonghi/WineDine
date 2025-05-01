@@ -52,13 +52,12 @@ public class WinesRepository implements BottleResponseCallback {
         this.wineFireStoreDatabase = new WineFireStoreDatabase();
     }
 
-    public MutableLiveData<Result> fetchWines(String wine, int number, long lastUpdate) {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdate > FRESH_TIMEOUT) {
+    public void getCategoriesFromFirestore(WineFireStoreDatabase.FirestoreCallback callback) {
+        wineFireStoreDatabase.getCategoriesFromFirestore(callback);
+    }
+
+    public MutableLiveData<Result> fetchWines(String wine, int number) {
             bottleRemoteDataSource.getWines(wine);
-        } else {
-            bottleLocalDataSource.getWines();
-        }
         return allWinesMutableLiveData;
     }
 
@@ -141,7 +140,5 @@ public class WinesRepository implements BottleResponseCallback {
         }
     }
 
-    public void getCategoriesFromFirestore(WineFireStoreDatabase.FirestoreCallback callback) {
-        wineFireStoreDatabase.getCategoriesFromFirestore(callback);
-    }
+
 }

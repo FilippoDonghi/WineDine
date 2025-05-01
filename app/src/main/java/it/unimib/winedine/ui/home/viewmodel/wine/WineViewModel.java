@@ -29,34 +29,6 @@ public class WineViewModel extends ViewModel {
         this.page = 1;
   }
 
-
-    public MutableLiveData<Result> getBottles(String wine, long lastUpdate) {
-      fetchWines(wine, lastUpdate);
-      return bottlesListLiveData;
-    }
-
-    public MutableLiveData<Result> getFavoriteWinesListLiveData() {
-            if (favoriteWinesListLiveData == null) {
-                getFavoriteWines();
-            }
-        return favoriteWinesListLiveData;
-    }
-
-    private void getFavoriteWines() {
-        favoriteWinesListLiveData= winesRepository.getFavoriteWines();
-    }
-
-    public void updateWine(Bottle bottle){
-          winesRepository.updateWine(bottle);
-    }
-
-    public void fetchWines(String wine, long lastUpdate) {
-        bottlesListLiveData.setValue(new Result.Loading());
-
-        winesRepository.fetchWines(wine, page, lastUpdate)
-                .observeForever(result -> bottlesListLiveData.postValue(result));
-    }
-
     public LiveData<List<String>> getCategories() {
         return categories;
     }
@@ -67,14 +39,6 @@ public class WineViewModel extends ViewModel {
 
     public LiveData<String> getError() {
         return error;
-    }
-
-    public void removeFromFavorite(Bottle bottle) {
-        winesRepository.updateWine(bottle);
-    }
-
-    public void deleteAllFavoriteWines() {
-        winesRepository.deleteFavoriteWines();
     }
 
     public void loadCategories() {
@@ -91,6 +55,33 @@ public class WineViewModel extends ViewModel {
                 error.postValue("Errore nel recupero delle categorie: " + e.getMessage());
             }
         });
+    }
+
+    public MutableLiveData<Result> getBottles(String wine) {
+      fetchWines(wine);
+      return bottlesListLiveData;
+    }
+
+    public void fetchWines(String wine) {
+        bottlesListLiveData.setValue(new Result.Loading());
+
+        winesRepository.fetchWines(wine, page)
+                .observeForever(result -> bottlesListLiveData.postValue(result));
+    }
+
+    public MutableLiveData<Result> getFavoriteWinesListLiveData() {
+            if (favoriteWinesListLiveData == null) {
+                getFavoriteWines();
+            }
+        return favoriteWinesListLiveData;
+    }
+
+    private void getFavoriteWines() {
+        favoriteWinesListLiveData= winesRepository.getFavoriteWines();
+    }
+
+    public void updateWine(Bottle bottle){
+          winesRepository.updateWine(bottle);
     }
 
 

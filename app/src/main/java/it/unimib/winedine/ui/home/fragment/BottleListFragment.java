@@ -51,8 +51,6 @@ public class BottleListFragment extends Fragment{
 
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -115,9 +113,8 @@ public class BottleListFragment extends Fragment{
 
         // Se un vino è stato selezionato, esegui la chiamata API
         if (selectedWine != null) {
-            long lastUpdate = 0;
 
-            wineViewModel.getBottles(selectedWine, lastUpdate).observe(getViewLifecycleOwner(),
+            wineViewModel.getBottles(selectedWine).observe(getViewLifecycleOwner(),
                     result -> {
                             if (result instanceof Result.WineSuccess) {
                                 this.bottleList.clear();
@@ -129,7 +126,7 @@ public class BottleListFragment extends Fragment{
                     });
         }
 
-  /*      wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
+        wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
             if (result instanceof Result.WineSuccess) {
                 List<Bottle> favoriteBottles = ((Result.WineSuccess) result).getData().getRecommendedWines();
 
@@ -141,9 +138,9 @@ public class BottleListFragment extends Fragment{
                         }
                     }
                 }
-                bottleAdapter.notifyDataSetChanged(); // 🔥 FORZA IL REFRESH
+                bottleAdapter.notifyDataSetChanged();
             }
-        }); */
+        });
         // Recupero dell'idToken e dell'email dall'utente loggato
             String idToken = userViewModel.getLoggedUser().getIdToken();
             String email = userViewModel.getLoggedUser().getEmail();
