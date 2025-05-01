@@ -89,9 +89,6 @@ public class WineAdapter extends BaseExpandableListAdapter {
                 .getIdentifier(drawableName, "drawable", context.getPackageName());
         if (resId != 0) {
             imageView.setImageResource(resId);
-        } else {
-            // fallback generico
-            imageView.setImageResource(R.drawable.calice);
         }
         return convertView;
     }
