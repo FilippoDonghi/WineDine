@@ -22,17 +22,24 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     }
 
     @Override
-    public void getWines() {
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            responseCallback.onSuccessFromLocal(wineDao.getAll());
-        });
-    }
-
-    @Override
     public void getFavoriteWines() {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Bottle> favoriteBottle = wineDao.getLiked();
             responseCallback.onWinesFavoriteStatusChanged(favoriteBottle);
+        });
+    }
+    @Override
+    public void insertBottle(Bottle bottle) {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            try {
+                long id = wineDao.insertBottle(bottle);
+                bottle.setUid(id);
+                Log.d("DB_INSERT", "Inserita bottle con ID: " + id + " e liked = " + bottle.getLiked());
+                responseCallback.onSuccessFromLocal(List.of(bottle));
+            } catch (Exception e) {
+                Log.e("DB_INSERT", "Errore durante l'inserimento della bottle", e);
+                responseCallback.onFailureFromLocal(e);
+            }
         });
     }
 
@@ -43,11 +50,6 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
             List<Bottle> allBottles = wineDao.getAll();
 
             if (bottleList != null) {
-
-                for (Bottle bottle : bottleList) {
-                    if (bottleList.contains(bottle)) {
-                        bottleList.set(bottleList.indexOf(bottle), bottle);
-                    }}
                 List<Long> insertedWinesIds = wineDao.insertBottlesList(bottleList);
                 for (int i = 0; i < bottleList.size(); i++) {
                     bottleList.get(i).setUid(insertedWinesIds.get(i));
@@ -58,50 +60,26 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
 
     @Override
     public void updateWine(Bottle bottle) {
-       /* WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             Log.d("DB_UPDATE", "Tentativo di aggiornare bottle con ID: " + bottle.getUid() + " a liked = " + bottle.getLiked());
+            int rowUpdatedCounter = wineDao.updateBottle(bottle);
+            if(rowUpdatedCounter == 1){
 
-            int rowUpdatedCounter = wineDao.updateLikedStatus(bottle.getUid(), bottle.getLiked());
-
-            Log.d("DB_UPDATE", "Righe aggiornate: " + rowUpdatedCounter);
-
-            if (rowUpdatedCounter > 0) {
                 Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
                 Log.d("DB_UPDATE", "Bottiglia aggiornata nel DB: " + updatedBottle.getLiked());
-
                 responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
             } else {
                 Log.e("DB_UPDATE", "Errore: nessuna riga aggiornata");
-                responseCallback.onFailureFromLocal(new Exception("Errore nell'aggiornamento del 'liked'"));
-            }
-        });*/
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            int rowUpdatedCounter = wineDao.updateBottle(bottle);
-            if(rowUpdatedCounter == 1){
-                Bottle updatedBottle = wineDao.getBottle(bottle.getUid());
-                responseCallback.onWinesFavoriteStatusChanged(updatedBottle, wineDao.getLiked());
-            } else {
                 responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
             }
         });
     }
 
-    @Override
-    public void deleteFavoriteWines() {
+    public void deleteFavoriteWines(Bottle bottle) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Bottle> favoriteWines = wineDao.getLiked();
-            for (Bottle article : favoriteWines) {
-                article.setLiked(false);
-            }
-            int updatedRowsNumber = wineDao.updateListFavoriteBottle(favoriteWines);
-
-            if (updatedRowsNumber == favoriteWines.size()) {
-                responseCallback.onDeleteFavoriteWinesSuccess(favoriteWines);
-            } else {
-               responseCallback.onFailureFromLocal(new Exception(UNEXPECTED_ERROR));
-            }
+            wineDao.deleteWine(bottle);
+            responseCallback.onWinesFavoriteStatusChanged(bottle, wineDao.getLiked());
         });
     }
-
 }
 

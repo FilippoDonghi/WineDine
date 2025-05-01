@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Collections;
 import java.util.List;
 
 import it.unimib.winedine.R;
@@ -65,8 +66,12 @@ public class WinesRepository implements BottleResponseCallback {
         bottleLocalDataSource.updateWine(bottle);
     }
 
-    public void deleteFavoriteWines() {
-        bottleLocalDataSource.deleteFavoriteWines();
+    public void deleteFavoriteWines(Bottle bottle) {
+        bottleLocalDataSource.deleteFavoriteWines(bottle);
+    }
+
+    public void insertWine(Bottle bottle) {
+        bottleLocalDataSource.insertBottle(bottle);
     }
 
     public MutableLiveData<Result> getFavoriteWines() {
@@ -98,19 +103,32 @@ public class WinesRepository implements BottleResponseCallback {
         favoriteWinesMutableLiveData.postValue(resultError);
     }
 
-    @Override
-    public void onWinesFavoriteStatusChanged(Bottle bottle, List<Bottle> favoriteBottles) {
-        Result allWinesResult = allWinesMutableLiveData.getValue();
+    public void onWinesFavoriteStatusChanged(Bottle updatedBottle, List<Bottle> favoriteBottles) {
+        Result result = allWinesMutableLiveData.getValue();
 
-        if (allWinesResult != null && allWinesResult.isSuccess()) {
-            List<Bottle> oldAllWines = ((Result.WineSuccess) allWinesResult).getData().getRecommendedWines();
-            if (oldAllWines.contains(bottle)) {
-                oldAllWines.set(oldAllWines.indexOf(bottle), bottle);
-                allWinesMutableLiveData.postValue(allWinesResult);
+        if (result != null && result instanceof Result.WineSuccess) {
+            Result.WineSuccess wineSuccess = (Result.WineSuccess) result;
+            List<Bottle> allWines = wineSuccess.getData().getRecommendedWines();
+
+            int index = allWines.indexOf(updatedBottle);
+            if (index != -1) {
+                allWines.set(index, updatedBottle);
+                Log.d(TAG, "Updated bottle in allWines list: " + updatedBottle.getTitle());
+                allWinesMutableLiveData.postValue(result);
+            } else {
+                Log.d(TAG, "Bottle not found in allWines list: " + updatedBottle.getTitle());
             }
+        } else {
+            Log.d(TAG, "Result is null or not an instance of WineSuccess");
         }
-        favoriteWinesMutableLiveData.postValue(new Result.WineSuccess(new WineAPIResponse(favoriteBottles)));
+
+        Log.d(TAG, "Posting updated favorite wines list with " + favoriteBottles.size() + " items");
+        favoriteWinesMutableLiveData.postValue(
+                new Result.WineSuccess(new WineAPIResponse(favoriteBottles))
+        );
     }
+
+
 
 
     @Override

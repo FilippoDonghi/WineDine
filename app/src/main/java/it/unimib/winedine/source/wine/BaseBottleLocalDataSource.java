@@ -13,12 +13,11 @@ public abstract class  BaseBottleLocalDataSource {
        this.responseCallback = responseCallback;
    }
 
-    public abstract void getWines();
-
     public abstract void insertWines(List<Bottle> bottleList);
+   public abstract void insertBottle(Bottle bottle);
 
     public abstract void updateWine(Bottle bottle);
 
     public abstract void getFavoriteWines();
-    public abstract void deleteFavoriteWines();
+    public abstract void deleteFavoriteWines(Bottle bottle);
 }

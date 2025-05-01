@@ -49,5 +49,14 @@ import it.unimib.winedine.model.Bottle;
 
     @Update
     int updateListFavoriteBottle(List<Bottle> bottles);
+
+
+    @Delete
+    void deleteWine(Bottle bottle);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertBottle(Bottle bottle);
     }
+
+
 

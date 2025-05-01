@@ -135,6 +135,19 @@ public Bottle(){};
     parcel.writeByte(this.liked ? (byte) 1 : (byte) 0);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bottle bottle = (Bottle) o;
+        return id != null && id.equals(bottle.id); // usa uid se preferisci
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
     public void readFromParcel(Parcel source) {
         this.uid = source.readLong();
         this.id = source.readString();

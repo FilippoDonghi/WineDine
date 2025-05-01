@@ -81,7 +81,7 @@ public class WineViewModel extends ViewModel {
     }
 
     public void updateWine(Bottle bottle){
-          winesRepository.updateWine(bottle);
+        winesRepository.updateWine(bottle);
     }
 
 

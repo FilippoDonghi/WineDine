@@ -13,4 +13,6 @@ public interface BottleResponseCallback {
     void onWinesFavoriteStatusChanged(Bottle bottles, List<Bottle> favoriteBottles);
     void onWinesFavoriteStatusChanged(List<Bottle> bottles);
     void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles);
+    void deleteFavoriteWines(Bottle bottle);
+    void insertWine(Bottle bottle);
 }

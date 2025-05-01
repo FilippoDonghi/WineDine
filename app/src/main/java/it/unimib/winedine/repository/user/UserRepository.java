@@ -235,4 +235,14 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     public void onDeleteFavoriteWinesSuccess(List<Bottle> favoriteBottles) {
 
     }
+
+    @Override
+    public void deleteFavoriteWines(Bottle bottle) {
+
+    }
+
+    @Override
+    public void insertWine(Bottle bottle) {
+
+    }
 }
