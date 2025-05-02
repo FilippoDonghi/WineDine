@@ -25,6 +25,7 @@ public class Bottle implements Parcelable {
     private String link;
 
     private boolean liked;
+    private String selectedWine;
 
 public Bottle(){};
 
@@ -35,6 +36,15 @@ public Bottle(){};
     public void setLiked(boolean liked) {
         this.liked = liked;
     }
+
+    public String getSelectedWine() {
+        return selectedWine;
+    }
+
+    public void setSelectedWine(String selectedWine) {
+        this.selectedWine = selectedWine;
+    }
+
     public String getId() {
         return id;
     }
@@ -133,6 +143,7 @@ public Bottle(){};
     parcel.writeString(this.score);
     parcel.writeString(this.link);
     parcel.writeByte(this.liked ? (byte) 1 : (byte) 0);
+    parcel.writeString(this.selectedWine);
     }
 
     @Override
@@ -174,6 +185,7 @@ public Bottle(){};
         this.score= in.readString();
         this.link= in.readString();
         this.liked = in.readByte() != 0;
+        this.selectedWine = in.readString();
     }
 
     public static final Parcelable.Creator<Bottle> CREATOR = new Parcelable.Creator<Bottle>() {

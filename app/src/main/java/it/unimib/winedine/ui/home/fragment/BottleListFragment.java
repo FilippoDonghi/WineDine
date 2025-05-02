@@ -184,6 +184,7 @@ public class BottleListFragment extends Fragment {
                         Bottle bottle = bottleList.get(position);
                         bottle.setLiked(!bottle.getLiked());
                         wineViewModel.updateWine(bottle);
+                        bottle.setSelectedWine(selectedWine);
 
                         String idToken = userViewModel.getLoggedUser().getIdToken();
                         userViewModel.saveUserFavoriteWines(idToken, bottle);

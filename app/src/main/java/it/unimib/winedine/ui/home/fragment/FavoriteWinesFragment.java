@@ -81,7 +81,8 @@ public class FavoriteWinesFragment extends Fragment {
                     public void onBottleItemClick(Bottle bottle, String selectedWine) {
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(Constants.BUNDLE_KEY_CURRENT_BOTTLE, bottle);
-                        bundle.putString("selectedWine", selectedWine);
+                        String selectedBottle = bottle.getSelectedWine();
+                        bundle.putString("selectedWine", selectedBottle);
                         Navigation.findNavController(view).navigate(R.id.action_favoriteWinesFragment_to_visualizeBottleFragment, bundle);
                     }
 
