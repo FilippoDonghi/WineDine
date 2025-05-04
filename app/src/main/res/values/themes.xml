@@ -46,5 +46,7 @@
         <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
         <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
+        <item name="android:fontFamily">@font/times_new_roman_family</item>
+        <item name="fontFamily">@font/times_new_roman_family</item>
     </style>
 </resources>

@@ -28,7 +28,7 @@ public class Constants {
     public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
-    public static final String WINE_API_KEY = "479c9363c0ff4aefb476aa164b47d046";
+    public static final String WINE_API_KEY = "6d59babbbc5641049d9f4a0cc1b6dfb5";
     public static final String RECIPE_ENDPOINT = "recipes/complexSearch";
     public static final String QUERY_PARAMETER = "query";
     public static final String MAX_FAT_PARAMETER = "maxFat";
@@ -38,7 +38,6 @@ public class Constants {
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
     public static final String SHARED_PREFERENCES_ID_TOKEN = "id_token";
     public static final String SHARED_PREFERENCES_EMAIL = "email";
-    public static final String SHARED_PREFERENCES_FAVORITE_WINES= "favorites";
 
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
     public static final int FRESH_TIMEOUT = 1000 * 60; // 1 minute in milliseconds

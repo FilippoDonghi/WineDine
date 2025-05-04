@@ -9,13 +9,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="4dp"
+            android:text="Titolo del vinoooooooooo"
+            android:textColor="@color/md_theme_surface_mediumContrast"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <!-- Immagine a sinistra -->
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="194dp"
+            android:layout_width="match_parent"
             android:layout_height="246dp"
+            android:layout_marginTop="15dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_launcher_background" />
@@ -23,26 +37,23 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
             android:orientation="vertical">
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingTop="3dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="4dp"
-            android:text="Titolo del vinoooooooooo"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewDescription"
+                android:layout_width="349dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="none"
+                android:padding="8dp"
+                android:text="Breve descrizione del vinoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
+                android:textColor="@color/md_theme_surface_mediumContrast"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -58,8 +69,10 @@
                         android:paddingEnd="8dp"
                         android:paddingBottom="5dp"
                         android:text="4,5"
+                        android:textStyle="bold"
                         android:textColor="@color/md_theme_error_mediumContrast"
-                        android:textSize="27sp" />
+                        android:textSize="27sp"
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -77,26 +90,21 @@
         android:rating="4.5"
         android:stepSize="0.5" />
 
-                        <TextView
-                            android:id="@+id/textViewRatingCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="4dp"
-                            android:text="13057 Voti"
-                            android:textColor="@color/md_theme_onSurface"
-                            android:textSize="16sp" />
+
                     </LinearLayout>
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:orientation="vertical">
                         <TextView
                             android:id="@+id/textViewScore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="8dp"
                             android:text="Wine Score: 92"
-                            android:textColor="@android:color/black"
+                            android:textColor="@color/md_theme_surface_mediumContrast"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -105,35 +113,46 @@
                         android:id="@+id/priceText"
                         android:layout_width="70dp"
                         android:layout_height="30dp"
-                        android:background="@drawable/price_background"
+                        android:background="@color/md_theme_surface_mediumContrast"
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="23,50 €"
-                        android:textColor="@color/md_theme_onPrimary"
+                        android:textColor="@color/md_theme_scrim"
                         android:textSize="12sp"
                         android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/textViewDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:padding="8dp"
-                android:text="Breve descrizione del vino"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="14sp" />
-
+        <TextView
+            android:id="@+id/textViewRatingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="4dp"
+            android:text="18 recensioni"
+            android:textColor="@color/md_theme_surface_mediumContrast"
+            android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
         <Button
             android:id="@+id/button_pairing"
             android:layout_width="234dp"
             android:layout_height="63dp"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/md_theme_errorContainer"
-            android:text="Abbinamento"
+            android:text="Discover Pairings"
+
             android:textColor="@color/md_theme_scrim"
             android:textSize="16sp" />
         </LinearLayout>
-    </LinearLayout>
+
+
+
+
     </LinearLayout>
 </LinearLayout>

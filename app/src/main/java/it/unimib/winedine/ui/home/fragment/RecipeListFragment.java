@@ -102,7 +102,6 @@ public class RecipeListFragment extends Fragment {
 
     private void setupAdapter() {
         adapter = new RecipeRecyclerAdapter(new ArrayList<>(), recipe -> {
-            // Passo solo l'id al dettaglio
             Bundle bundle = new Bundle();
             bundle.putInt("recipe_id", recipe.getId());
             Navigation.findNavController(requireView())
