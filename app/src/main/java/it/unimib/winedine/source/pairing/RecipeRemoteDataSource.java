@@ -30,28 +30,32 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
 
     @Override
     public void getRecipesForPairings(String[] ingredients) {
+        // **Resetto qui** la lista e il contatore
+        aggregatedRecipes = new ArrayList<>();
         pendingRequests = ingredients.length;
-        for (String ingredient : ingredients) {
-            currentCall= wineAPIService.getRecipes(ingredient, 25, 3, WINE_API_KEY);
-                    currentCall.enqueue(new Callback<RecipeAPIResponse>() {
-                        @Override
-                        public void onResponse(@NonNull Call<RecipeAPIResponse> call,
-                                               @NonNull Response<RecipeAPIResponse> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                aggregatedRecipes.addAll(response.body().getResults());
-                                Log.d("API_DEBUG", "Ricette ricevute: " + aggregatedRecipes.size());
-                            }
-                            checkCompletion();
-                        }
 
-                        @Override
-                        public void onFailure(@NonNull Call<RecipeAPIResponse> call,
-                                              @NonNull Throwable t) {
-                            checkCompletion();
-                        }
-                    });
+        for (String ingredient : ingredients) {
+            currentCall = wineAPIService.getRecipes(ingredient, 25, 3, WINE_API_KEY);
+            currentCall.enqueue(new Callback<RecipeAPIResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<RecipeAPIResponse> call,
+                                       @NonNull Response<RecipeAPIResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        aggregatedRecipes.addAll(response.body().getResults());
+                        Log.d("API_DEBUG", "Ricette ricevute (agg): " + aggregatedRecipes.size());
+                    }
+                    checkCompletion();
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<RecipeAPIResponse> call,
+                                      @NonNull Throwable t) {
+                    checkCompletion();
+                }
+            });
         }
     }
+
 
     @Override
     public void cancelPendingRequests() {

@@ -115,7 +115,6 @@ public class BottleVisualizeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         pairingViewModel.getPairingResult().removeObservers(getViewLifecycleOwner());
-        recipeViewModel.getRecipesResult().removeObservers(getViewLifecycleOwner());
     }
 
 
@@ -176,34 +175,42 @@ public class BottleVisualizeFragment extends Fragment {
         pairingButton = view.findViewById(R.id.button_pairing);
         pairingButton.setOnClickListener(v -> {
             pairingViewModel.resetPairingResult();
-            recipeViewModel.resetRecipesResult();
 
             pairingViewModel.getPairingResult().removeObservers(getViewLifecycleOwner());
-            recipeViewModel.getRecipesResult().removeObservers(getViewLifecycleOwner());
 
             pairingViewModel.fetchPairing(selectedWine);
 
             pairingViewModel.getPairingResult().observe(getViewLifecycleOwner(), pairingResult -> {
                 if (pairingResult instanceof Result.PairingSuccess) {
-                    PairingAPIResponse response = ((Result.PairingSuccess) pairingResult).getPairing();
-                    String[] ingredients = response.getPairings();
+                    String[] ingredients = ((Result.PairingSuccess) pairingResult)
+                            .getPairing()
+                            .getPairings();
 
                     if (ingredients == null || ingredients.length == 0) {
                         Toast.makeText(requireContext(), "Nessun ingrediente trovato", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    // Avvia la richiesta delle ricette PRIMA della navigazione
-                    recipeViewModel.fetchRecipes(ingredients);
+                    // 1) Fai partire la fetch sulla shared ViewModel
+                    recipeViewModel.getRecipes(ingredients);
 
-                    // Naviga solo dopo aver avviato la richiesta
+                    // 2) Prepara il bundle con gli ingredients
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArray("ingredients", ingredients);
+
+                    // 3) Naviga passando il bundle
                     NavController navController = Navigation.findNavController(v);
-                    navController.navigate(R.id.action_bottleVisualizeFragment_to_recipeListFragment);
+                    navController.navigate(
+                            R.id.action_bottleVisualizeFragment_to_recipeListFragment,
+                            bundle
+                    );
                 }
             });
         });
 
-        return view;
+
+
+            return view;
 
 }}
 

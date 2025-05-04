@@ -72,21 +72,31 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupAdapter();
-        observeRecipes();
-    }
 
-    private void observeRecipes() {
-        recipeViewModel.getRecipesResult().observe(getViewLifecycleOwner(), result -> {
-            if (result instanceof Result.RecipesSuccess) {
-                // Aggiorna i dati dell'adapter con le nuove ricette
-                currentRecipes = ((Result.RecipesSuccess) result).getRecipes();
-                adapter.updateData(currentRecipes);
-                Log.d("RECIPE_DEBUG", "Ricette ricevute: " + currentRecipes.size());
-            } else if (result instanceof Result.Error) {
-                Toast.makeText(requireContext(), "Errore nel caricamento", Toast.LENGTH_SHORT).show();
-            }
-        });
+        setupAdapter();
+
+        String[] ingredients = getArguments() != null
+                ? getArguments().getStringArray("ingredients")
+                : null;
+
+        if (ingredients == null) {
+            Toast.makeText(requireContext(), "Errore: nessun filtro ingredienti", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 1) Registro l'observer SUL repository
+        recipeViewModel.getRecipes(ingredients)
+                .observe(getViewLifecycleOwner(), result -> {
+                    if (result instanceof Result.RecipesSuccess) {
+                        List<Recipe> recipes = ((Result.RecipesSuccess) result).getRecipes();
+                        Log.d("RECIPE_DEBUG", "Ricevute " + recipes.size() + " ricette");
+                        adapter.updateData(recipes);
+                    } else if (result instanceof Result.Error) {
+                        Toast.makeText(requireContext(), "Errore: " + ((Result.Error) result).getMessage(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
     }
 
     @Override
@@ -106,17 +116,16 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        currentRecipes.clear();
+       /* currentRecipes.clear();
         if (adapter != null) {
             adapter.updateData(new ArrayList<>()); // Resetta l'adapter
             adapter = null;
         }
-        dishViewModel.getDishResult().removeObservers(getViewLifecycleOwner());
-    }
+      dishViewModel.getDishResult().removeObservers(getViewLifecycleOwner());
+     */}
 
     private void setupAdapter() {
         adapter = new RecipeRecyclerAdapter(currentRecipes, recipe -> {
-            // Rimuovi osservatori precedenti
             dishViewModel.getDishResult().removeObservers(getViewLifecycleOwner());
 
             dishViewModel.fetchDish(recipe.getId());
