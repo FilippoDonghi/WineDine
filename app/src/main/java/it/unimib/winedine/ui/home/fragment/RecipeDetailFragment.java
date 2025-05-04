@@ -55,29 +55,36 @@ public class RecipeDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
 
-        titleTextView = view.findViewById(R.id.text_recipe_title);
-        recipeImageView = view.findViewById(R.id.image_recipe);
-        readyTimeTextView = view.findViewById(R.id.text_ready_time);
-        servingsTextView = view.findViewById(R.id.text_servings);
-        sourceUrlTextView = view.findViewById(R.id.text_source_url);
+        // 1) Bind delle view
+        titleTextView       = view.findViewById(R.id.text_recipe_title);
+        recipeImageView     = view.findViewById(R.id.image_recipe);
+        readyTimeTextView   = view.findViewById(R.id.text_ready_time);
+        servingsTextView    = view.findViewById(R.id.text_servings);
+        sourceUrlTextView   = view.findViewById(R.id.text_source_url);
         spoonacularTextView = view.findViewById(R.id.text_spoonecular);
-        if (getArguments() != null) {
-            DishAPIResponse dish = getArguments().getParcelable("dishDetails");
-            if (dish != null) {
-                updateUI(dish);
-            } else {
-                int recipeId = getArguments().getInt("recipe_id");
-                dishViewModel.fetchDish(recipeId);
-                dishViewModel.getDishResult().observe(getViewLifecycleOwner(), result -> {
+
+        // 2) Estrazione dell'id dal bundle (deve sempre esserci)
+        int recipeId = requireArguments().getInt("recipe_id", -1);
+        if (recipeId == -1) {
+            throw new IllegalStateException("RecipeDetailFragment richiede sempre un recipe_id nel bundle");
+        }
+
+        // 3) Osservo il LiveData “fresco” per questo id
+        dishViewModel.getDish(recipeId)
+                .observe(getViewLifecycleOwner(), result -> {
                     if (result instanceof Result.DishSuccess) {
                         updateUI(((Result.DishSuccess) result).getDish());
+                    } else if (result instanceof Result.Error) {
+                        Toast.makeText(requireContext(),
+                                        "Errore nel caricamento: " + ((Result.Error) result).getMessage(),
+                                        Toast.LENGTH_SHORT)
+                                .show();
                     }
                 });
-            }
-        }
 
         return view;
     }
+
 
     private void updateUI(DishAPIResponse dish) {
         titleTextView.setText(dish.getTitle());
