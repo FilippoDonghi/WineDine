@@ -22,13 +22,6 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     }
 
     @Override
-    public void getFavoriteWines() {
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            List<Bottle> favoriteBottle = wineDao.getLiked();
-            responseCallback.onWinesFavoriteStatusChanged(favoriteBottle);
-        });
-    }
-    @Override
     public void insertBottle(Bottle bottle) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             try {
@@ -44,11 +37,28 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     }
 
     @Override
+    public void getWines() {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            responseCallback.onSuccessFromLocal(wineDao.getAll());
+        });
+    }
+
+    @Override
+    public void getBottlesBySelectedWine(String selectedWine) {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Bottle> bottles = wineDao.getBottlesBySelectedWine(selectedWine);
+            if (bottles != null && !bottles.isEmpty()) {
+                responseCallback.onSuccessFromLocal(bottles);  // Passa la lista di bottiglie
+            } else {
+                responseCallback.onFailureFromLocal(new Exception("No bottles found for wine type: " + selectedWine));
+            }
+        });
+    }
+
+    @Override
     public void insertWines(List<Bottle> bottleList) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            // Reads the news from the database
             List<Bottle> allBottles = wineDao.getAll();
-
             if (bottleList != null) {
                 List<Long> insertedWinesIds = wineDao.insertBottlesList(bottleList);
                 for (int i = 0; i < bottleList.size(); i++) {
@@ -75,6 +85,13 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
         });
     }
 
+    @Override
+    public void getFavoriteWines() {
+        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
+            List<Bottle> favoriteBottle = wineDao.getLiked();
+            responseCallback.onWinesFavoriteStatusChanged(favoriteBottle);
+        });
+    }
     public void deleteFavoriteWines(Bottle bottle) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             wineDao.deleteWine(bottle);

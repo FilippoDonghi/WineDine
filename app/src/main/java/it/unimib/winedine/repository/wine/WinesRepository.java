@@ -41,6 +41,7 @@ public class WinesRepository implements BottleResponseCallback {
     private final BaseBottleRemoteDataSource bottleRemoteDataSource;
     private final BaseBottleLocalDataSource bottleLocalDataSource;
     private final WineFireStoreDatabase wineFireStoreDatabase;
+    private long lastUpdateTime = 0;
 
 
     public WinesRepository(BaseBottleRemoteDataSource bottleRemoteDataSource, BaseBottleLocalDataSource bottleLocalDataSource) {
@@ -58,7 +59,16 @@ public class WinesRepository implements BottleResponseCallback {
     }
 
     public MutableLiveData<Result> fetchWines(String wine, int number) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastUpdateTime > FRESH_TIMEOUT) {
             bottleRemoteDataSource.getWines(wine);
+            lastUpdateTime = currentTime;
+        }
+            else {
+            bottleLocalDataSource.getBottlesBySelectedWine(wine);
+            lastUpdateTime = currentTime;
+            Log.d(TAG, "Fetching wines from local database");
+        }
         return allWinesMutableLiveData;
     }
 

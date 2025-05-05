@@ -35,6 +35,9 @@ import it.unimib.winedine.model.Bottle;
     @Query("SELECT * FROM Bottle WHERE uid = :id")
     Bottle getBottle(long id);
 
+    @Query("SELECT * FROM Bottle WHERE selectedWine = :wineType")
+    List<Bottle> getBottlesBySelectedWine(String wineType);
+
     @Query("SELECT * FROM Bottle WHERE liked = 1")
     List<Bottle> getLiked();
 

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,6 +36,7 @@ import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModelFactory;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.Constants;
+import it.unimib.winedine.util.NetworkUtil;
 import it.unimib.winedine.util.ServiceLocator;
 import it.unimib.winedine.util.SharedPreferencesUtils;
 
@@ -49,6 +51,8 @@ public class BottleListFragment extends Fragment {
     private BottleRecyclerAdapter bottleAdapter;
     private WineViewModel wineViewModel;
     private UserViewModel userViewModel;
+    private FrameLayout noInternetView;
+
 
     public BottleListFragment() {
     }
@@ -117,15 +121,18 @@ public class BottleListFragment extends Fragment {
 
         // Carica i vini in base alla selezione, se esiste
         if (selectedWine != null) {
+
+            if (!NetworkUtil.isInternetAvailable(getContext())) {
+                noInternetView.setVisibility(View.VISIBLE);
+                String lastUpdate = System.currentTimeMillis() + "";
+            }
+
             wineViewModel.getBottles(selectedWine).observe(getViewLifecycleOwner(), result -> {
                 if (result instanceof Result.WineSuccess) {
-                    Log.d(TAG, "Loaded wines from API: " + bottleList.size() + " items");
-
                     // Aggiungi i vini ricevuti nella lista
                     this.bottleList.clear();
                     this.bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
 
-                    // Sincronizza lo stato di "liked" tra i preferiti e i vini
                     wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), favoriteResult -> {
                         if (favoriteResult instanceof Result.WineSuccess) {
                             List<Bottle> favoriteBottles = ((Result.WineSuccess) favoriteResult).getData().getRecommendedWines();
@@ -168,6 +175,7 @@ public class BottleListFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        noInternetView = view.findViewById(R.id.noInternetMessage);
 
         bottleAdapter = new BottleRecyclerAdapter(R.layout.card_bottle, bottleList, selectedWine, true,
                 new BottleRecyclerAdapter.OnItemClickListener() {

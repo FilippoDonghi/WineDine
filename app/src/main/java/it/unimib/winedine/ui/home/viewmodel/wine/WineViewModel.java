@@ -63,7 +63,7 @@ public class WineViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<Result> getBottles(String wine) {
+    public MutableLiveData<Result> getBottles(String wine){
       fetchWines(wine);
       return bottlesListLiveData;
     }
@@ -99,15 +99,11 @@ public class WineViewModel extends ViewModel {
 
             @Override
             public void onFailure(String errorMessage) {
-                // Gestiamo l'errore
                 favoriteWinesListLiveData.postValue(new Result.Error(errorMessage));
             }
         });
     }
 
-    public LiveData<Result> getFavoriteWinesLiveData() {
-        return favoriteWinesListLiveData;
-    }
 }
 
 
