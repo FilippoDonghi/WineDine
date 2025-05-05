@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center">
-    <!-- tools:context=".ui.welcome.WelcomeActivity"> -->
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="230dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         app:srcCompat="@drawable/img_login"
         />
 
@@ -19,29 +19,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#d1c9bc"
-        android:text="@string/welcome"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#d1c9bc"
-        android:text="@string/already_registered"/>
+        android:textSize="24dp"
+        android:text="@string/explore_signUp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
         android:layout_marginTop="@dimen/margin_medium"
-        style="?attr/textInputOutlinedStyle"
         android:background="#80FFFFFF"
+        style="?attr/textInputOutlinedStyle"
         app:startIconDrawable="@drawable/baseline_alternate_email_24"
         >
 
@@ -49,9 +41,9 @@
             android:id="@+id/textInputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:background="#00000000"/>
-
+            android:background="#00000000"
+            android:textSize="19dp"
+            android:inputType="textEmailAddress" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -61,20 +53,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
         android:layout_marginTop="@dimen/margin_medium"
+        android:background="#80FFFFFF"
         style="?attr/textInputOutlinedStyle"
-        android:background="#00000000"
-        app:startIconDrawable="@drawable/baseline_password_24"
-        >
+        app:startIconDrawable="@drawable/baseline_password_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:background="#80FFFFFF"/>
+            android:textSize="19dp"
+            android:background="#00000000"/>
 
 
 
@@ -84,14 +76,16 @@
     <Button
         android:id="@+id/signupButton"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="255dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:layout_marginStart="50dp"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginEnd="50dp"
         android:backgroundTint="#d1c9bc"
         android:gravity="center"
+        android:textSize="24dp"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:text="@string/signup"
 

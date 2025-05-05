@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Wine&amp;Dine</string>
 
-    <string name="welcome">Welcome!</string>
-    <string name="already_registered">Are you already registered?</string>
+    <string name="welcome">Your wine profile, one login away</string>
+    <string name="already_registered">Are you not registered yet?</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
 
@@ -10,7 +10,7 @@
     <string name="login_with_google">Login with Google</string>
     <string name="create_a_new_account">Create new account</string>
     <string name="or">or</string>
-    <string name="signup">signup</string>
+    <string name="signup">Sign up</string>
 
     <!-- Errors -->
     <string name="error_email_login">Check the email address</string>
@@ -31,5 +31,6 @@
     <string name="logging_out">Release in progress...</string>
     <string name="logout_error">Error while logging out</string>
     <string name="logout">Logout</string>
+    <string name="explore_signUp">Sign up to explore the world of wine</string>
 
 </resources>
