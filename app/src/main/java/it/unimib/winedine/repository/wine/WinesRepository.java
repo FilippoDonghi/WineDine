@@ -41,7 +41,7 @@ public class WinesRepository implements BottleResponseCallback {
     private final BaseBottleRemoteDataSource bottleRemoteDataSource;
     private final BaseBottleLocalDataSource bottleLocalDataSource;
     private final WineFireStoreDatabase wineFireStoreDatabase;
-    private long lastUpdateTime = 0;
+    String lastSelectedWine=null;
 
 
     public WinesRepository(BaseBottleRemoteDataSource bottleRemoteDataSource, BaseBottleLocalDataSource bottleLocalDataSource) {
@@ -59,18 +59,18 @@ public class WinesRepository implements BottleResponseCallback {
     }
 
     public MutableLiveData<Result> fetchWines(String wine, int number) {
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdateTime > FRESH_TIMEOUT) {
-            bottleRemoteDataSource.getWines(wine);
-            lastUpdateTime = currentTime;
-        }
-            else {
+        if (wine.equals(lastSelectedWine)) {
+            Log.d(TAG, "Same wine selected as last time: fetching from local DB.");
             bottleLocalDataSource.getBottlesBySelectedWine(wine);
-            lastUpdateTime = currentTime;
-            Log.d(TAG, "Fetching wines from local database");
+        } else {
+            Log.d(TAG, "New wine selected: fetching from API.");
+            lastSelectedWine = wine; // <-- importante: aggiorna prima di chiamare l’API
+            bottleRemoteDataSource.getWines(wine);
         }
+
         return allWinesMutableLiveData;
     }
+
 
     public void updateWine(Bottle bottle) {
         bottleLocalDataSource.updateWine(bottle);
@@ -91,8 +91,17 @@ public class WinesRepository implements BottleResponseCallback {
 
     @Override
     public void onSuccessFromRemote(WineAPIResponse wineAPIResponse, long lastUpdate) {
-        bottleLocalDataSource.insertWines(wineAPIResponse.getRecommendedWines());
+        List<Bottle> bottles = wineAPIResponse.getRecommendedWines();
+
+        if (bottles != null) {
+            for (Bottle bottle : bottles) {
+                bottle.setSelectedWine(lastSelectedWine); // <-- imposta il selectedWine correttamente
+            }
+        }
+
+        bottleLocalDataSource.insertWines(bottles);
     }
+
 
     @Override
     public void onFailureFromRemote(Exception exception) {

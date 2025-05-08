@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import it.unimib.winedine.R;
@@ -41,15 +42,24 @@ public class BottleRemoteDataSource extends BaseBottleRemoteDataSource {
             public void onResponse(@NonNull Call<WineAPIResponse> call,
                                    @NonNull Response<WineAPIResponse> response) {
 
-                if (response.body() != null && response.isSuccessful()) {
-                   // List<Bottle> bottleList = response.body().getRecommendedWines();
-                    responseCallback.onSuccessFromRemote(response.body(), System.currentTimeMillis());
+                if (response.isSuccessful() && response.body() != null) {
+                    WineAPIResponse apiResponse = response.body();
+
+                    if (apiResponse.getRecommendedWines() == null || apiResponse.getRecommendedWines().isEmpty()) {
+                        Log.w("API Response", "Success, but no wines returned");
+                        // Successo "vuoto", ma comunque valido
+                        apiResponse.setRecommendedWines(Collections.emptyList());
+                    }
+
+                    responseCallback.onSuccessFromRemote(apiResponse, System.currentTimeMillis());
+
                 } else {
-                    responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+                    responseCallback.onFailureFromRemote(new Exception("Errore nella risposta dell'API"));
                 }
             }
 
-            @Override
+
+                @Override
             public void onFailure(@NonNull Call<WineAPIResponse> call, @NonNull Throwable t) {
                 responseCallback.onFailureFromRemote(new Exception(RETROFIT_ERROR));
             }

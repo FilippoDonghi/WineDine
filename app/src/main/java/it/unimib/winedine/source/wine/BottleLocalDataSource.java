@@ -47,11 +47,7 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     public void getBottlesBySelectedWine(String selectedWine) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Bottle> bottles = wineDao.getBottlesBySelectedWine(selectedWine);
-            if (bottles != null && !bottles.isEmpty()) {
-                responseCallback.onSuccessFromLocal(bottles);  // Passa la lista di bottiglie
-            } else {
-                responseCallback.onFailureFromLocal(new Exception("No bottles found for wine type: " + selectedWine));
-            }
+            responseCallback.onSuccessFromLocal(bottles);
         });
     }
 
