@@ -157,7 +157,6 @@ public class BottleListFragment extends Fragment {
                                 }
                             }
 
-                            // Notifica l'adapter
                             bottleAdapter.notifyDataSetChanged();
                         }
                     });

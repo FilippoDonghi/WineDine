@@ -28,7 +28,7 @@ public class Constants {
     public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
-    public static final String WINE_API_KEY = "2a8406e466eb4ae1afe2b2ef2df59b08";
+    public static final String WINE_API_KEY = "dddfaf25b91e47e2a27f31d82b48d5a6";
     public static final String RECIPE_ENDPOINT = "recipes/complexSearch";
     public static final String QUERY_PARAMETER = "query";
     public static final String MAX_FAT_PARAMETER = "maxFat";

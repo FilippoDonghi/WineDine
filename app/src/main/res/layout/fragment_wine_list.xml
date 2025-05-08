@@ -9,27 +9,13 @@
 
         android:padding="16dp">
 
-
-    <com.google.android.material.textfield.TextInputLayout
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Cerca"
-        app:boxBackgroundMode="filled"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxStrokeColor="#d1c9bc"
-        app:boxBackgroundColor="#d1c9bc"/>
+        android:layout_height="80dp"
+        app:srcCompat="@drawable/scritta"
+        />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Choose your wine"
-        android:textAlignment="center"
-        android:textColor="#d1c9bc"
-        android:textSize="30dp"/>
 
     <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
