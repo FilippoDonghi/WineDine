@@ -10,9 +10,6 @@ import it.unimib.winedine.model.User;
 public class SharedPreferencesUtils {
 
     private final Context context;
-    private static final String PREF_NAME = "login_prefs";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_ID_TOKEN = "id_token";
 
     public SharedPreferencesUtils(Context context) {
         this.context = context;

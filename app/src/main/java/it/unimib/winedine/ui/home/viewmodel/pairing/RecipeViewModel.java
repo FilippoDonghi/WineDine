@@ -16,8 +16,6 @@ public class RecipeViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    /** Invece di postare tu sui MutableLiveData,
-     ritorna semplicemente ciò che il repository espone. */
     public LiveData<Result> getRecipes(String[] ingredients) {
         repository.cancelPendingRequest();
         return repository.getRecipes(ingredients);

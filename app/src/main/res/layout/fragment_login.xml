@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:backgroundTint="#422631"
     android:gravity="center" >
     <!--tools:context=".ui.welcome.WelcomeActivity"> -->
 
@@ -134,7 +135,7 @@
         android:layout_gravity="center"
         android:backgroundTint="#d1c9bc"
         android:textSize="20dp"
-
+        android:textStyle="bold"
         android:text="@string/create_a_new_account" />
 
 

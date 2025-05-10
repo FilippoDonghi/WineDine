@@ -1,9 +1,5 @@
 package it.unimib.winedine.ui.home.fragment;
 
-import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_EMAIL;
-import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_FILENAME;
-import static it.unimib.winedine.util.Constants.SHARED_PREFERENCES_ID_TOKEN;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;

@@ -213,7 +213,6 @@ public class LoginFragment extends Fragment {
         if (sharedPreferencesUtil.readStringData(SHARED_PREFERENCES_FILENAME,
                 SHARED_PREFERENCES_ID_TOKEN) != null){
             startActivity(new Intent(getContext(), HomeActivity.class));
-            //Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeActivity);
 
         } else {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeActivity);

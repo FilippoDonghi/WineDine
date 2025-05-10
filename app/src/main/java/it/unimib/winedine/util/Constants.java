@@ -3,7 +3,7 @@ package it.unimib.winedine.util;
 public class Constants {
     public static final int MINIMUM_LENGTH_PASSWORD = 8;
 
-    //Error
+
     public static final String RETROFIT_ERROR = "retrofit_error";
     public static final String API_KEY_ERROR = "api_key_error";
     public static final String UNEXPECTED_ERROR = "unexpected_error";
@@ -28,7 +28,7 @@ public class Constants {
     public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
-    public static final String WINE_API_KEY = "2a8406e466eb4ae1afe2b2ef2df59b08";
+    public static final String WINE_API_KEY = "dddfaf25b91e47e2a27f31d82b48d5a6";
     public static final String RECIPE_ENDPOINT = "recipes/complexSearch";
     public static final String QUERY_PARAMETER = "query";
     public static final String MAX_FAT_PARAMETER = "maxFat";
@@ -37,11 +37,9 @@ public class Constants {
     //Shared Preferences
     public static final String SHARED_PREFERENCES_FILENAME = "it.unimib.winedine.preferences";
     public static final String SHARED_PREFERENCES_ID_TOKEN = "id_token";
-    public static final String SHARED_PREFERENCES_EMAIL = "email";
 
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
     public static final int FRESH_TIMEOUT = 3000 * 60;
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
     public static final String DISH_ENDPOINT = "recipes/{id}/information";
-    public static final String ID_PARAMETER = "id";
 }
