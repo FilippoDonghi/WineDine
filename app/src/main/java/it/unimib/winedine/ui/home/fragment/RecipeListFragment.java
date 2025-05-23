@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.runner.permission.RequestPermissionCallable;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,11 +75,13 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupAdapter();
+
 
         String[] ingredients = getArguments() != null
                 ? getArguments().getStringArray("ingredients")
                 : null;
+
+        setupAdapter(ingredients);
 
         if (ingredients == null || ingredients.length == 0) {
             Toast.makeText(requireContext(), "Errore: nessun filtro ingredienti", Toast.LENGTH_SHORT).show();
@@ -92,18 +96,16 @@ public class RecipeListFragment extends Fragment {
                         Log.d("RECIPE_DEBUG", "Ricevute " + recipes.size() + " ricette");
                         adapter.updateData(recipes);
                     } else if (result instanceof Result.Error) {
-                        Toast.makeText(requireContext(),
-                                        "Errore: " + ((Result.Error) result).getMessage(),
-                                        Toast.LENGTH_SHORT)
-                                .show();
+                        Snackbar.make(getView(), getString(R.string.error_retireving_bottles), Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void setupAdapter() {
+    private void setupAdapter(String[] ingredients) {
         adapter = new RecipeRecyclerAdapter(new ArrayList<>(), recipe -> {
             Bundle bundle = new Bundle();
             bundle.putInt("recipe_id", recipe.getId());
+            bundle.putStringArray("ingredients", ingredients);
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_recipeListFragment_to_recipeDetailFragment, bundle);
         });

@@ -96,12 +96,13 @@ public class RecipeDetailFragment extends Fragment {
         readyTimeTextView.setText("Tempo di preparazione: " + dish.getReadyInMinutes() + " min");
         servingsTextView.setText("Porzioni: " + dish.getServings());
 
-        sourceUrlTextView.setText("Vedi ricetta completa");
+        sourceUrlTextView.setText("See Complete Recipe Instructions");
         sourceUrlTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSourceUrl()));
             Log.d("URL_DEBUG", "URL: " + dish.getSourceUrl());
             startActivity(browserIntent);
         });
+        spoonacularTextView.setText("More Nutritional Info on Spoonacular");
         spoonacularTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSpoonacularSourceUrl()));
             startActivity(browserIntent);

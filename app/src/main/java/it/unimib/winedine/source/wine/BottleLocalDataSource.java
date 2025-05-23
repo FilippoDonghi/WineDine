@@ -37,13 +37,6 @@ public class BottleLocalDataSource extends BaseBottleLocalDataSource {
     }
 
     @Override
-    public void getWines() {
-        WineRoomDatabase.databaseWriteExecutor.execute(() -> {
-            responseCallback.onSuccessFromLocal(wineDao.getAll());
-        });
-    }
-
-    @Override
     public void getBottlesBySelectedWine(String selectedWine) {
         WineRoomDatabase.databaseWriteExecutor.execute(() -> {
             List<Bottle> bottles = wineDao.getBottlesBySelectedWine(selectedWine);

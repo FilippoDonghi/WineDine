@@ -43,31 +43,12 @@ public class UserViewModel extends ViewModel {
         return userMutableLiveData;
     }
 
-    public MutableLiveData<Result> getUserFavoriteNewsMutableLiveData(String idToken) {
-        if (userFavoriteNewsMutableLiveData == null) {
-            getUserFavoriteNews(idToken);
-        }
-        return userFavoriteNewsMutableLiveData;
-    }
-
-    public void saveUserPreferences(String idToken) {
-        if (idToken != null) {
-            userRepository.saveUserPreferences(idToken);
-        }
-    }
-
     public void saveUserFavoriteWines(String idToken, Bottle bottle) {
         if (idToken != null) {
             userRepository.saveUserFavoriteWines(idToken, bottle);
         }
     }
 
-    public MutableLiveData<Result> getUserPreferences(String idToken) {
-        if (idToken != null) {
-            userPreferencesMutableLiveData = userRepository.getUserPreferences(idToken);
-        }
-        return userPreferencesMutableLiveData;
-    }
 
     public User getLoggedUser() {
         return userRepository.getLoggedUser();
@@ -85,10 +66,6 @@ public class UserViewModel extends ViewModel {
         });
 
         return resultLiveData;
-    }
-
-    private void getUserFavoriteNews(String idToken) {
-        userFavoriteNewsMutableLiveData = userRepository.getUserFavoriteWines(idToken);
     }
 
     public LiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
@@ -125,9 +102,5 @@ public class UserViewModel extends ViewModel {
 
     private void getUserData(String token) {
         userMutableLiveData = userRepository.getGoogleUser(token);
-    }
-
-    public void getUserFavoriteWines(String idToken, IUserRepository.FavoriteWinesCallback callback) {
-        userRepository.getUserFavoriteWines(idToken);
     }
 }

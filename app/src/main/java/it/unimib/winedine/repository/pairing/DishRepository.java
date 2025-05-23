@@ -17,7 +17,6 @@ public class DishRepository {
 
     public LiveData<Result> getDish(int id) {
         MutableLiveData<Result> dishLiveData = new MutableLiveData<>();
-        // Imposto una callback “ad hoc” che posta su questo liveData
         remoteDataSource.setDishCallback(new DishCallback() {
             @Override
             public void onDishSuccess(DishAPIResponse response) {

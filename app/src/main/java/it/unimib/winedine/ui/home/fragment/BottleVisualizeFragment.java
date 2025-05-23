@@ -191,7 +191,6 @@ public class BottleVisualizeFragment extends Fragment {
                         return;
                     }
 
-                    // 1) Fai partire la fetch sulla shared ViewModel
                     recipeViewModel.getRecipes(ingredients);
 
                     // 2) Prepara il bundle con gli ingredients

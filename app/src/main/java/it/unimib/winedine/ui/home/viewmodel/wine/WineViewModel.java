@@ -36,15 +36,15 @@ public class WineViewModel extends ViewModel {
   }
 
     public LiveData<List<String>> getCategories() {
-        return categories;
+      return categories;
     }
 
     public LiveData<HashMap<String, List<String>>> getWinesMap() {
-        return winesMap;
+      return winesMap;
     }
 
     public LiveData<String> getError() {
-        return error;
+      return error;
     }
 
     public void loadCategories() {
@@ -87,7 +87,7 @@ public class WineViewModel extends ViewModel {
     }
 
     public void updateWine(Bottle bottle){
-        winesRepository.updateWine(bottle);
+      winesRepository.updateWine(bottle);
     }
 
     public void refreshFavoriteWines(String idToken) {

@@ -30,7 +30,6 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
 
     @Override
     public void getRecipesForPairings(String[] ingredients) {
-        // **Resetto qui** la lista e il contatore
         aggregatedRecipes = new ArrayList<>();
         pendingRequests = ingredients.length;
 
@@ -42,7 +41,7 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
                                        @NonNull Response<RecipeAPIResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         aggregatedRecipes.addAll(response.body().getResults());
-                        Log.d("API_DEBUG", "Ricette ricevute (agg): " + aggregatedRecipes.size());
+                        Log.d("API_DEBUG", "Chiamata API pairing per: " + aggregatedRecipes.size());
                     }
                     checkCompletion();
                 }

@@ -24,9 +24,6 @@ import retrofit2.Response;
 
 public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
     private final WineAPIService wineAPIService;
-    private List<Recipe> aggregatedRecipes = new ArrayList<>();
-    private int pendingRequests = 0;
-
 
     public PairingRemoteDataSource() {
         this.wineAPIService = ServiceLocator.getInstance().getWinesAPIService();

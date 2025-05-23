@@ -17,6 +17,7 @@
     <string name="error_password_login">The credentials you entered are incorrect</string>
     <string name="error_invalid_password">The password must be at least 8 characters long</string>
     <string name="error_retireving_bottles">There was an error in retrieving the bottles</string>
+    <string name="error_retireving_dishes">There was an error in retrieving dishes</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="error_unexpected">error unexpected</string>
     <string name="error_collision_user">collision user</string>

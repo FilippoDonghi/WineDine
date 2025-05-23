@@ -10,7 +10,6 @@ import it.unimib.winedine.repository.pairing.PairingRepository;
 
 public class PairingViewModel extends ViewModel {
     private final PairingRepository pairingRepository;
-    private final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
     private final MutableLiveData<Result> pairingResult = new MutableLiveData<>();
 
 
