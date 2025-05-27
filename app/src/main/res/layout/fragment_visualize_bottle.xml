@@ -33,8 +33,8 @@
         <!-- Immagine senza sfondo -->
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="320dp"
-            android:layout_height="233dp"
+            android:layout_width="302dp"
+            android:layout_height="207dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:text="Description:"
                     android:textColor="#FFF"
-                    android:textSize="24sp"
+                    android:textSize="23sp"
                     android:textStyle="bold"
                     android:lineSpacingExtra="2dp" />
                 <TextView
@@ -79,12 +79,13 @@
                     android:justificationMode="inter_word"
                     android:text="Breve descrizione del vino..."
                     android:textColor="#FFFF"
-                    android:textSize="19sp"
+                    android:textSize="20sp"
                     android:lineSpacingExtra="2dp"
-                    android:shadowColor="#80000000"
-                    android:shadowDx="0"
-                    android:shadowDy="2"
-                    android:shadowRadius="4" />
+                    android:shadowColor="#CC000000"
+                    android:shadowDx="1"
+                    android:shadowDy="4"
+                    android:shadowRadius="6" />
+
 
 
             </LinearLayout>
@@ -119,7 +120,7 @@
                     android:lineSpacingExtra="2dp"
                     android:text="Rating and price:"
                     android:textColor="#FFF"
-                    android:textSize="24sp"
+                    android:textSize="23sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
