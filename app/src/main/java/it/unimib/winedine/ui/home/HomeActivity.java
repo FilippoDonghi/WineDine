@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -43,6 +44,11 @@ import it.unimib.winedine.ui.welcome.WelcomeActivity;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.ServiceLocator;
+import android.util.TypedValue;
+import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import java.lang.reflect.Field;
 
 
 public class HomeActivity extends AppCompatActivity {

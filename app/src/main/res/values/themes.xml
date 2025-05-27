@@ -48,5 +48,10 @@
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
         <item name="android:fontFamily">@font/times_new_roman_family</item>
         <item name="fontFamily">@font/times_new_roman_family</item>
+
+    </style>
+    <style name="MyBottomNavigationText" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 </resources>

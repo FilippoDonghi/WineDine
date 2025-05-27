@@ -105,7 +105,7 @@
             android:background="@drawable/price_background"
             android:gravity="center"
             android:text="23,50 €"
-            android:textColor="@color/md_theme_onPrimary"
+            android:textColor="@color/md_theme_scrim"
             android:textSize="17sp"
             android:textStyle="bold"
             android:padding="6dp"

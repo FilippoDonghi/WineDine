@@ -140,4 +140,10 @@
     <color name="md_theme_surfaceContainer_highContrast">#EBDFE6</color>
     <color name="md_theme_surfaceContainerHigh_highContrast">#DDD1D8</color>
     <color name="md_theme_surfaceContainerHighest_highContrast">#CFC3CA</color>
+    <color name="wine_dark_text">#2D1E1E</color>
+    <color name="wine_medium_text">#5A3B3B</color>
+    <color name="wine_red">#8B0000</color>
+    <color name="wine_gold">#D4AF37</color>
+    <color name="wine_dark_red">#5A0000</color>
+    <color name="wine_light_background">#F5F0EB</color>
 </resources>

@@ -22,11 +22,14 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#d1c9bc"
+        app:itemTextAppearanceActive="@style/MyBottomNavigationText"
+        app:itemTextAppearanceInactive="@style/MyBottomNavigationText"
+        app:itemIconSize="30dp"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/home_menu"
-        android:background="#d1c9bc"
-        app:labelVisibilityMode="labeled"
-        />
+        tools:layout_editor_absoluteX="0dp" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -37,17 +40,18 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <ImageButton
             android:id="@+id/profile_menu"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="end"
-            android:src="@drawable/ic_profile"
             android:background="#d1c9bc"
             android:contentDescription="Profilo"
-            />
+            android:src="@drawable/ic_profile" />
 
     </androidx.appcompat.widget.Toolbar>
 
