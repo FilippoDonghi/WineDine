@@ -40,7 +40,7 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecipeRecyclerAd
 
             Glide.with(itemView.getContext())
                     .load(recipe.getImage())
-                    .placeholder(R.color.md_theme_error)
+                    .placeholder(R.color.md_theme_secondary)
                     .into(imageRecipe);
 
             itemView.setOnClickListener(v -> listener.onRecipeItemClick(recipe));

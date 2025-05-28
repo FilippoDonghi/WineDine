@@ -93,16 +93,16 @@ public class RecipeDetailFragment extends Fragment {
                 .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
                 .into(recipeImageView);
 
-        readyTimeTextView.setText("Tempo di preparazione: " + dish.getReadyInMinutes() + " min");
-        servingsTextView.setText("Porzioni: " + dish.getServings());
+        readyTimeTextView.setText("Preparation time: " + dish.getReadyInMinutes() + " min");
+        servingsTextView.setText("Portions: " + dish.getServings());
 
-        sourceUrlTextView.setText("See Complete Recipe Instructions");
+        sourceUrlTextView.setText("Show Full Recipe");
         sourceUrlTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSourceUrl()));
             Log.d("URL_DEBUG", "URL: " + dish.getSourceUrl());
             startActivity(browserIntent);
         });
-        spoonacularTextView.setText("More Nutritional Info on Spoonacular");
+        spoonacularTextView.setText("More Nutrition Info");
         spoonacularTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSpoonacularSourceUrl()));
             startActivity(browserIntent);
