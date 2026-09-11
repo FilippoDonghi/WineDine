@@ -25,6 +25,7 @@ import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
@@ -184,12 +185,22 @@ public class BottleListFragment extends Fragment {
 
                     @Override
                     public void onFavoriteButtonClick(int position) {
+                        User user = userViewModel.getLoggedUser();
+                        if (user == null || user.getIdToken() == null) {
+                            Snackbar.make(view, R.string.error_sign_in_required,
+                                    Snackbar.LENGTH_SHORT).show();
+                            bottleAdapter.notifyDataSetChanged();
+                            return;
+                        }
+                        if (position < 0 || position >= bottleList.size()) {
+                            return;
+                        }
                         Bottle bottle = bottleList.get(position);
                         bottle.setLiked(!bottle.getLiked());
                         wineViewModel.updateWine(bottle);
                         bottle.setSelectedWine(selectedWine);
 
-                        String idToken = userViewModel.getLoggedUser().getIdToken();
+                        String idToken = user.getIdToken();
                         userViewModel.saveUserFavoriteWines(idToken, bottle);
 
                         bottleAdapter.notifyDataSetChanged();

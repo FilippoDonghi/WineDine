@@ -11,6 +11,8 @@ android:orientation="horizontal"
 android:id="@+id/group_icon"
 android:layout_width="80dp"
 android:layout_height="100dp"
+android:contentDescription="@null"
+android:importantForAccessibility="no"
 android:layout_marginEnd="8dp" />
 
 

@@ -19,7 +19,6 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.model.Result;
-import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
@@ -58,35 +57,30 @@ public class SignupFragment extends Fragment {
         textInputPassword = view.findViewById(R.id.textInputPassword);
 
         signupButton.setOnClickListener(v -> {
-            String email = textInputEmail.getText().toString().trim();
-            String password = textInputPassword.getText().toString().trim();
+            String email = textInputEmail.getText() == null
+                    ? "" : textInputEmail.getText().toString().trim();
+            String password = textInputPassword.getText() == null
+                    ? "" : textInputPassword.getText().toString();
 
-            if (isEmailOk(email) & isPasswordOk(password)) {
-                Navigation.findNavController(view).navigate(R.id.action_signupFragment_to_homeActivity);
-                //binding.progressBar.setVisibility(View.VISIBLE);
-                if (!userViewModel.isAuthenticationError()) {
-                    userViewModel.getUserMutableLiveData(email, password, false).observe(
-                            getViewLifecycleOwner(), result -> {
-                                if (result.isSuccess()) {
-                                    User user = ((Result.UserSuccess) result).getData();
-                                    //saveLoginData(email, password, user.getIdToken());
-                                    userViewModel.setAuthenticationError(false);
-
-                                } else {
-                                    userViewModel.setAuthenticationError(true);
-                                    Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                                            getErrorMessage(((Result.Error) result).getMessage()),
-                                            Snackbar.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    userViewModel.getUser(email, password, false);
-                }
-                //binding.progressBar.setVisibility(View.GONE);
+            if (isEmailOk(email) && isPasswordOk(password)) {
+                signupButton.setEnabled(false);
+                userViewModel.getUser(email, password, false).observe(
+                        getViewLifecycleOwner(), result -> {
+                            signupButton.setEnabled(true);
+                            if (result instanceof Result.UserSuccess) {
+                                userViewModel.setAuthenticationError(false);
+                                Navigation.findNavController(view).navigate(
+                                        R.id.action_signupFragment_to_homeActivity);
+                            } else if (result instanceof Result.Error) {
+                                userViewModel.setAuthenticationError(true);
+                                Snackbar.make(
+                                        requireActivity().findViewById(android.R.id.content),
+                                        getErrorMessage(((Result.Error) result).getMessage()),
+                                        Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
             } else {
                 userViewModel.setAuthenticationError(true);
-                Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                        R.string.error_email_login, Snackbar.LENGTH_SHORT).show();
             }
         });
 

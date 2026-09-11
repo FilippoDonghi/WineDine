@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -139,7 +140,8 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         Bottle bottle = bottleList.get(position);
         viewHolder.getTextViewTitle().setText(bottle.getTitle());
         int ratingCount = (int) Double.parseDouble(bottle.getRatingCount());
-        viewHolder.getTextViewRatingCount().setText(ratingCount+" reviews");
+        viewHolder.getTextViewRatingCount().setText(
+                context.getString(R.string.review_count, ratingCount));
 
         viewHolder.getViewPrice().setText(bottle.getPrice());
         String originalRating = bottle.getAverageRating();
@@ -147,7 +149,8 @@ public class BottleRecyclerAdapter extends RecyclerView.Adapter<BottleRecyclerAd
         try {
             float ratingValue = Float.parseFloat(originalRating) * 5; // Scala il rating su 5 stelle
             viewHolder.getRatingBar().setRating(ratingValue);
-            viewHolder.getTextViewAverageRating().setText(String.format("%.1f", ratingValue));
+            viewHolder.getTextViewAverageRating().setText(
+                    String.format(Locale.getDefault(), "%.1f", ratingValue));
         } catch (NumberFormatException e) {
             viewHolder.getRatingBar().setRating(0);
             viewHolder.getTextViewAverageRating().setText("0.0");

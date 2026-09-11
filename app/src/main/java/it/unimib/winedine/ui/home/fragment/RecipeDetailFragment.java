@@ -75,8 +75,9 @@ public class RecipeDetailFragment extends Fragment {
                     if (result instanceof Result.DishSuccess) {
                         updateUI(((Result.DishSuccess) result).getDish());
                     } else if (result instanceof Result.Error) {
-                        Toast.makeText(requireContext(),
-                                        "Errore nel caricamento: " + ((Result.Error) result).getMessage(),
+                        Toast.makeText(requireContext(), getString(
+                                        R.string.error_loading_recipe,
+                                        ((Result.Error) result).getMessage()),
                                         Toast.LENGTH_SHORT)
                                 .show();
                     }
@@ -93,20 +94,25 @@ public class RecipeDetailFragment extends Fragment {
                 .placeholder(new ColorDrawable(getContext().getColor(R.color.md_theme_onSecondaryContainer)))
                 .into(recipeImageView);
 
-        readyTimeTextView.setText("Preparation time: " + dish.getReadyInMinutes() + " min");
-        servingsTextView.setText("Portions: " + dish.getServings());
+        readyTimeTextView.setText(getString(
+                R.string.preparation_time_minutes, dish.getReadyInMinutes()));
+        servingsTextView.setText(getString(R.string.servings, dish.getServings()));
 
-        sourceUrlTextView.setText("Show Full Recipe");
+        if (getResources().getBoolean(R.bool.debug_mode)) {
+            sourceUrlTextView.setVisibility(View.GONE);
+            spoonacularTextView.setVisibility(View.GONE);
+            return;
+        }
+        sourceUrlTextView.setText(R.string.show_full_recipe);
         sourceUrlTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSourceUrl()));
             Log.d("URL_DEBUG", "URL: " + dish.getSourceUrl());
             startActivity(browserIntent);
         });
-        spoonacularTextView.setText("More Nutrition Info");
+        spoonacularTextView.setText(R.string.more_nutrition_info);
         spoonacularTextView.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dish.getSpoonacularSourceUrl()));
             startActivity(browserIntent);
         });
     }
 }
-

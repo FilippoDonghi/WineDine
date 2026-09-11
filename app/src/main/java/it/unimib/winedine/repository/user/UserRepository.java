@@ -20,7 +20,9 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     private final BaseUserAuthenticationRemoteDataSource userRemoteDataSource;
     private final BaseUserDataRemoteDataSource userDataRemoteDataSource;
     private final BaseBottleLocalDataSource bottleLocalDataSource;
-    private final MutableLiveData<Result> userMutableLiveData;
+    private MutableLiveData<Result> userMutableLiveData;
+    private MutableLiveData<Result> logoutLiveData;
+    private boolean authenticationInFlight;
     private final MutableLiveData<Result> userFavoriteWinesMutableLiveData;
     private final MutableLiveData<Result> userPreferencesMutableLiveData;
 
@@ -41,6 +43,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
 
     @Override
     public MutableLiveData<Result> getUser(String email, String password, boolean isUserRegistered) {
+        if (authenticationInFlight) {
+            return userMutableLiveData;
+        }
+        beginAuthentication();
         if (isUserRegistered) {
             signIn(email, password);
         } else {
@@ -51,6 +57,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
 
     @Override
     public MutableLiveData<Result> getGoogleUser(String idToken) {
+        if (authenticationInFlight) {
+            return userMutableLiveData;
+        }
+        beginAuthentication();
         signInWithGoogle(idToken);
         return userMutableLiveData;
     }
@@ -75,54 +85,18 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
 
     @Override
     public MutableLiveData<Result> logout() {
-        MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
-
+        logoutLiveData = new MutableLiveData<>();
+        userRemoteDataSource.setUserResponseCallback(this);
         userRemoteDataSource.logout();
+        return logoutLiveData;
+    }
 
-        // Aggiungi listener esplicito
-        userRemoteDataSource.setUserResponseCallback(new UserResponseCallback() {
-            @Override
-            public void onSuccessLogout() {
-                resultLiveData.postValue(new Result.UserSuccess(null));
-            }
-
-            @Override
-            public void onSuccessFromAuthentication(User user) {
-
-            }
-
-            @Override
-            public void onFailureFromAuthentication(String message) {
-                resultLiveData.postValue(new Result.Error(message));
-            }
-
-            @Override
-            public void onSuccessFromRemoteDatabase(User user) {
-
-            }
-
-            @Override
-            public void onSuccessFromRemoteDatabase(List<Bottle> bottleList) {
-
-            }
-
-            @Override
-            public void onSuccessFromRemoteDatabaseFavorites() {
-
-            }
-
-            @Override
-            public void onSuccessFromGettingUserPreferences() {
-
-            }
-
-            @Override
-            public void onFailureFromRemoteDatabase(String message) {
-
-            }
-        });
-
-        return resultLiveData;
+    private void beginAuthentication() {
+        userMutableLiveData = new MutableLiveData<>();
+        logoutLiveData = null;
+        authenticationInFlight = true;
+        userRemoteDataSource.setUserResponseCallback(this);
+        userDataRemoteDataSource.setUserResponseCallback(this);
     }
 
     @Override
@@ -201,6 +175,10 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     @Override
     public void onFailureFromAuthentication(String message) {
         Result.Error result = new Result.Error(message);
+        authenticationInFlight = false;
+        if (logoutLiveData != null) {
+            logoutLiveData.postValue(result);
+        }
         userMutableLiveData.postValue(result);
     }
 
@@ -208,6 +186,7 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     @Override
     public void onSuccessFromRemoteDatabase(User user) {
         Result.UserSuccess result = new Result.UserSuccess(user);
+        authenticationInFlight = false;
         userMutableLiveData.postValue(result);
     }
 
@@ -228,12 +207,15 @@ public class UserRepository implements IUserRepository, UserResponseCallback, Bo
     @Override
     public void onFailureFromRemoteDatabase(String message) {
         Result.Error result = new Result.Error(message);
+        authenticationInFlight = false;
         userMutableLiveData.postValue(result);
     }
 
     @Override
     public void onSuccessLogout() {
-
+        if (logoutLiveData != null) {
+            logoutLiveData.postValue(new Result.UserSuccess(null));
+        }
     }
 
 

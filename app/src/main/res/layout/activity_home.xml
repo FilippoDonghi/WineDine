@@ -50,7 +50,7 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:background="#d1c9bc"
-            android:contentDescription="Profilo"
+            android:contentDescription="@string/profile"
             android:src="@drawable/ic_profile" />
 
     </androidx.appcompat.widget.Toolbar>

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/md_theme_background"
-            android:text="No internet connection" />
+            android:text="@string/error_no_internet" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

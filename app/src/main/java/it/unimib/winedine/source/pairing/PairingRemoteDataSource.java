@@ -30,6 +30,11 @@ public class PairingRemoteDataSource extends BasePairingRemoteDataSource {
     }
     @Override
     public void getPairing(String wine) {
+        if (WINE_API_KEY.isBlank()) {
+            responseCallback.onFailure(new Exception(API_KEY_ERROR));
+            return;
+        }
+
         Call<PairingAPIResponse> call = wineAPIService.getPairings(wine, WINE_API_KEY);
         call.enqueue(new Callback<PairingAPIResponse>() {
             @Override

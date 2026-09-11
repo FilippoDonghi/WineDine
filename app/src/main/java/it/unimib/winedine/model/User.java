@@ -48,7 +48,7 @@ import com.google.firebase.database.Exclude;
             return "User{" +
                     "name='" + name + '\'' +
                     ", email='" + email + '\'' +
-                    ", idToken='" + idToken + '\'' +
+                    ", idToken='[redacted]'" +
                     '}';
         }
 
@@ -88,4 +88,3 @@ import com.google.firebase.database.Exclude;
             }
         };
     }
-

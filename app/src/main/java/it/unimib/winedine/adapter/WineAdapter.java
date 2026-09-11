@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import it.unimib.winedine.R;
 
@@ -83,7 +84,7 @@ public class WineAdapter extends BaseExpandableListAdapter {
         ImageView imageView = convertView.findViewById(R.id.group_icon);
 
         String drawableName = categoryName
-                .toLowerCase()
+                .toLowerCase(Locale.ROOT)
                 .replace(" ", "_");
         int resId = context.getResources()
                 .getIdentifier(drawableName, "drawable", context.getPackageName());

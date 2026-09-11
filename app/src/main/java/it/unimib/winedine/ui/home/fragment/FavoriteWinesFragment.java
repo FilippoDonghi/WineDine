@@ -22,6 +22,7 @@ import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
 import it.unimib.winedine.model.Bottle;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.model.User;
 import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.repository.wine.WinesRepository;
 import it.unimib.winedine.ui.home.viewmodel.wine.WineViewModel;
@@ -88,6 +89,16 @@ public class FavoriteWinesFragment extends Fragment {
 
                     @Override
                     public void onFavoriteButtonClick(int position) {
+                        User user = userViewModel.getLoggedUser();
+                        if (user == null || user.getIdToken() == null) {
+                            Snackbar.make(view, R.string.error_sign_in_required,
+                                    Snackbar.LENGTH_SHORT).show();
+                            bottleRecyclerAdapter.notifyDataSetChanged();
+                            return;
+                        }
+                        if (position < 0 || position >= bottleList.size()) {
+                            return;
+                        }
                         Bottle bottle = bottleList.get(position);
                         bottle.setLiked(!bottle.getLiked());
 
@@ -95,7 +106,7 @@ public class FavoriteWinesFragment extends Fragment {
                         wineViewModel.updateWine(bottle);
 
                         // Aggiorna Firebase
-                        String idToken = userViewModel.getLoggedUser().getIdToken();
+                        String idToken = user.getIdToken();
                         userViewModel.saveUserFavoriteWines(idToken, bottle);
 
                         // Rimuove il vino dalla lista se non è più nei preferiti
@@ -110,20 +121,19 @@ public class FavoriteWinesFragment extends Fragment {
 
         // Osserva il LiveData di wineViewModel per i vini preferiti
         wineViewModel.getFavoriteWinesListLiveData().observe(getViewLifecycleOwner(), result -> {
-            if (result.isSuccess()) {
+            if (result instanceof Result.WineSuccess) {
                 bottleList.clear();
                 bottleList.addAll(((Result.WineSuccess) result).getData().getRecommendedWines());
                 bottleRecyclerAdapter.notifyDataSetChanged();
                 recyclerView.setVisibility(View.VISIBLE);
                 circularProgressIndicator.setVisibility(View.GONE);
             } else {
-                Snackbar.make(view, "Error loading wines", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view, R.string.error_loading_wines, Snackbar.LENGTH_SHORT).show();
             }
         });
 
         // Recupera i vini preferiti tramite il ViewModel dell'utente
-        String idToken = userViewModel.getLoggedUser().getIdToken();
-        wineViewModel.refreshFavoriteWines(idToken);
+        refreshFavorites();
 
 
         return view;
@@ -132,7 +142,17 @@ public class FavoriteWinesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        String idToken = userViewModel.getLoggedUser().getIdToken();
-        wineViewModel.refreshFavoriteWines(idToken);
+        refreshFavorites();
+    }
+
+    private void refreshFavorites() {
+        User user = userViewModel.getLoggedUser();
+        if (user == null || user.getIdToken() == null) {
+            bottleList.clear();
+            bottleRecyclerAdapter.notifyDataSetChanged();
+            circularProgressIndicator.setVisibility(View.GONE);
+            return;
+        }
+        wineViewModel.refreshFavoriteWines(user.getIdToken());
     }
 }

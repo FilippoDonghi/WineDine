@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import it.unimib.winedine.R;
 import it.unimib.winedine.adapter.BottleRecyclerAdapter;
@@ -148,9 +149,10 @@ public class BottleVisualizeFragment extends Fragment {
                         });
 
         int ratingCount = (int) Double.parseDouble(currentBottle.getRatingCount());
-        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(ratingCount +" reviews");
+        ((TextView) view.findViewById(R.id.textViewRatingCount)).setText(
+                getString(R.string.review_count, ratingCount));
         double score = Double.parseDouble(currentBottle.getScore()); // Converte la stringa in double
-        String formattedScore = String.format("%.1f/100", score * 100); // Formatta con una cifra decimale
+        String formattedScore = getString(R.string.score_out_of_100, score * 100);
         ((TextView) view.findViewById(R.id.textViewScore)).setText(formattedScore);
         ((TextView) view.findViewById(R.id.priceText)).setText(currentBottle.getPrice());
 
@@ -158,7 +160,7 @@ public class BottleVisualizeFragment extends Fragment {
         try {
             float ratingValue = Float.parseFloat(originalRating) * 5; // Scala il rating su 5 stelle
             ratingBar.setRating(ratingValue);
-            ratingView.setText(String.format("%.1f", ratingValue));
+            ratingView.setText(String.format(Locale.getDefault(), "%.1f", ratingValue));
         } catch (NumberFormatException e) {
             ratingBar.setRating(0);
             ratingView.setText("0.0");
@@ -187,7 +189,8 @@ public class BottleVisualizeFragment extends Fragment {
                             .getPairings();
 
                     if (ingredients == null || ingredients.length == 0) {
-                        Toast.makeText(requireContext(), "Nessun ingrediente trovato", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.error_missing_ingredients,
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -212,6 +215,4 @@ public class BottleVisualizeFragment extends Fragment {
             return view;
 
 }}
-
-
 

@@ -1,5 +1,7 @@
 package it.unimib.winedine.util;
 
+import it.unimib.winedine.BuildConfig;
+
 public class Constants {
     public static final int MINIMUM_LENGTH_PASSWORD = 8;
 
@@ -28,7 +30,7 @@ public class Constants {
     public static final String RECOMMENDATION_WINE_PARAMETER = "wine";
     public static final String NUMBER_PARAMETER = "number";
     public static final int RECOMMENDATION_NUMBER_VALUE = 6;
-    public static final String WINE_API_KEY = "9b0a990eacb84d8aaa6d5ab0ee7a02c2";
+    public static final String WINE_API_KEY = BuildConfig.SPOONACULAR_API_KEY;
     public static final String RECIPE_ENDPOINT = "recipes/complexSearch";
     public static final String QUERY_PARAMETER = "query";
     public static final String MAX_FAT_PARAMETER = "maxFat";
@@ -39,6 +41,9 @@ public class Constants {
     public static final String SHARED_PREFERENCES_ID_TOKEN = "id_token";
 
     public static final String SAMPLE_JSON_FILENAME = "sample_api_response.json";
+    public static final String SAMPLE_PAIRING_FILENAME = "sample_api2_response.json";
+    public static final String SAMPLE_RECIPE_FILENAME = "sample_recipe_response.json";
+    public static final String SAMPLE_DISH_FILENAME = "sample_dish_response.json";
     public static final int FRESH_TIMEOUT = 3000 * 60;
     public static final String BUNDLE_KEY_CURRENT_BOTTLE = "current_bottle";
     public static final String DISH_ENDPOINT = "recipes/{id}/information";

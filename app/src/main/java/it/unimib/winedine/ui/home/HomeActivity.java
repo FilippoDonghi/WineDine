@@ -1,8 +1,6 @@
 package it.unimib.winedine.ui.home;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -10,16 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.os.HandlerCompat;
 import androidx.core.text.HtmlCompat;
@@ -31,24 +26,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.logging.Handler;
-
 import it.unimib.winedine.R;
-import it.unimib.winedine.database.WineRoomDatabase;
 import it.unimib.winedine.model.Result;
+import it.unimib.winedine.repository.user.IUserRepository;
 import it.unimib.winedine.ui.welcome.WelcomeActivity;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModel;
 import it.unimib.winedine.ui.welcome.viewmodel.UserViewModelFactory;
 import it.unimib.winedine.util.ServiceLocator;
-import android.util.TypedValue;
-import android.util.TypedValue;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import java.lang.reflect.Field;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -60,6 +44,15 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        IUserRepository userRepository = ServiceLocator.getInstance()
+                .getUserRepository(getApplication());
+        userViewModel = new ViewModelProvider(
+                this,
+                new UserViewModelFactory(userRepository)).get(UserViewModel.class);
+        if (userViewModel.getLoggedUser() == null) {
+            navigateToLoginScreen();
+            return;
+        }
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
@@ -89,13 +82,14 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        return navController.navigateUp();
+        return navController != null && navController.navigateUp();
     }
 
     @Override
     public void onBackPressed() {
-       // super.onBackPressed();
-        navController.navigateUp();
+        if (navController == null || !navController.navigateUp()) {
+            super.onBackPressed();
+        }
     }
 
     private void showProfileMenu(View anchorView) {
@@ -114,18 +108,7 @@ public class HomeActivity extends AppCompatActivity {
                 "<font color='#FFFFFF'>Logout</font>", HtmlCompat.FROM_HTML_MODE_LEGACY
         ));
 
-        popupMenu.show();
-
-        try {
-            Field field = popupMenu.getClass().getDeclaredField("mPopup");
-            field.setAccessible(true);
-            Object menuHelper = field.get(popupMenu);
-            Class<?> classPopupHelper = Class.forName(menuHelper.getClass().getName());
-            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
-            setForceIcons.invoke(menuHelper, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        popupMenu.setForceShowIcon(true);
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -163,12 +146,10 @@ public class HomeActivity extends AppCompatActivity {
             // Il tuo codice timeout qui
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
-                showLogoutError("Timeout durante il logout");
+                showLogoutError(getString(R.string.logout_timeout));
             }
         }, 15000);
     // 15 secondi timeout
-
-        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         userViewModel.logout().observe(this, result -> {
             progressDialog.dismiss();
@@ -177,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
                 navigateToLoginScreen();
             } else {
                 String errorMsg = result instanceof Result.Error ?
-                        ((Result.Error)result).getMessage() : "Errore sconosciuto";
+                        ((Result.Error) result).getMessage() : getString(R.string.logout_error);
                 showLogoutError(errorMsg);
             }
         });
@@ -185,9 +166,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showLogoutError(String message) {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Errore")
+                .setTitle(R.string.error_title)
                 .setMessage(message)
-                .setPositiveButton("OK", (d, w) -> {
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
                     // Eventuale azione aggiuntiva
                 })
                 .show();
