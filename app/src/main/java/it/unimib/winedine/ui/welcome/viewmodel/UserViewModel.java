@@ -37,10 +37,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public MutableLiveData<Result> getGoogleUserMutableLiveData(String token) {
-        if (userMutableLiveData == null) {
-            getUserData(token);
-        }
-        return userMutableLiveData;
+        return userRepository.getGoogleUser(token);
     }
 
     public void saveUserFavoriteWines(String idToken, Bottle bottle) {
@@ -56,12 +53,15 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Result> logout() {
         MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
+        LiveData<Result> source = userRepository.logout();
 
-        userRepository.logout().observeForever(result -> {
-            if (result != null) {
-                resultLiveData.postValue(result);
-            } else {
-                resultLiveData.postValue(new Result.Error("Errore sconosciuto durante il logout"));
+        source.observeForever(new Observer<Result>() {
+            @Override
+            public void onChanged(Result result) {
+                resultLiveData.postValue(result != null
+                        ? result
+                        : new Result.Error("Unknown error while signing out"));
+                source.removeObserver(this);
             }
         });
 
@@ -72,15 +72,13 @@ public class UserViewModel extends ViewModel {
         // Crea un nuovo LiveData per questa specifica chiamata
         MutableLiveData<Result> resultLiveData = new MutableLiveData<>();
 
-        // Osserva il LiveData del repository
-        userRepository.getUser(email, password, isUserRegistered)
-                .observeForever(new Observer<Result>() {
+        LiveData<Result> source = userRepository.getUser(email, password, isUserRegistered);
+        source.observeForever(new Observer<Result>() {
                     @Override
                     public void onChanged(Result result) {
                         if (result != null) {
                             resultLiveData.postValue(result);
-                            // Rimuovi l'observer dopo aver ricevuto il risultato
-                            userRepository.getUser(email, password, isUserRegistered).removeObserver(this);
+                            source.removeObserver(this);
                         }
                     }
                 });

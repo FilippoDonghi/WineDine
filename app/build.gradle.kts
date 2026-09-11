@@ -1,9 +1,23 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
 }
+
+val spoonacularApiKey = providers.gradleProperty("SPOONACULAR_API_KEY")
+    .orElse(providers.environmentVariable("SPOONACULAR_API_KEY"))
+    .getOrElse("")
+val demoMode = providers.gradleProperty("DEMO_MODE")
+    .orElse(providers.environmentVariable("DEMO_MODE"))
+    .map(String::toBoolean)
+    .getOrElse(spoonacularApiKey.isBlank())
+
+require(demoMode || spoonacularApiKey.isNotBlank()) {
+    "SPOONACULAR_API_KEY is required when DEMO_MODE=false"
+}
+
+val escapedApiKey = spoonacularApiKey
+    .replace("\\", "\\\\")
+    .replace("\"", "\\\"")
 
 android {
     namespace = "it.unimib.winedine"
@@ -18,8 +32,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        
-        resValue("bool", "debug_mode", gradleLocalProperties(rootDir, providers).getProperty("debug_mode"))
+        resValue("bool", "debug_mode", demoMode.toString())
+        buildConfigField("String", "SPOONACULAR_API_KEY", "\"$escapedApiKey\"")
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -31,14 +50,16 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation (libs.play.services.auth.v2070)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -52,20 +73,18 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
-    implementation (libs.gson)
+    implementation(libs.gson)
     implementation(libs.commons.validator)
     implementation(libs.github.glide)
     implementation(libs.shimmer)
-    implementation (libs.appcompat.v140)
-    implementation (libs.material.v160)
-    implementation (libs.core)
+    implementation(libs.core)
 
     implementation(libs.room.runtime)
-    implementation(libs.runner)
     annotationProcessor(libs.room.compiler)
 
 
     testImplementation(libs.junit)
+    testImplementation(libs.arch.core.testing)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

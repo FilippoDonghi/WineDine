@@ -13,6 +13,8 @@
         android:layout_height="230dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/img_login"
         />
 
@@ -23,7 +25,7 @@
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#d1c9bc"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:text="@string/explore_signUp"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#00000000"
-            android:textSize="19dp"
+            android:textSize="19sp"
             android:inputType="textEmailAddress" />
 
 
@@ -66,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:textSize="19dp"
+            android:textSize="19sp"
             android:background="#00000000"/>
 
 
@@ -85,7 +87,7 @@
         android:layout_marginEnd="50dp"
         android:backgroundTint="#d1c9bc"
         android:gravity="center"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textStyle="bold"
         android:textAlignment="center"
         android:text="@string/signup"

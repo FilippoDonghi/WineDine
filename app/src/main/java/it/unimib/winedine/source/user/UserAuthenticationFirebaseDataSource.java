@@ -37,13 +37,6 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
             Log.d(TAG, "Nessun utente loggato");
             return null;
         } else {
-            String displayName = firebaseUser.getDisplayName();
-            String email = firebaseUser.getEmail();
-            String uid = firebaseUser.getUid();
-            Log.d(TAG, "Utente loggato: ");
-            Log.d(TAG, "Nome: " + displayName);
-            Log.d(TAG, "Email: " + email);
-            Log.d(TAG, "UID: " + uid);
             return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
         }
     }
@@ -147,4 +140,3 @@ public class UserAuthenticationFirebaseDataSource extends BaseUserAuthentication
         return UNEXPECTED_ERROR;
     }
 }
-

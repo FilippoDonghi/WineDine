@@ -18,11 +18,17 @@ public class BottleMockDataSource extends BaseBottleRemoteDataSource {
 
     @Override
     public void getWines(String wine) {
+        if (!"merlot".equalsIgnoreCase(wine)) {
+            responseCallback.onFailureFromRemote(
+                    new IOException("The demo supports Merlot only"));
+            return;
+        }
         WineAPIResponse wineAPIResponse= null;
         try{
             wineAPIResponse = jsonParserUtil.parseJSONFileWithGSon(Constants.SAMPLE_JSON_FILENAME);
         } catch (IOException e) {
-            e.printStackTrace();
+            responseCallback.onFailureFromRemote(e);
+            return;
         }
 
         if (wineAPIResponse != null) {
@@ -32,6 +38,4 @@ public class BottleMockDataSource extends BaseBottleRemoteDataSource {
         }
     }
 }
-
-
 

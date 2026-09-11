@@ -1,12 +1,11 @@
 [versions]
 agp = "8.6.0"
-appcompatVersion = "1.4.0"
+archCoreTesting = "2.2.0"
 commonsValidator = "1.7"
 converterGson = "2.11.0"
 core = "1.15.0"
 firebaseBom = "33.9.0"
 glideVersion = "4.16.0"
-googlePlayServicesAuth = "20.7.0"
 gson = "2.12.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -16,7 +15,6 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
-materialVersion = "1.6.0"
 playServicesAuth = "21.3.0"
 retrofit = "2.11.0"
 navigationFragment = "2.8.6"
@@ -24,10 +22,9 @@ navigationUi = "2.8.6"
 roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
 shimmer = "0.5.0"
-runner = "1.6.1"
 
 [libraries]
-appcompat-v140 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+arch-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "archCoreTesting" }
 commons-validator = { module = "commons-validator:commons-validator", version.ref = "commonsValidator" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "androidx.core:core", version.ref = "core" }
@@ -44,17 +41,13 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-material-v160 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
-play-services-auth-v2070 = { module = "com.google.android.gms:play-services-auth", version.ref = "googlePlayServicesAuth" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

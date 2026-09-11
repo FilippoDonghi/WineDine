@@ -4,7 +4,6 @@ import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
 import static it.unimib.winedine.util.Constants.FRESH_TIMEOUT;
 import static it.unimib.winedine.util.Constants.RECOMMENDATION_NUMBER_VALUE;
 import static it.unimib.winedine.util.Constants.RETROFIT_ERROR;
-import static it.unimib.winedine.util.Constants.WINE_API_KEY;
 
 import android.app.Application;
 import android.util.Log;

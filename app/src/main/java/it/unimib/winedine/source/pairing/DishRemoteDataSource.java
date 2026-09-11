@@ -23,8 +23,13 @@ public class DishRemoteDataSource extends BaseDishRemoteDataSource{
 
     @Override
     public void getDishes(int id) {
+        if (WINE_API_KEY.isBlank()) {
+            responseCallback.onFailure(new Exception(Constants.API_KEY_ERROR));
+            return;
+        }
+
         Call<DishAPIResponse> call = wineAPIService.getDish(id, WINE_API_KEY);
-        Log.d("API_DEBUG", "Dish URL: https://api.spoonacular.com/recipes/" + id + "/information?apiKey=" + Constants.WINE_API_KEY);
+        Log.d("API_DEBUG", "Requesting recipe details for id=" + id);
 
         call.enqueue(new Callback<DishAPIResponse>() {
             @Override

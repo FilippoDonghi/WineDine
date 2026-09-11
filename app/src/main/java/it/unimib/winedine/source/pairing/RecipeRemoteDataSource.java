@@ -1,6 +1,7 @@
 package it.unimib.winedine.source.pairing;
 
 import static it.unimib.winedine.util.Constants.WINE_API_KEY;
+import static it.unimib.winedine.util.Constants.API_KEY_ERROR;
 
 import android.util.Log;
 
@@ -30,6 +31,11 @@ public class RecipeRemoteDataSource extends BaseRecipeRemoteDataSource {
 
     @Override
     public void getRecipesForPairings(String[] ingredients) {
+        if (WINE_API_KEY.isBlank()) {
+            responseCallback.onFailure(new Exception(API_KEY_ERROR));
+            return;
+        }
+
         aggregatedRecipes = new ArrayList<>();
         pendingRequests = ingredients.length;
 

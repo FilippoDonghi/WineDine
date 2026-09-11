@@ -32,9 +32,13 @@ public class BottleRemoteDataSource extends BaseBottleRemoteDataSource {
 
     @Override
     public void getWines(String wine) {
+        if (WINE_API_KEY.isBlank()) {
+            responseCallback.onFailureFromRemote(new Exception(API_KEY_ERROR));
+            return;
+        }
+
         Call<WineAPIResponse> winesResponseCall = winesAPIService.getWines(wine, RECOMMENDATION_NUMBER_VALUE,WINE_API_KEY);
-        Log.d("API Request", "URL: https://api.spoonacular.com/food/wine/recommendation?wine="
-                + wine + "&number=" + RECOMMENDATION_NUMBER_VALUE + "&apiKey=" + WINE_API_KEY);
+        Log.d("API Request", "Requesting recommendations for wine=" + wine);
 
         winesResponseCall.enqueue(new Callback<WineAPIResponse>() {
 
@@ -68,6 +72,5 @@ public class BottleRemoteDataSource extends BaseBottleRemoteDataSource {
 
 
 }
-
 
 

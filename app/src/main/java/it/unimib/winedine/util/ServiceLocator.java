@@ -15,7 +15,10 @@ import it.unimib.winedine.source.pairing.BaseDishRemoteDataSource;
 import it.unimib.winedine.source.pairing.BasePairingRemoteDataSource;
 import it.unimib.winedine.source.pairing.BaseRecipeRemoteDataSource;
 import it.unimib.winedine.source.pairing.DishRemoteDataSource;
+import it.unimib.winedine.source.pairing.DishMockDataSource;
+import it.unimib.winedine.source.pairing.PairingMockDataSource;
 import it.unimib.winedine.source.pairing.PairingRemoteDataSource;
+import it.unimib.winedine.source.pairing.RecipeMockDataSource;
 import it.unimib.winedine.source.pairing.RecipeRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserAuthenticationRemoteDataSource;
 import it.unimib.winedine.source.user.BaseUserDataRemoteDataSource;
@@ -90,18 +93,24 @@ public class ServiceLocator {
     }
 
     public RecipeRepository getRecipeRepository(Application application, boolean debugMode) {
-        BaseRecipeRemoteDataSource recipeRemoteDataSource = new RecipeRemoteDataSource();
+        BaseRecipeRemoteDataSource recipeRemoteDataSource = debugMode
+                ? new RecipeMockDataSource(new JSONParserUtils(application))
+                : new RecipeRemoteDataSource();
         return new RecipeRepository(recipeRemoteDataSource);
     }
 
     public DishRepository getDishRepository(Application application, boolean debugMode) {
-        BaseDishRemoteDataSource dishRemoteDataSource = new DishRemoteDataSource();
+        BaseDishRemoteDataSource dishRemoteDataSource = debugMode
+                ? new DishMockDataSource(new JSONParserUtils(application))
+                : new DishRemoteDataSource();
         return new DishRepository(dishRemoteDataSource);
     }
 
 
     public PairingRepository getPairingRepository(Application application, boolean debugMode) {
-        BasePairingRemoteDataSource pairingRemoteDataSource = new PairingRemoteDataSource();
+        BasePairingRemoteDataSource pairingRemoteDataSource = debugMode
+                ? new PairingMockDataSource(new JSONParserUtils(application))
+                : new PairingRemoteDataSource();
         return new PairingRepository(pairingRemoteDataSource);
     }
 
@@ -120,4 +129,3 @@ public WineRoomDatabase getWineDAO(Application application){
 }
 
 }
-

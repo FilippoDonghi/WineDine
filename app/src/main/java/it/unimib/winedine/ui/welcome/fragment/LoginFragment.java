@@ -105,7 +105,6 @@ public class LoginFragment extends Fragment {
                             if (authenticationResult.isSuccess()) {
                                 User user = ((Result.UserSuccess) authenticationResult).getData();
                                 //saveLoginData(user.getEmail(), null, user.getIdToken());
-                                Log.i(TAG, "Logged as: " + user.getEmail());
                                 userViewModel.setAuthenticationError(false);
                                 goToNextPage(getView());
                             } else {
@@ -159,10 +158,15 @@ public class LoginFragment extends Fragment {
                 return;
             }
 
-            // Usa getUser() con isUserRegistered=true per il login
+            loginButton.setEnabled(false);
+            loginGoogleButton.setEnabled(false);
+            signupButton.setEnabled(false);
             userViewModel.getUser(email, password, true)
                     .observe(getViewLifecycleOwner(), result -> {
                         if (result != null) {
+                            loginButton.setEnabled(true);
+                            loginGoogleButton.setEnabled(true);
+                            signupButton.setEnabled(true);
                             if (result.isSuccess()) {
                                 // Login riuscito
                                 Navigation.findNavController(v).navigate(R.id.action_loginFragment_to_homeActivity);
@@ -251,6 +255,5 @@ public class LoginFragment extends Fragment {
         }
     }
     }
-
 
 

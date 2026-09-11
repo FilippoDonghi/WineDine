@@ -17,7 +17,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.runner.permission.RequestPermissionCallable;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -84,7 +83,8 @@ public class RecipeListFragment extends Fragment {
         setupAdapter(ingredients);
 
         if (ingredients == null || ingredients.length == 0) {
-            Toast.makeText(requireContext(), "Errore: nessun filtro ingredienti", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.error_missing_ingredient_filter,
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 

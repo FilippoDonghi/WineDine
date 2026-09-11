@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -111,7 +112,16 @@ public class WineListFragment extends Fragment{
             });
 
             // Carica i dati
-            wineViewModel.loadCategories();
+            if (getResources().getBoolean(R.bool.debug_mode)) {
+                this.categories.clear();
+                this.categories.add("Red wine (demo)");
+                this.winesMap.clear();
+                this.winesMap.put("Red wine (demo)", Arrays.asList("Merlot"));
+                adapter.updateCategories(this.categories);
+                adapter.updateWinesMap(this.winesMap);
+            } else {
+                wineViewModel.loadCategories();
+            }
 
             return view;
         }
@@ -147,7 +157,8 @@ public class WineListFragment extends Fragment{
     // Funzione di formattazione
     private String formatWineName(String wine) {
         return Arrays.stream(wine.split("_"))
-                .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
+                .map(word -> word.substring(0, 1).toUpperCase(Locale.getDefault())
+                        + word.substring(1).toLowerCase(Locale.getDefault()))
                 .collect(Collectors.joining(" "));
     }
     }
